@@ -1,13 +1,9 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 
 const HomeScreen = () => {
 
   return (<View style={styles.base}>
-    <StatusBar style="light" hidden={false} animated />
-    <View style={styles.nameContainer}>
-      <Text style={styles.name}>Home</Text>
-    </View>
+    <Text style={styles.name}>Home</Text>
   </View>)
 }
 
