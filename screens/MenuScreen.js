@@ -25,7 +25,7 @@ const tabScreens = [
   },
 ];
 
-const Navigation = () => {
+const MenuScreen = () => {
 
   return (
     <NavigationContainer>
@@ -76,4 +76,4 @@ const Navigation = () => {
   );
 }
 
-export default Navigation;
+export default MenuScreen;
