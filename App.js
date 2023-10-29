@@ -3,12 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import StartingScreen from './screens/StartingScreen';
 import LoginScreen from './screens/LoginScreen';
-import SignUpScreen from './screens/SigupScreen';
+import SignUpScreen from './screens/SignupScreen';
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-
+//npx expo start --tunnel
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Start">

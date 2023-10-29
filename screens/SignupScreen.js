@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import BalooFont from '../assets/fonts/Baloo.ttf';
 import { useFonts } from 'expo-font';
 import CustomButton from '../components/CustomButton';
+import axios from "axios";
+
 const SignUpScreen = () => {
-    const [name, setName] = useState('')
     const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const [isLoaded] = useFonts({
@@ -19,6 +21,34 @@ const SignUpScreen = () => {
         return null;
     }
 
+    const handleRegister = () => {
+        const user = {
+          username: username,
+          email: email,
+          password: password,
+        };
+    
+        axios
+          .post("http://localhost:3000/register", user)
+          .then((response) => {
+            console.log(response);
+            Alert.alert(
+              "Registration successful",
+              "you have been registered successfully"
+            );
+            setUsername("");
+            setEmail("");
+            setPassword("");
+          })
+          .catch((error) => {
+            Alert.alert(
+              "Registration failed",
+              "An error occurred during registration"
+            );
+            console.log("error", error);
+          });
+      };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.base} >
@@ -26,16 +56,16 @@ const SignUpScreen = () => {
                     <Text style={styles.name}>Sign Up</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={(text) => setName(text)}
-                        value={name}
-                        placeholder='Full Name'
+                        onChangeText={(text) => setUsername(text)}
+                        value={username}
+                        placeholder='Username'
                         placeholderTextColor='#AFAFAF'
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={(text) => setUsername(text)}
-                        value={username}
-                        placeholder='Username'
+                        onChangeText={(text) => setEmail(text)}
+                        value={email}
+                        placeholder='Email'
                         placeholderTextColor='#AFAFAF'
                     />
                     <TextInput
@@ -48,7 +78,7 @@ const SignUpScreen = () => {
                     />
                 </View>
                 <View style={styles.buttons}>
-                    <CustomButton title="SIGN UP" color="white" bgColor="#944ADE" borderColor={'#7939B8'}/>
+                    <CustomButton title="SIGN UP" color="white" bgColor="#944ADE" borderColor={'#7939B8'} onPress={handleRegister} />
                 </View>
             </View>
         </SafeAreaView>

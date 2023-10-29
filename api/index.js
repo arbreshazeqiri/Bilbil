@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -13,7 +14,7 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect("mongodb://localhost:27017", {
+  .connect(`mongodb+srv://arbreshazeqiri:${process.env.MONGO_PASSWORD}@cluster0.qdofyye.mongodb.net/?retryWrites=true&w=majority`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -21,9 +22,11 @@ mongoose
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
+    console.log(err)
     console.log("Error Connecting to MongoDB");
   });
 
+//node index.js
 app.listen(port, () => {
   console.log("server is running on port 3000");
 });
@@ -33,15 +36,17 @@ const User = require("./models/user");
 //endpoint to register a user in the backend
 app.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { username, email, password } = req.body;
+    console.log(req.body)
 
     const existingUser = await User.findOne({ email });
+    console.log(existingUser)
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
     //create a new user
-    const newUser = new User({ name, email, password });
+    const newUser = new User({ username, email, password });
 
     //generate and store the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
@@ -51,7 +56,7 @@ app.post("/register", async (req, res) => {
 
     res.status(200).json({ message: "Registration successful" });
   } catch (error) {
-    console.log("error registering user", error);
+    console.log("error registering user", error.message);
     res.status(500).json({ message: "error registering user" });
   }
 });
