@@ -1,16 +1,39 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TextInput, Alert, StatusBar, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import BalooFont from '../assets/fonts/Baloo.ttf';
 import { useFonts } from 'expo-font';
 import CustomButton from '../components/CustomButton';
 import axios from 'axios';
+import { Ionicons } from 'react-native-vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
-    const [email, setEmail] = useState('')
+    const [emailOrUsername, setEmailOrUsername] = useState('')
     const [password, setPassword] = useState('')
-
+    const [showPassword, setShowPassword] = useState(false)
+    const navigation = useNavigation();
+    
+    // useEffect(() => {
+    //     const checkLoginStatus = async () => {
+    //         try {
+    //             const token = await AsyncStorage.getItem("authToken");
+                
+    //             if (token) {
+    //                 setTimeout(() => {
+    //                     navigation.replace("Start");
+    //                 }, 400);
+    //             }
+    //         } catch (error) {
+    //             console.log("error", error);
+    //         }
+    //     };
+        
+    //     checkLoginStatus();
+    // }, []);
+    
     const [isLoaded] = useFonts({
         "baloo": BalooFont,
         "baloo-semibold": BalooSemiBoldFont,
@@ -19,50 +42,61 @@ const LoginScreen = () => {
     if (!isLoaded) {
         return null;
     }
-
     const handleLogin = () => {
         const user = {
-          email: email,
-          password: password,
+            emailOrUsername: emailOrUsername,
+            password: password,
         };
-    
+
         axios
-          .post(`http://192.168.2.2:3000/login`, user)
-          .then((response) => {
-            console.log(response);
-            const token = response.data.token;
-            AsyncStorage.setItem("authToken", token);
-            navigation.navigate("Main");
-          })
-          .catch((error) => {
-            Alert.alert("Login error");
-            console.log("error ", error);
-          });
-      };
+            .post(`http://192.168.2.2:3000/login`, user)
+            .then((response) => {
+                const token = response.data.token;
+                AsyncStorage.setItem("authToken", token);
+                navigation.navigate("Menu");
+            })
+            .catch((error) => {
+                Alert.alert("Login error");
+                console.log("error ", error);
+            });
+    };
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+            <StatusBar backgroundColor={'#212832'} barStyle={'light-content'} />
             <View style={styles.base} >
                 <View style={styles.brand}>
-                    <Text style={styles.name}>Log in</Text>
+                    <Text style={styles.name}>WELCOME BACK</Text>
                     <TextInput
-                        style={styles.input}
-                        onChangeText={(text) => setEmail(text)}
-                        value={email}
-                        placeholder='Email'
+                        style={styles.inputTop}
+                        onChangeText={(text) => setEmailOrUsername(text)}
+                        value={emailOrUsername}
+                        placeholder='Email or username'
                         placeholderTextColor='#AFAFAF'
                     />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={(text) => setPassword(text)}
-                        value={password}
-                        secureTextEntry={true}
-                        placeholder='Password'
-                        placeholderTextColor='#AFAFAF'
-                    />
+                    <View style={styles.passwordContainer}>
+                        <TextInput
+                            style={styles.passwordInput}
+                            onChangeText={(text) => setPassword(text)}
+                            value={password}
+                            secureTextEntry={!showPassword}
+                            placeholder='Password'
+                            placeholderTextColor='#AFAFAF'
+                        />
+                        <TouchableOpacity
+                            style={styles.togglePassword}
+                            onPress={() => setShowPassword(!showPassword)}
+                        >
+                            <Ionicons
+                                name={showPassword ? 'ios-eye' : 'ios-eye-off'}
+                                size={20}
+                                color={showPassword ? '#B76DF2' : '#AFAFAF'}
+                            />
+                        </TouchableOpacity>
+                    </View>
                 </View>
                 <View style={styles.buttons}>
-                    <CustomButton title="LOG IN" color="white" bgColor="#944ADE" borderColor={'#7939B8'} onPress={handleLogin}/>
+                    <CustomButton title="LOG IN" color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={handleLogin} />
                 </View>
             </View>
         </SafeAreaView>
@@ -74,7 +108,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#212832',
+        paddingTop: 0,
         padding: 20,
         gap: 20,
     },
@@ -82,7 +117,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 20,
+        gap: 0,
     },
     buttons: {
         display: 'flex',
@@ -92,18 +127,42 @@ const styles = StyleSheet.create({
         gap: 10,
         cursor: 'pointer',
     },
-    input: {
-        color: '#3C3C3C',
+    inputTop: {
+        color: 'white',
         width: '100%',
-        borderRadius: 15,
+        borderRadius: 10,
         height: 40,
-        fontWeight: 'bold',
-        borderWidth: 2,
+        fontWeight: 'semibold',
+        borderWidth: 1,
         borderColor: '#AFAFAF',
+        padding: 10,
+        backgroundColor: '#2B3440',
+        borderBottomLeftRadius: 0,
+        borderBottomRightRadius: 0
+    },
+    passwordContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#AFAFAF',
+        borderTopWidth: 0,
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderRadius: 10,
+        backgroundColor: '#2B3440',
+        height: 40,
+    },
+    passwordInput: {
+        color: 'white',
+        flex: 1,
+        fontWeight: 'semibold',
+        padding: 10,
+    },
+    togglePassword: {
         padding: 10,
     },
     name: {
-        color: '#3C3C3C',
+        color: 'white',
         fontSize: 40,
         fontFamily: 'baloo-semibold'
     },

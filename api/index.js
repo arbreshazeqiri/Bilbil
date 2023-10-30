@@ -73,11 +73,14 @@ const secretKey = generateSecretKey();
 
 app.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { emailOrUsername, password } = req.body;
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({
+      $or: [{ email: emailOrUsername }, { username: emailOrUsername }],
+    });
+
     if (!user) {
-      return res.status(404).json({ message: "Invalid email" });
+      return res.status(404).json({ message: "Invalid email or username" });
     }
 
     //compare password with the stored hashed password

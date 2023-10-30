@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import BalooFont from '../assets/fonts/Baloo.ttf';
@@ -12,7 +12,7 @@ const StartingScreen = () => {
     const handleNavigateToLogin = () => {
         navigation.navigate('Login');
     };
-    
+
     const handleNavigateToSignup = () => {
         navigation.navigate('Signup');
     };
@@ -27,7 +27,8 @@ const StartingScreen = () => {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: '#212832' }}>
+            <StatusBar backgroundColor={'#212832'} barStyle={'light-content'} />
             <View style={styles.base} >
                 <View style={styles.brand}>
                     <Image source={require('../assets/icon.png')} style={{ width: 170, height: 170 }} />
@@ -35,8 +36,8 @@ const StartingScreen = () => {
                     <Text style={styles.banner}>Unlock the beauty of the Albanian Language</Text>
                 </View>
                 <View style={styles.buttons}>
-                    <CustomButton title="GET STARTED" color="white" bgColor="#FFC700" borderColor={'#DBAE0D'} onPress={handleNavigateToSignup} />
-                    <CustomButton title="I ALREADY HAVE AN ACCOUNT" color="#FFC700" bgColor="white" borderColor={'#E5E5E5'} onPress={handleNavigateToLogin} />
+                    <CustomButton title="GET STARTED" color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={handleNavigateToSignup} />
+                    <CustomButton title="I ALREADY HAVE AN ACCOUNT" color="#FF9100" bgColor="#212832" borderColor={'#2E3845'} hasTopBorder onPress={handleNavigateToLogin} />
                 </View>
             </View>
         </SafeAreaView>
@@ -48,7 +49,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white',
+        backgroundColor: '#212832',
         padding: 20,
         gap: 20,
     },
@@ -62,16 +63,16 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 10,
+        gap: 15,
         cursor: 'pointer',
     },
     name: {
-        color: '#FFC700',
+        color: '#FF9100',
         fontSize: 40,
         fontFamily: 'baloo-semibold'
     },
     banner: {
-        color: '#797979',
+        color: 'white',
         fontSize: 17,
         fontWeight: '600',
         fontFamily: 'baloo'

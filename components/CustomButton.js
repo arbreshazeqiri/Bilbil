@@ -3,7 +3,7 @@ import { StyleSheet, TouchableOpacity, Text } from "react-native"
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import { useFonts } from 'expo-font';
 
-const CustomButton = ({ onPress, title, color, bgColor, borderColor }) => {
+const CustomButton = ({ onPress, title, color, bgColor, borderColor, hasTopBorder }) => {
     
     const [isLoaded] = useFonts({
         "baloo-semibold": BalooSemiBoldFont,
@@ -16,7 +16,6 @@ const CustomButton = ({ onPress, title, color, bgColor, borderColor }) => {
     const styles = StyleSheet.create({
         appButtonContainer: {
             width: '100%',
-            elevation: 10,
             shadowOpacity: 1,
             shadowOffset: { width: 4, height: 2 },
             shadowColor: borderColor,
@@ -27,7 +26,7 @@ const CustomButton = ({ onPress, title, color, bgColor, borderColor }) => {
             paddingHorizontal: 12,
             borderColor: borderColor,
             borderWidth: 1,
-            borderTopWidth: 0,
+            borderTopWidth: hasTopBorder ? 2 : 0,
             borderBottomWidth: 5,
         },
         appButtonText: {
