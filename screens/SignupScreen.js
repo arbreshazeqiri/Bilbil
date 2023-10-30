@@ -29,7 +29,7 @@ const SignUpScreen = () => {
         };
     
         axios
-          .post(`http://${process.env.MACHINE_IP}:3000/register`, user)
+          .post(`http://192.168.2.2:3000/register`, user)
           .then((response) => {
             console.log(response);
             Alert.alert(

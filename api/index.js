@@ -3,6 +3,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const bcrypt = require("bcrypt");
 
 const app = express();
 const port = 3000;
@@ -37,16 +38,18 @@ const User = require("./models/user");
 app.post("/register", async (req, res) => {
   try {
     const { username, email, password } = req.body;
-    console.log(req.body)
 
     const existingUser = await User.findOne({ email });
-    console.log(existingUser)
+
     if (existingUser) {
       return res.status(400).json({ message: "Email already registered" });
     }
 
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
     //create a new user
-    const newUser = new User({ username, email, password });
+    const newUser = new User({ username, email, password: hashedPassword });
 
     //generate and store the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
@@ -58,26 +61,6 @@ app.post("/register", async (req, res) => {
   } catch (error) {
     console.log("error registering user", error);
     res.status(500).json({ message: "error registering user" });
-  }
-});
-
-app.get("/verify/:token", async (req, res) => {
-  try {
-    const token = req.params.token;
-
-    const user = await User.findOne({ verificationToken: token });
-    if (!user) {
-      return res.status(404).json({ message: "Invalid token" });
-    }
-
-    user.verified = true;
-    user.verificationToken = undefined;
-    await user.save();
-
-    res.status(200).json({ message: "Email verified successfully" });
-  } catch (error) {
-    console.log("error getting token", error);
-    res.status(500).json({ message: "Email verification failed" });
   }
 });
 
@@ -97,7 +80,10 @@ app.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Invalid email" });
     }
 
-    if (user.password !== password) {
+    //compare password with the stored hashed password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
       return res.status(404).json({ message: "Invalid password" });
     }
 
