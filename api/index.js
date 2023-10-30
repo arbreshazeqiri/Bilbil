@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect(`mongodb+srv://arbreshazeqiri:${process.env.MONGO_PASSWORD}@cluster0.qdofyye.mongodb.net/?retryWrites=true&w=majority`, {
+  .connect(`mongodb+srv://arbreshazeqiri:${process.env.MONGO_PASSWORD}@cluster0.wtjqff2.mongodb.net/`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -56,7 +56,7 @@ app.post("/register", async (req, res) => {
 
     res.status(200).json({ message: "Registration successful" });
   } catch (error) {
-    console.log("error registering user", error.message);
+    console.log("error registering user", error);
     res.status(500).json({ message: "error registering user" });
   }
 });

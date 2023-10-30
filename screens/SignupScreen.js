@@ -29,7 +29,7 @@ const SignUpScreen = () => {
         };
     
         axios
-          .post("http://localhost:3000/register", user)
+          .post(`http://${process.env.MACHINE_IP}:3000/register`, user)
           .then((response) => {
             console.log(response);
             Alert.alert(

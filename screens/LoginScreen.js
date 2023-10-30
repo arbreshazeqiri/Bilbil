@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
-import { useNavigation } from '@react-navigation/native';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import BalooFont from '../assets/fonts/Baloo.ttf';
 import { useFonts } from 'expo-font';
 import CustomButton from '../components/CustomButton';
+import axios from 'axios';
+
 const LoginScreen = () => {
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
     const [isLoaded] = useFonts({
@@ -19,6 +20,26 @@ const LoginScreen = () => {
         return null;
     }
 
+    const handleLogin = () => {
+        const user = {
+          email: email,
+          password: password,
+        };
+    
+        axios
+          .post(`http://${process.env.MACHINE_IP}:3000/register`, user)
+          .then((response) => {
+            console.log(response);
+            const token = response.data.token;
+            AsyncStorage.setItem("authToken", token);
+            navigation.navigate("Main");
+          })
+          .catch((error) => {
+            Alert.alert("Login error");
+            console.log("error ", error);
+          });
+      };
+
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
             <View style={styles.base} >
@@ -26,9 +47,9 @@ const LoginScreen = () => {
                     <Text style={styles.name}>Log in</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={(text) => setUsername(text)}
-                        value={username}
-                        placeholder='Username'
+                        onChangeText={(text) => setEmail(text)}
+                        value={email}
+                        placeholder='Email'
                         placeholderTextColor='#AFAFAF'
                     />
                     <TextInput
@@ -41,7 +62,7 @@ const LoginScreen = () => {
                     />
                 </View>
                 <View style={styles.buttons}>
-                    <CustomButton title="LOG IN" color="white" bgColor="#944ADE" borderColor={'#7939B8'}/>
+                    <CustomButton title="LOG IN" color="white" bgColor="#944ADE" borderColor={'#7939B8'} onPress={handleLogin}/>
                 </View>
             </View>
         </SafeAreaView>
