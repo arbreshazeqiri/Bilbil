@@ -3,7 +3,7 @@ import { StyleSheet, Text, Image, View } from "react-native"
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import { useFonts } from 'expo-font';
 
-const LegendItem = ({ value, description, src, color, bgColor, borderColor, hasTopBorder }) => {
+const LegendItem = ({ value, description, src, bgColor, borderColor, hasTopBorder }) => {
 
     const [isLoaded] = useFonts({
         "baloo-semibold": BalooSemiBoldFont,

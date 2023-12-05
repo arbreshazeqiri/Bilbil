@@ -34,10 +34,17 @@ app.listen(port, () => {
 
 const User = require("./models/user");
 
+const generateSecretKey = () => {
+  const secretKey = crypto.randomBytes(32).toString("hex");
+  return secretKey;
+};
+
+const secretKey = generateSecretKey();
+
 //endpoint to register a user in the backend
 app.post("/register", async (req, res) => {
   try {
-    const { username, email, password } = req.body;
+    const { username, name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
 
@@ -48,28 +55,21 @@ app.post("/register", async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    //create a new user
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, name, email, password: hashedPassword });
 
     //generate and store the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
 
     //save the  user to the database
-    await newUser.save();
-
-    res.status(200).json({ message: "Registration successful" });
+    await newUser.save().then((result) => {
+      const token = jwt.sign({ userId: result._id }, secretKey);
+      res.status(200).json({ user: { ...result, token } });
+    });
   } catch (error) {
     console.log("error registering user", error);
     res.status(500).json({ message: "error registering user" });
   }
 });
-
-const generateSecretKey = () => {
-  const secretKey = crypto.randomBytes(32).toString("hex");
-  return secretKey;
-};
-
-const secretKey = generateSecretKey();
 
 app.post("/login", async (req, res) => {
   try {
@@ -92,8 +92,27 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ token });
+    res.status(200).json({ user: { ...user['_doc'], token } });
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
+  }
+});
+
+app.post('/search', async (req, res) => {
+  try {
+    const { searchInput } = req.body;
+    const searchRegex = new RegExp(`.*${searchInput}.*`, 'i');
+
+    const users = await User.find({
+      $or: [
+        { username: { $regex: searchRegex } },
+        { name: { $regex: searchRegex } },
+      ],
+    });
+
+    res.status(200).json({ users });
+  } catch (error) {
+    console.error('Error searching users:', error);
+    res.status(500).json({ message: 'Error searching users' });
   }
 });

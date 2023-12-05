@@ -2,9 +2,10 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native"
 import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import { useFonts } from 'expo-font';
+import { Ionicons } from 'react-native-vector-icons';
 
-const CustomButton = ({ onPress, title, color, bgColor, borderColor, hasTopBorder }) => {
-    
+const CustomButton = ({ onPress, title, icon = false, iconName, color, bgColor, borderColor, hasTopBorder, fontSize = 18, hasVerticalPadding = true }) => {
+
     const [isLoaded] = useFonts({
         "baloo-semibold": BalooSemiBoldFont,
     });
@@ -22,15 +23,17 @@ const CustomButton = ({ onPress, title, color, bgColor, borderColor, hasTopBorde
             shadowRadius: 2,
             backgroundColor: bgColor,
             borderRadius: 15,
-            paddingVertical: 10,
+            paddingVertical: hasVerticalPadding ? 12 : 4,
             paddingHorizontal: 12,
             borderColor: borderColor,
             borderWidth: 1,
             borderTopWidth: hasTopBorder ? 2 : 0,
             borderBottomWidth: 5,
+            display: 'flex',
+            gap: 4,
         },
         appButtonText: {
-            fontSize: 18,
+            fontSize: fontSize,
             color: color,
             fontFamily: 'baloo-semibold',
             fontWeight: "bold",
@@ -40,6 +43,11 @@ const CustomButton = ({ onPress, title, color, bgColor, borderColor, hasTopBorde
 
     return (
         <TouchableOpacity onPress={onPress} style={styles.appButtonContainer}>
+            {icon && <Ionicons
+                name={iconName}
+                size={30}
+                color={color}
+            />}
             <Text style={styles.appButtonText}>{title}</Text>
         </TouchableOpacity>
     )

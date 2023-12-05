@@ -7,8 +7,8 @@ import { useFonts } from 'expo-font';
 import CustomButton from '../components/CustomButton';
 import axios from 'axios';
 import { Ionicons } from 'react-native-vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import userStore from '../store/UserStore';
 
 const LoginScreen = () => {
     const [emailOrUsername, setEmailOrUsername] = useState('')
@@ -49,10 +49,10 @@ const LoginScreen = () => {
         };
 
         axios
-            .post(`http://192.168.2.2:3000/login`, user)
+            .post(`http://100.82.181.111:3000/login`, user)
             .then((response) => {
-                const token = response.data.token;
-                AsyncStorage.setItem("authToken", token);
+                const { user: userData } = response.data;
+                userStore.setUser(userData);
                 navigation.navigate("Menu");
             })
             .catch((error) => {

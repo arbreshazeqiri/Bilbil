@@ -7,12 +7,16 @@ import { useFonts } from 'expo-font';
 import CustomButton from '../components/CustomButton';
 import axios from "axios";
 import { Ionicons } from 'react-native-vector-icons';
+import userStore from '../store/UserStore';
+import { useNavigation } from '@react-navigation/native';
 
 const SignUpScreen = () => {
+    const [name, setName] = useState('')
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const navigation = useNavigation();
 
     const [isLoaded] = useFonts({
         "baloo": BalooFont,
@@ -25,13 +29,14 @@ const SignUpScreen = () => {
 
     const handleRegister = () => {
         const user = {
-            username: username,
-            email: email,
-            password: password,
+            username,
+            name,
+            email,
+            password,
         };
 
         axios
-            .post(`http://192.168.2.2:3000/register`, user)
+            .post(`http://100.82.181.111:3000/register`, user)
             .then((response) => {
                 Alert.alert(
                     "Registration successful",
@@ -40,6 +45,9 @@ const SignUpScreen = () => {
                 setUsername("");
                 setEmail("");
                 setPassword("");
+                const { user: userData } = response.data;
+                userStore.setUser(userData);
+                navigation.navigate("Menu");
             })
             .catch((error) => {
                 Alert.alert(
@@ -58,6 +66,13 @@ const SignUpScreen = () => {
                     <Text style={styles.name}>GET STARTED</Text>
                     <TextInput
                         style={styles.inputTop}
+                        onChangeText={(text) => setName(text)}
+                        value={name}
+                        placeholder='Full name'
+                        placeholderTextColor='#AFAFAF'
+                    />
+                    <TextInput
+                        style={styles.inputMiddle}
                         onChangeText={(text) => setUsername(text)}
                         value={username}
                         placeholder='Username'

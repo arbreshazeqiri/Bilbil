@@ -6,9 +6,14 @@ const userSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  name: {
+    type: String,
+    required: true,
+  },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  profilePicture: { type: String },
+  avatarType: { type: String },
+  avatarAttributes: { type: mongoose.Schema.ObjectId },
   joindDate: { type: Date, default: Date.now },
   sentFollowRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   receivedFollowRequests: [
