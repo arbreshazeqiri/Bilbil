@@ -1,5 +1,6 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, runInAction } from 'mobx';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
 
 class UserStore {
   user = null;
@@ -23,6 +24,16 @@ class UserStore {
       }
     } catch (error) {
       console.error('Error loading user from AsyncStorage:', error);
+    }
+  }
+
+  async getUser(_id) {
+    try {
+      const response = await axios.get(`http://100.81.43.159:3000/user/${_id}`);
+      const userData = response.data.user;
+      return userData
+    } catch (error) {
+      console.error('Error fetching user from API:', error);
     }
   }
 

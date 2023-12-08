@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
     buttons: {
         display: 'flex',
         width: '100%',
+        height: 55,
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,

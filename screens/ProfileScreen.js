@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useFonts } from 'expo-font';
 import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,10 +15,47 @@ import CustomModal from '../components/CustomModal';
 import axios from "axios";
 
 const ProfileScreen = observer(() => {
-  const user = userStore.user;
+  const [user, setUser] = useState(userStore.user);
   const [isOpen, setIsOpen] = useState(false)
   const [searchInput, setSearchInput] = useState('')
   const [users, setUsers] = useState([])
+
+  const handleSearch = () => {
+    try {
+      axios
+        .post(`http://100.81.43.159:3000/search`, { searchInput })
+        .then((response) => {
+          const foundUsers = response.data.users
+          const updatedUsers = foundUsers.map((foundUser) => {
+            const friend = user.friends.find((friend) => friend.friendId.toString() === foundUser._id.toString());
+            if (friend && friend.status === 'Friends') {
+              return { ...foundUser, friendshipStatus: 'F' };
+            } else if (friend && friend.status === 'Pending') {
+              return { ...foundUser, friendshipStatus: 'P' };
+            } else if (friend && friend.status === 'Resolve') {
+              return { ...foundUser, friendshipStatus: 'R' };
+            } else {
+              return { ...foundUser, friendshipStatus: 'NF' };
+            }
+          });
+          setUsers(updatedUsers)
+        })
+        .catch((error) => {
+          Alert.alert(
+            "An error has occurred while trying to search for users. Please try again later.",
+          );
+          console.log("error", error);
+        });
+    } catch (err) {
+      console.log(err)
+    }
+  };
+
+  useEffect(() => {
+    if (searchInput !== '')
+      handleSearch();
+  }, [JSON.stringify(user)]);
+
 
   const [isLoaded] = useFonts({
     "baloo": BalooFont,
@@ -42,24 +79,54 @@ const ProfileScreen = observer(() => {
     },
   ]
 
-  const handleSearch = () => {
+  const handleSendFriendRequest = async (friendId) => {
     try {
-      axios
-        .post(`http://100.82.181.111:3000/search`, { searchInput })
-        .then((response) => {
-          const foundUsers = response.data.users
-          setUsers(foundUsers)
-        })
-        .catch((error) => {
-          Alert.alert(
-            "An error has occurred while trying to search for users. Please try again later.",
-          );
-          console.log("error", error);
-        });
-    } catch (err) {
-      console.log(err)
+      const res = await axios.post('http://100.81.43.159:3000/sendFriendRequest', {
+        userId: user._id,
+        friendId: friendId,
+      });
+      if (res) {
+        const newUser = await userStore.getUser(user._id)
+        setUser(newUser)
+        userStore.setUser(newUser)
+      }
+    } catch (error) {
+      console.error('Error sending friend request:', error.message);
     }
   };
+
+  const handleAcceptFriendRequest = async (friendId) => {
+    try {
+      const res = await axios.post('http://100.81.43.159:3000/acceptFriendRequest', {
+        userId: user._id,
+        friendId: friendId,
+      });
+      if (res) {
+        const newUser = await userStore.getUser(user._id)
+        setUser(newUser)
+        userStore.setUser(newUser)
+      }
+    } catch (error) {
+      console.error('Error accepting friend request:', error.message);
+    }
+  };
+
+  const handleRemoveFriendRequest = async (friendId) => {
+    try {
+      const res = await axios.post('http://100.81.43.159:3000/removeFriendRequest', {
+        userId: user._id,
+        friendId: friendId,
+      });
+      if (res) {
+        const newUser = await userStore.getUser(user._id)
+        setUser(newUser)
+        userStore.setUser(newUser)
+      }
+    } catch (error) {
+      console.error('Error removing friend:', error.message);
+    }
+  };
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#212832' }}>
@@ -85,7 +152,7 @@ const ProfileScreen = observer(() => {
           </View>
           <Text style={styles.details}>{user.username}</Text>
           <Text style={styles.details}>Joined {dayjs(user.joindDate).format('MMMM YYYY')}</Text>
-          <Text style={styles.accentDetail}>{user.followers && user.followers.length || 0} friends</Text>
+          <Text style={styles.accentDetail}>{user.friends && user.friends.length || 0} friends</Text>
           <View style={styles.buttons}>
             <CustomButton title="Add friends" color="#FF9100" bgColor="#212832" borderColor={'#2E3845'} hasTopBorder onPress={() => setIsOpen(true)} />
           </View>
@@ -128,14 +195,24 @@ const ProfileScreen = observer(() => {
               />
             </View>
             <View style={styles.usersSection}>
-              {users.map((user, id) =>
+              {users.filter(_ => _._id !== user._id).map((foundUser, id) =>
                 <View key={id} style={styles.userWidget}>
                   <View style={styles.userData}>
-                    <Text style={styles.userDetailOne}>{user.name}</Text>
-                    <Text style={styles.userDetailTwo}>{user.username}</Text>
+                    <Text style={styles.userDetailOne}>{foundUser.name}</Text>
+                    <Text style={styles.userDetailTwo}>{foundUser.username}</Text>
                   </View>
                   <View style={styles.userButton}>
-                    <CustomButton icon={true} iconName={'person-add'} title="" color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={() => sendFriendRequest(id)} />
+                    {foundUser.friendshipStatus === 'NF' ? <CustomButton icon={true} iconName={'person-add'} title="" iconSize={22} color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={() => handleSendFriendRequest(foundUser._id)} /> :
+                      foundUser.friendshipStatus === 'F' ? <CustomButton icon={true} iconName={'person-remove'} title="" iconSize={22} color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={() => handleRemoveFriendRequest(foundUser._id)} /> :
+                        foundUser.friendshipStatus === 'P' ? <CustomButton icon={true} iconName={'close'} title="" iconSize={22} color="#212832" bgColor="#FF9100" borderColor={'#E58200'} onPress={() => handleRemoveFriendRequest(foundUser._id)} /> :
+                          <View style={styles.twoButtons}>
+                            <View style={styles.userButton}>
+                              <CustomButton icon={true} iconName={'checkmark'} title="" iconSize={25} color="#ffffff" bgColor="#93D334" borderColor={'#7BB836'} onPress={() => handleAcceptFriendRequest(foundUser._id)} />
+                            </View>
+                            <View style={styles.userButton}>
+                              <CustomButton icon={true} iconName={'close'} title="" iconSize={25} color="#ffffff" bgColor="#ED5654" borderColor={'#D63C3A'} onPress={() => handleRemoveFriendRequest(foundUser._id)} />
+                            </View>
+                          </View>}
                   </View>
                 </View>
               )}
@@ -201,6 +278,7 @@ const styles = StyleSheet.create({
   buttons: {
     display: 'flex',
     width: '90%',
+    height: 55,
     justifyContent: 'center',
     justifySelf: 'center',
     alignSelf: 'center',
@@ -263,11 +341,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#AFAFAF',
     backgroundColor: '#2B3440',
-    padding: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 10,
+    display: 'flex',
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    justifyContent: 'space-between'
   },
   userData: {
     flexDirection: 'column'
@@ -283,9 +363,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginVertical: 2,
   },
+  twoButtons: {
+    gap: 10,
+    flexDirection: 'row',
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   userButton: {
-    width: 60,
-    height: 40
+    width: 'fit-content',
   }
 });
 

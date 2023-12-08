@@ -15,11 +15,12 @@ const userSchema = new mongoose.Schema({
   avatarType: { type: String },
   avatarAttributes: { type: mongoose.Schema.ObjectId },
   joindDate: { type: Date, default: Date.now },
-  sentFollowRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-  receivedFollowRequests: [
-    { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  friends: [
+    {
+      friendId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      status: String, // Pending, Friends, Resolve
+    }
   ],
-  followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
   verified: {
     type: Boolean,
     default: false,

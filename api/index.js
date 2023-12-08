@@ -32,7 +32,7 @@ app.listen(port, () => {
   console.log("server is running on port 3000");
 });
 
-const User = require("./models/user");
+const User = require("./models/User");
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
@@ -63,7 +63,7 @@ app.post("/register", async (req, res) => {
     //save the  user to the database
     await newUser.save().then((result) => {
       const token = jwt.sign({ userId: result._id }, secretKey);
-      res.status(200).json({ user: { ...result, token } });
+      res.status(200).json({ user: { ...result['_doc'], token } });
     });
   } catch (error) {
     console.log("error registering user", error);
@@ -114,5 +114,77 @@ app.post('/search', async (req, res) => {
   } catch (error) {
     console.error('Error searching users:', error);
     res.status(500).json({ message: 'Error searching users' });
+  }
+});
+
+app.post('/sendFriendRequest', async (req, res) => {
+  const { userId, friendId } = req.body;
+
+  try {
+    await Promise.all([
+      User.findByIdAndUpdate(userId, { $push: { friends: { friendId: friendId, status: 'Pending' } } }),
+      User.findByIdAndUpdate(friendId, { $push: { friends: { friendId: userId, status: 'Resolve' } } }),
+    ]);
+
+    res.status(200).json({ message: 'Friend request sent successfully' });
+  } catch (error) {
+    console.error('Error sending friend request:', error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post('/acceptFriendRequest', async (req, res) => {
+  const { userId, friendId } = req.body;
+
+  try {
+    await Promise.all([
+      User.findOneAndUpdate(
+        { _id: userId, 'friends.friendId': friendId },
+        { $set: { 'friends.$.status': 'Friends' } }
+      ),
+      User.findOneAndUpdate(
+        { _id: friendId, 'friends.friendId': userId },
+        { $set: { 'friends.$.status': 'Friends' } }
+      ),
+    ]);
+
+    res.status(200).json({ message: 'Friend request accepted successfully' });
+  } catch (error) {
+    console.error('Error accepting friend request:', error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.post('/removeFriendRequest', async (req, res) => {
+  const { userId, friendId } = req.body;
+
+  try {
+    await Promise.all([
+      User.findByIdAndUpdate(userId, { $pull: { friends: { friendId: friendId } } }),
+      User.findByIdAndUpdate(friendId, { $pull: { friends: { friendId: userId } } }),
+    ]);
+
+    res.status(200).json({ message: 'Friend removed successfully' });
+  } catch (error) {
+    console.error('Error removing friend:', error.message);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+app.get('/user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await User.findOne({ _id: id });
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const token = jwt.sign({ userId: user._id }, secretKey);
+
+    res.status(200).json({ user: {...user['_doc'], token} });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });

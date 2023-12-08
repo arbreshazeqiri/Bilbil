@@ -36,7 +36,7 @@ const SignUpScreen = () => {
         };
 
         axios
-            .post(`http://100.82.181.111:3000/register`, user)
+            .post(`http://100.81.43.159:3000/register`, user)
             .then((response) => {
                 Alert.alert(
                     "Registration successful",
@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
     buttons: {
         display: 'flex',
         width: '100%',
+        height: 55,
         justifyContent: 'center',
         alignItems: 'center',
         gap: 10,

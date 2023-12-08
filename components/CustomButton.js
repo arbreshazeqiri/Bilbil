@@ -4,7 +4,7 @@ import BalooSemiBoldFont from '../assets/fonts/Baloo-SemiBold.ttf';
 import { useFonts } from 'expo-font';
 import { Ionicons } from 'react-native-vector-icons';
 
-const CustomButton = ({ onPress, title, icon = false, iconName, color, bgColor, borderColor, hasTopBorder, fontSize = 18, hasVerticalPadding = true }) => {
+const CustomButton = ({ onPress, title, icon = false, iconName, color, bgColor, borderColor, hasTopBorder, iconSize = 30, fontSize = 18, hasVerticalPadding = true }) => {
 
     const [isLoaded] = useFonts({
         "baloo-semibold": BalooSemiBoldFont,
@@ -17,6 +17,7 @@ const CustomButton = ({ onPress, title, icon = false, iconName, color, bgColor, 
     const styles = StyleSheet.create({
         appButtonContainer: {
             width: '100%',
+            height: '100%',
             shadowOpacity: 1,
             shadowOffset: { width: 4, height: 2 },
             shadowColor: borderColor,
@@ -45,7 +46,7 @@ const CustomButton = ({ onPress, title, icon = false, iconName, color, bgColor, 
         <TouchableOpacity onPress={onPress} style={styles.appButtonContainer}>
             {icon && <Ionicons
                 name={iconName}
-                size={30}
+                size={iconSize}
                 color={color}
             />}
             <Text style={styles.appButtonText}>{title}</Text>

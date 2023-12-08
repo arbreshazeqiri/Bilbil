@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#212832',
         padding: 20,
-        gap: 20,
+        gap: 50,
     },
     brand: {
         justifyContent: 'center',
@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
     buttons: {
         display: 'flex',
         width: '100%',
+        height: 55,
         justifyContent: 'center',
         alignItems: 'center',
         gap: 15,
