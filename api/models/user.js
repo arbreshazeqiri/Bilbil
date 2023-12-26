@@ -17,9 +17,9 @@ const userSchema = new mongoose.Schema({
   joindDate: { type: Date, default: Date.now },
   friends: [
     {
-      friendId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      friendId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       status: String, // Pending, Friends, Resolve
-    }
+    },
   ],
   verified: {
     type: Boolean,
@@ -27,7 +27,6 @@ const userSchema = new mongoose.Schema({
   },
   verificationToken: String,
 });
-
 
 const User = mongoose.model("User", userSchema);
 

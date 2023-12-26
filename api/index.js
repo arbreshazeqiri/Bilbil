@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
@@ -15,15 +15,18 @@ app.use(bodyParser.json());
 const jwt = require("jsonwebtoken");
 
 mongoose
-  .connect(`mongodb+srv://arbreshazeqiri:${process.env.MONGO_PASSWORD}@cluster0.wtjqff2.mongodb.net/`, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(
+    `mongodb+srv://arbreshazeqiri:${process.env.MONGO_PASSWORD}@cluster0.wtjqff2.mongodb.net/`,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
   .then(() => {
     console.log("Connected to MongoDB");
   })
   .catch((err) => {
-    console.log(err)
+    console.log(err);
     console.log("Error Connecting to MongoDB");
   });
 
@@ -55,7 +58,12 @@ app.post("/register", async (req, res) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const newUser = new User({ username, name, email, password: hashedPassword });
+    const newUser = new User({
+      username,
+      name,
+      email,
+      password: hashedPassword,
+    });
 
     //generate and store the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
@@ -63,7 +71,7 @@ app.post("/register", async (req, res) => {
     //save the  user to the database
     await newUser.save().then((result) => {
       const token = jwt.sign({ userId: result._id }, secretKey);
-      res.status(200).json({ user: { ...result['_doc'], token } });
+      res.status(200).json({ user: { ...result["_doc"], token } });
     });
   } catch (error) {
     console.log("error registering user", error);
@@ -92,16 +100,16 @@ app.post("/login", async (req, res) => {
 
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ user: { ...user['_doc'], token } });
+    res.status(200).json({ user: { ...user["_doc"], token } });
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
   }
 });
 
-app.post('/search', async (req, res) => {
+app.post("/search", async (req, res) => {
   try {
     const { searchInput } = req.body;
-    const searchRegex = new RegExp(`.*${searchInput}.*`, 'i');
+    const searchRegex = new RegExp(`.*${searchInput}.*`, "i");
 
     const users = await User.find({
       $or: [
@@ -112,79 +120,87 @@ app.post('/search', async (req, res) => {
 
     res.status(200).json({ users });
   } catch (error) {
-    console.error('Error searching users:', error);
-    res.status(500).json({ message: 'Error searching users' });
+    console.error("Error searching users:", error);
+    res.status(500).json({ message: "Error searching users" });
   }
 });
 
-app.post('/sendFriendRequest', async (req, res) => {
+app.post("/sendFriendRequest", async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
     await Promise.all([
-      User.findByIdAndUpdate(userId, { $push: { friends: { friendId: friendId, status: 'Pending' } } }),
-      User.findByIdAndUpdate(friendId, { $push: { friends: { friendId: userId, status: 'Resolve' } } }),
+      User.findByIdAndUpdate(userId, {
+        $push: { friends: { friendId: friendId, status: "Pending" } },
+      }),
+      User.findByIdAndUpdate(friendId, {
+        $push: { friends: { friendId: userId, status: "Resolve" } },
+      }),
     ]);
 
-    res.status(200).json({ message: 'Friend request sent successfully' });
+    res.status(200).json({ message: "Friend request sent successfully" });
   } catch (error) {
-    console.error('Error sending friend request:', error.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error sending friend request:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-app.post('/acceptFriendRequest', async (req, res) => {
+app.post("/acceptFriendRequest", async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
     await Promise.all([
       User.findOneAndUpdate(
-        { _id: userId, 'friends.friendId': friendId },
-        { $set: { 'friends.$.status': 'Friends' } }
+        { _id: userId, "friends.friendId": friendId },
+        { $set: { "friends.$.status": "Friends" } }
       ),
       User.findOneAndUpdate(
-        { _id: friendId, 'friends.friendId': userId },
-        { $set: { 'friends.$.status': 'Friends' } }
+        { _id: friendId, "friends.friendId": userId },
+        { $set: { "friends.$.status": "Friends" } }
       ),
     ]);
 
-    res.status(200).json({ message: 'Friend request accepted successfully' });
+    res.status(200).json({ message: "Friend request accepted successfully" });
   } catch (error) {
-    console.error('Error accepting friend request:', error.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error accepting friend request:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-app.post('/removeFriendRequest', async (req, res) => {
+app.post("/removeFriendRequest", async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
     await Promise.all([
-      User.findByIdAndUpdate(userId, { $pull: { friends: { friendId: friendId } } }),
-      User.findByIdAndUpdate(friendId, { $pull: { friends: { friendId: userId } } }),
+      User.findByIdAndUpdate(userId, {
+        $pull: { friends: { friendId: friendId } },
+      }),
+      User.findByIdAndUpdate(friendId, {
+        $pull: { friends: { friendId: userId } },
+      }),
     ]);
 
-    res.status(200).json({ message: 'Friend removed successfully' });
+    res.status(200).json({ message: "Friend removed successfully" });
   } catch (error) {
-    console.error('Error removing friend:', error.message);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error removing friend:", error.message);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-app.get('/user/:id', async (req, res) => {
+app.get("/user/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
     const user = await User.findOne({ _id: id });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
     const token = jwt.sign({ userId: user._id }, secretKey);
 
-    res.status(200).json({ user: {...user['_doc'], token} });
+    res.status(200).json({ user: { ...user["_doc"], token } });
   } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).json({ message: 'Internal Server Error' });
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
