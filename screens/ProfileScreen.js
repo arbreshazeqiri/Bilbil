@@ -4,6 +4,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
   Image,
   TouchableOpacity,
   Alert,
@@ -18,14 +19,9 @@ import LegendItem from "../components/LegendItem";
 import userStore from "../store/UserStore";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
+import CustomModal from "../components/CustomModal";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
-import SearchFriends from "../components/SearchFriends";
-import {
-  sendFriendRequest,
-  acceptFriendRequest,
-  removeFriendRequest,
-} from "../api";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -33,7 +29,6 @@ const ProfileScreen = observer(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
-  const [isCustomizing, setIsAvatar] = useState(false);
 
   const handleSearch = () => {
     try {
@@ -97,8 +92,13 @@ const ProfileScreen = observer(() => {
 
   const handleSendFriendRequest = async (friendId) => {
     try {
-      const res = await sendFriendRequest(user._id, friendId);
-
+      const res = await axios.post(
+        "http://100.81.43.159:3000/sendFriendRequest",
+        {
+          userId: user._id,
+          friendId: friendId,
+        }
+      );
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);
@@ -111,8 +111,13 @@ const ProfileScreen = observer(() => {
 
   const handleAcceptFriendRequest = async (friendId) => {
     try {
-      const res = await acceptFriendRequest(user._id, friendId);
-
+      const res = await axios.post(
+        "http://100.81.43.159:3000/acceptFriendRequest",
+        {
+          userId: user._id,
+          friendId: friendId,
+        }
+      );
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);
@@ -125,8 +130,13 @@ const ProfileScreen = observer(() => {
 
   const handleRemoveFriendRequest = async (friendId) => {
     try {
-      const res = await removeFriendRequest(user._id, friendId);
-
+      const res = await axios.post(
+        "http://100.81.43.159:3000/removeFriendRequest",
+        {
+          userId: user._id,
+          friendId: friendId,
+        }
+      );
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);
@@ -155,69 +165,158 @@ const ProfileScreen = observer(() => {
             <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
         </View>
-        {isCustomizing ? (
-          <Text>Customizing Avatar</Text>
-        ) : (
-          <View>
-            <View style={styles.infoContainer}>
-              <View style={styles.mainTitle}>
-                <Text style={styles.name}>{user.name}</Text>
-                <Image
-                  source={require("../assets/navigation/albanian-flag.png")}
-                  style={{ width: 40, height: 40 }}
-                />
-              </View>
-              <Text style={styles.details}>{user.username}</Text>
-              <Text style={styles.details}>
-                Joined {dayjs(user.joindDate).format("MMMM YYYY")}
-              </Text>
-              <Text style={styles.accentDetail}>
-                {(user.friends && user.friends.length) || 0} friends
-              </Text>
-              <View style={styles.buttons}>
-                <CustomButton
-                  title="Add friends"
+        <View style={styles.infoContainer}>
+          <View style={styles.mainTitle}>
+            <Text style={styles.name}>{user.name}</Text>
+            <Image
+              source={require("../assets/navigation/albanian-flag.png")}
+              style={{ width: 40, height: 40 }}
+            />
+          </View>
+          <Text style={styles.details}>{user.username}</Text>
+          <Text style={styles.details}>
+            Joined {dayjs(user.joindDate).format("MMMM YYYY")}
+          </Text>
+          <Text style={styles.accentDetail}>
+            {(user.friends && user.friends.length) || 0} friends
+          </Text>
+          <View style={styles.buttons}>
+            <CustomButton
+              title="Add friends"
+              color="#FF9100"
+              bgColor="#212832"
+              borderColor={"#2E3845"}
+              hasTopBorder
+              onPress={() => setIsOpen(true)}
+            />
+          </View>
+        </View>
+        <View style={styles.infoContainer}>
+          <View style={styles.mainTitle}>
+            <Text style={styles.name}>Information</Text>
+          </View>
+          <View style={styles.legend}>
+            {legend.map((el, id) => (
+              <View style={styles.button} key={id}>
+                <LegendItem
+                  value={el.value}
+                  description={el.dsc}
+                  src={el.src}
                   color="#FF9100"
                   bgColor="#212832"
                   borderColor={"#2E3845"}
                   hasTopBorder
-                  onPress={() => setIsOpen(true)}
                 />
               </View>
+            ))}
+          </View>
+        </View>
+        <CustomModal
+          visible={isOpen}
+          transparent={true}
+          dismiss={() => setIsOpen(!isOpen)}
+        >
+          <View style={styles.popupContent}>
+            <Text style={styles.searchText}>Search for friends</Text>
+            <View style={styles.searchContainer}>
+              <Ionicons name={"search"} size={20} color={"#AFAFAF"} />
+              <TextInput
+                style={styles.searchInput}
+                onChangeText={(text) => setSearchInput(text)}
+                value={searchInput}
+                placeholder="Name or Username"
+                placeholderTextColor="#AFAFAF"
+                returnKeyType="search"
+                onSubmitEditing={handleSearch}
+              />
             </View>
-            <View style={styles.infoContainer}>
-              <View style={styles.mainTitle}>
-                <Text style={styles.name}>Information</Text>
-              </View>
-              <View style={styles.legend}>
-                {legend.map((el, id) => (
-                  <View style={styles.button} key={id}>
-                    <LegendItem
-                      value={el.value}
-                      description={el.dsc}
-                      src={el.src}
-                      color="#FF9100"
-                      bgColor="#212832"
-                      borderColor={"#2E3845"}
-                      hasTopBorder
-                    />
+            <View style={styles.usersSection}>
+              {users
+                .filter((_) => _._id !== user._id)
+                .map((foundUser, id) => (
+                  <View key={id} style={styles.userWidget}>
+                    <View style={styles.userData}>
+                      <Text style={styles.userDetailOne}>{foundUser.name}</Text>
+                      <Text style={styles.userDetailTwo}>
+                        {foundUser.username}
+                      </Text>
+                    </View>
+                    <View style={styles.userButton}>
+                      {foundUser.friendshipStatus === "NF" ? (
+                        <CustomButton
+                          icon={true}
+                          iconName={"person-add"}
+                          title=""
+                          iconSize={22}
+                          color="#212832"
+                          bgColor="#FF9100"
+                          borderColor={"#E58200"}
+                          onPress={() => handleSendFriendRequest(foundUser._id)}
+                        />
+                      ) : foundUser.friendshipStatus === "F" ? (
+                        <CustomButton
+                          icon={true}
+                          iconName={"person-remove"}
+                          title=""
+                          iconSize={22}
+                          color="#212832"
+                          bgColor="#FF9100"
+                          borderColor={"#E58200"}
+                          onPress={() =>
+                            handleRemoveFriendRequest(foundUser._id)
+                          }
+                        />
+                      ) : foundUser.friendshipStatus === "P" ? (
+                        <CustomButton
+                          icon={true}
+                          iconName={"close"}
+                          title=""
+                          iconSize={22}
+                          color="#212832"
+                          bgColor="#FF9100"
+                          borderColor={"#E58200"}
+                          onPress={() =>
+                            handleRemoveFriendRequest(foundUser._id)
+                          }
+                        />
+                      ) : (
+                        <View style={styles.twoButtons}>
+                          <View style={styles.userButton}>
+                            <CustomButton
+                              icon={true}
+                              iconName={"checkmark"}
+                              title=""
+                              iconSize={25}
+                              color="#ffffff"
+                              bgColor="#93D334"
+                              borderColor={"#7BB836"}
+                              onPress={() =>
+                                handleAcceptFriendRequest(foundUser._id)
+                              }
+                            />
+                          </View>
+                          <View style={styles.userButton}>
+                            <CustomButton
+                              icon={true}
+                              iconName={"close"}
+                              title=""
+                              iconSize={25}
+                              color="#ffffff"
+                              bgColor="#ED5654"
+                              borderColor={"#D63C3A"}
+                              onPress={() =>
+                                handleRemoveFriendRequest(foundUser._id)
+                              }
+                            />
+                          </View>
+                        </View>
+                      )}
+                    </View>
                   </View>
                 ))}
-              </View>
             </View>
-            <SearchFriends
-              users={users}
-              isOpen={isOpen}
-              searchInput={searchInput}
-              handleSearch={handleSearch}
-              dismiss={() => setIsOpen(!isOpen)}
-              setSearchInput={(input) => setSearchInput(input)}
-              handleRemoveFriendRequest={(id) => handleRemoveFriendRequest(id)}
-              handleAcceptFriendRequest={(id) => handleAcceptFriendRequest(id)}
-              handleSendFriendRequest={(id) => handleSendFriendRequest(id)}
-            />
           </View>
-        )}
+        </CustomModal>
       </View>
     </SafeAreaView>
   );
@@ -299,6 +398,78 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     marginTop: 150,
+  },
+  popupContent: {
+    flex: 1,
+    flexDirection: "column",
+    gap: 20,
+  },
+  searchText: {
+    alignSelf: "center",
+    color: "#AFAFAF",
+    fontSize: 20,
+    fontWeight: "600",
+  },
+  searchContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#AFAFAF",
+    borderRadius: 10,
+    backgroundColor: "#2B3440",
+    height: 40,
+    paddingHorizontal: 10,
+    margin: 10,
+  },
+  searchInput: {
+    height: 40,
+    color: "white",
+    fontWeight: "semibold",
+    padding: 10,
+  },
+  usersSection: {
+    flexDirection: "column",
+    padding: 10,
+  },
+  userWidget: {
+    color: "white",
+    width: "100%",
+    height: 60,
+    fontWeight: "semibold",
+    borderWidth: 1,
+    borderColor: "#AFAFAF",
+    backgroundColor: "#2B3440",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 10,
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  userData: {
+    flexDirection: "column",
+  },
+  userDetailOne: {
+    fontSize: 18,
+    color: "white",
+    fontWeight: "bold",
+    alignSelf: "center",
+  },
+  userDetailTwo: {
+    color: "#DAE5EB",
+    fontSize: 14,
+    marginVertical: 2,
+  },
+  twoButtons: {
+    gap: 10,
+    flexDirection: "row",
+    height: 50,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  userButton: {
+    width: "fit-content",
   },
 });
 
