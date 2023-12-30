@@ -1,38 +1,39 @@
-import { makeAutoObservable, action, observable, runInAction } from "mobx";
+import { makeAutoObservable, runInAction } from "mobx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
+import {
+  getUserById,
+} from '../api';
 
 class UserStore {
-  @observable user = null;
+  user = null;
 
   constructor() {
     makeAutoObservable(this);
     this.loadUser();
   }
 
-  @action
   setUser(newUser) {
     this.user = { ...newUser };
     AsyncStorage.setItem("user", JSON.stringify(newUser));
     AsyncStorage.setItem("authToken", newUser.token);
   }
 
-  @action
   async loadUser() {
     try {
       const user = await AsyncStorage.getItem("user");
       if (user) {
-        this.user = JSON.parse(user);
+        runInAction(() => {
+          this.user = JSON.parse(user);
+        });
       }
     } catch (error) {
       console.error("Error loading user from AsyncStorage:", error);
     }
   }
 
-  @action
   async getUser(_id) {
     try {
-      const response = await axios.get(`http://100.81.43.159:3000/user/${_id}`);
+      const response = await getUserById(_id);
       const userData = response.data.user;
 
       if (!userData) {
@@ -46,7 +47,6 @@ class UserStore {
     }
   }
 
-  @action
   async logout() {
     await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("user");

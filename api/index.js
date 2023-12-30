@@ -44,8 +44,7 @@ const generateSecretKey = () => {
 
 const secretKey = generateSecretKey();
 
-//endpoint to register a user in the backend
-app.post("/register", async (req, res) => {
+const registerUserHandler = async (req, res) => {
   try {
     const { username, name, email, password } = req.body;
 
@@ -65,10 +64,8 @@ app.post("/register", async (req, res) => {
       password: hashedPassword,
     });
 
-    //generate and store the verification token
     newUser.verificationToken = crypto.randomBytes(20).toString("hex");
 
-    //save the  user to the database
     await newUser.save().then((result) => {
       const token = jwt.sign({ userId: result._id }, secretKey);
       res.status(200).json({ user: { ...result["_doc"], token } });
@@ -77,9 +74,9 @@ app.post("/register", async (req, res) => {
     console.log("error registering user", error);
     res.status(500).json({ message: "error registering user" });
   }
-});
+};
 
-app.post("/login", async (req, res) => {
+const loginUserHandler = async (req, res) => {
   try {
     const { emailOrUsername, password } = req.body;
 
@@ -91,7 +88,6 @@ app.post("/login", async (req, res) => {
       return res.status(404).json({ message: "Invalid email or username" });
     }
 
-    //compare password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -104,9 +100,9 @@ app.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Login failed" });
   }
-});
+};
 
-app.post("/search", async (req, res) => {
+const searchUsersHandler = async (req, res) => {
   try {
     const { searchInput } = req.body;
     const searchRegex = new RegExp(`.*${searchInput}.*`, "i");
@@ -123,9 +119,9 @@ app.post("/search", async (req, res) => {
     console.error("Error searching users:", error);
     res.status(500).json({ message: "Error searching users" });
   }
-});
+};
 
-app.post("/sendFriendRequest", async (req, res) => {
+const sendFriendRequestHandler = async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
@@ -143,9 +139,9 @@ app.post("/sendFriendRequest", async (req, res) => {
     console.error("Error sending friend request:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+};
 
-app.post("/acceptFriendRequest", async (req, res) => {
+const acceptFriendRequestHandler = async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
@@ -165,9 +161,9 @@ app.post("/acceptFriendRequest", async (req, res) => {
     console.error("Error accepting friend request:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+};
 
-app.post("/removeFriendRequest", async (req, res) => {
+const removeFriendHandler = async (req, res) => {
   const { userId, friendId } = req.body;
 
   try {
@@ -185,9 +181,9 @@ app.post("/removeFriendRequest", async (req, res) => {
     console.error("Error removing friend:", error.message);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+};
 
-app.get("/user/:id", async (req, res) => {
+const getUserByIdHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -196,6 +192,7 @@ app.get("/user/:id", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
     const token = jwt.sign({ userId: user._id }, secretKey);
 
     res.status(200).json({ user: { ...user["_doc"], token } });
@@ -203,4 +200,22 @@ app.get("/user/:id", async (req, res) => {
     console.error("Error fetching user:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-});
+};
+
+app.post("/register", registerUserHandler);
+app.post("/login", loginUserHandler);
+app.post("/search", searchUsersHandler);
+app.post("/sendFriendRequest", sendFriendRequestHandler);
+app.post("/acceptFriendRequest", acceptFriendRequestHandler);
+app.post("/removeFriendRequest", removeFriendHandler);
+app.get("/user/:id", getUserByIdHandler);
+
+module.exports = {
+  registerUser: registerUserHandler,
+  loginUser: loginUserHandler,
+  searchUsers: searchUsersHandler,
+  sendFriendRequest: sendFriendRequestHandler,
+  acceptFriendRequest: acceptFriendRequestHandler,
+  removeFriend: removeFriendHandler,
+  getUserById: getUserByIdHandler,
+};
