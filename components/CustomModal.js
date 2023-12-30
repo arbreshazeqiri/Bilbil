@@ -4,7 +4,7 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from "react-native";
-import { Ionicons } from "react-native-vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function Popup({ children, visible, transparent, dismiss }) {
   return (

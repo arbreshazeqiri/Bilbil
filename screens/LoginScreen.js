@@ -13,8 +13,8 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import CustomButton from "../components/CustomButton";
-import axios from "axios";
-import { Ionicons } from "react-native-vector-icons";
+import { loginUser } from "../api";
+import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import userStore from "../store/UserStore";
 
@@ -32,14 +32,13 @@ const LoginScreen = () => {
   if (!isLoaded) {
     return null;
   }
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const user = {
       emailOrUsername: emailOrUsername,
       password: password,
     };
 
-    axios
-      .post(`http://192.168.2.4:3000/login`, user)
+    await loginUser(user)
       .then((response) => {
         const { user: userData } = response.data;
         userStore.setUser(userData);

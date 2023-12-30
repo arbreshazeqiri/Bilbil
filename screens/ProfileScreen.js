@@ -12,7 +12,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
-import { Ionicons } from "react-native-vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import Group from "../assets/avatars/Female-5";
 import CustomButton from "../components/CustomButton";
 import LegendItem from "../components/LegendItem";
@@ -20,8 +20,13 @@ import userStore from "../store/UserStore";
 import { observer } from "mobx-react";
 import dayjs from "dayjs";
 import CustomModal from "../components/CustomModal";
-import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
+import {
+  searchUsers,
+  sendFriendRequest,
+  acceptFriendRequest,
+  removeFriendRequest,
+} from "../api";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -30,10 +35,9 @@ const ProfileScreen = observer(() => {
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     try {
-      axios
-        .post(`http://192.168.2.4:3000/search`, { searchInput })
+      await searchUsers(searchInput)
         .then((response) => {
           const foundUsers = response.data.users;
           const updatedUsers = foundUsers.map((foundUser) => {
@@ -92,13 +96,7 @@ const ProfileScreen = observer(() => {
 
   const handleSendFriendRequest = async (friendId) => {
     try {
-      const res = await axios.post(
-        "http://100.81.43.159:3000/sendFriendRequest",
-        {
-          userId: user._id,
-          friendId: friendId,
-        }
-      );
+      const res = await sendFriendRequest(user._id, friendId);
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);
@@ -111,13 +109,7 @@ const ProfileScreen = observer(() => {
 
   const handleAcceptFriendRequest = async (friendId) => {
     try {
-      const res = await axios.post(
-        "http://100.81.43.159:3000/acceptFriendRequest",
-        {
-          userId: user._id,
-          friendId: friendId,
-        }
-      );
+      const res = await acceptFriendRequest(user._id, friendId);
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);
@@ -130,13 +122,7 @@ const ProfileScreen = observer(() => {
 
   const handleRemoveFriendRequest = async (friendId) => {
     try {
-      const res = await axios.post(
-        "http://100.81.43.159:3000/removeFriendRequest",
-        {
-          userId: user._id,
-          friendId: friendId,
-        }
-      );
+      const res = await removeFriendRequest(user._id, friendId);
       if (res) {
         const newUser = await userStore.getUser(user._id);
         setUser(newUser);

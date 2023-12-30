@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, TouchableOpacity, Text } from "react-native";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
-import { Ionicons } from "react-native-vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 
 const CustomButton = ({
   onPress,

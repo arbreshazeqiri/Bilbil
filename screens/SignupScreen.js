@@ -14,7 +14,7 @@ import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import CustomButton from "../components/CustomButton";
 import axios from "axios";
-import { Ionicons } from "react-native-vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import userStore from "../store/UserStore";
 import { useNavigation } from "@react-navigation/native";
 
@@ -35,7 +35,7 @@ const SignUpScreen = () => {
     return null;
   }
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     const user = {
       username,
       name,
@@ -44,7 +44,10 @@ const SignUpScreen = () => {
     };
 
     axios
-      .post(`http://192.168.2.4:3000/register`, user)
+    await registerUser(
+      user._id,
+      friendId,
+    )
       .then((response) => {
         Alert.alert(
           "Registration successful",

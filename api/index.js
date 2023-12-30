@@ -3,16 +3,17 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const crypto = require("crypto");
+const cors = require("cors");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const User = require("./models/User");
 
 const app = express();
 const port = 3000;
-const cors = require("cors");
-app.use(cors());
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-const jwt = require("jsonwebtoken");
 
 mongoose
   .connect(
@@ -34,8 +35,6 @@ mongoose
 app.listen(port, () => {
   console.log("server is running on port 3000");
 });
-
-const User = require("./models/User");
 
 const generateSecretKey = () => {
   const secretKey = crypto.randomBytes(32).toString("hex");
