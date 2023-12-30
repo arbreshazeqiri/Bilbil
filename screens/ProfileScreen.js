@@ -135,6 +135,7 @@ const ProfileScreen = observer(() => {
 
   const handleLogout = async () => {
     await userStore.logout();
+    await userStore.loadUser();
     if (!userStore.user) {
       navigation.navigate("Start");
     }

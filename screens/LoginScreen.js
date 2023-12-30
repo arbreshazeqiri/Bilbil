@@ -17,6 +17,7 @@ import { loginUser } from "../api";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import userStore from "../store/UserStore";
+import { runInAction } from "mobx";
 
 const LoginScreen = () => {
   const [emailOrUsername, setEmailOrUsername] = useState("");
@@ -38,16 +39,19 @@ const LoginScreen = () => {
       password: password,
     };
 
-    await loginUser(user)
-      .then((response) => {
-        const { user: userData } = response.data;
+    try {
+      const response = await loginUser(user);
+      const { user: userData } = response.data;
+
+      runInAction(() => {
         userStore.setUser(userData);
-        navigation.navigate("Menu");
-      })
-      .catch((error) => {
-        Alert.alert("Login error");
-        console.log("error ", error);
       });
+
+      navigation.navigate("Menu");
+    } catch (error) {
+      Alert.alert("Login error");
+      console.error("error", error);
+    }
   };
 
   return (

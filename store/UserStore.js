@@ -13,7 +13,9 @@ class UserStore {
   }
 
   setUser(newUser) {
-    this.user = { ...newUser };
+    runInAction(() => {
+      this.user = { ...newUser };
+    });
     AsyncStorage.setItem("user", JSON.stringify(newUser));
     AsyncStorage.setItem("authToken", newUser.token);
   }
