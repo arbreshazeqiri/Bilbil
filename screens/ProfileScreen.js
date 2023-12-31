@@ -135,7 +135,6 @@ const ProfileScreen = observer(() => {
 
   const handleLogout = async () => {
     await userStore.logout();
-    await userStore.loadUser();
     if (!userStore.user) {
       navigation.navigate("Start");
     }
@@ -169,7 +168,7 @@ const ProfileScreen = observer(() => {
                 Joined {dayjs(user.joindDate).format("MMMM YYYY")}
               </Text>
               <Text style={styles.accentDetail}>
-                {(user.friends && user.friends.length) || 0} friends
+                {(user.friends && user.friends.filter(f => f.status === 'Friends').length) || 0} friends
               </Text>
               <View style={styles.buttons}>
                 <CustomButton

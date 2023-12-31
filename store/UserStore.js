@@ -18,6 +18,7 @@ class UserStore {
     });
     AsyncStorage.setItem("user", JSON.stringify(newUser));
     AsyncStorage.setItem("authToken", newUser.token);
+    this.loadUser()
   }
 
   async loadUser() {
@@ -55,6 +56,7 @@ class UserStore {
     runInAction(() => {
       this.user = null;
     });
+    this.loadUser();
   }
 }
 
