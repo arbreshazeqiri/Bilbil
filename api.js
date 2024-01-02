@@ -11,9 +11,9 @@ const registerUser = async (userData) => {
     }
 };
 
-const loginUser = async (user) => {
+const loginUser = async (userData) => {
     try {
-        const response = await axios.post(`${BASE_URL}/login`, user);
+        const response = await axios.post(`${BASE_URL}/login`, userData);
         return response;
     } catch (error) {
         console.error('Error during login:', error);

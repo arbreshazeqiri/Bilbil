@@ -12,7 +12,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { Ionicons } from "@expo/vector-icons";
-import Group from "../assets/avatars/Female-5";
 import CustomButton from "../components/CustomButton";
 import LegendItem from "../components/LegendItem";
 import SearchFriends from "../components/SearchFriends";
@@ -26,6 +25,8 @@ import {
   acceptFriendRequest,
   removeFriendRequest,
 } from "../api";
+import TopTabNavigator from "../components/TopTabNavigator";
+import FeatureScreen from "../components/FeatureScreen";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -34,6 +35,11 @@ const ProfileScreen = observer(() => {
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(0);
+  const [avatarType, setAvatarType] = useState("Group5");
+  const [hair, setHair] = useState("gold");
+  const [skin, setSkin] = useState("#ad905b");
+  const [skinDetails, setSkinDetails] = useState("#6d5832");
 
   const handleSearch = async () => {
     try {
@@ -140,19 +146,47 @@ const ProfileScreen = observer(() => {
     }
   };
 
+  const menuScreens = [
+    {
+      name: "Avatar",
+      component: FeatureScreen,
+      iconSource: require("../assets/avatar-menu/anonymity.png"),
+    },
+    {
+      name: "Hair",
+      component: FeatureScreen,
+      iconSource: require("../assets/avatar-menu/hair-dryer.png"),
+    },
+    {
+      name: "Skin",
+      component: FeatureScreen,
+      iconSource: require("../assets/avatar-menu/skin-tone.png"),
+    },
+    {
+      name: "Details",
+      component: FeatureScreen,
+      iconSource: require("../assets/avatar-menu/girl.png"),
+    },
+  ];
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
         <View style={styles.picContainer}>
           <View style={styles.avatar}>
-            <Group />
+            {/* <Group /> */}
           </View>
-          <TouchableOpacity style={styles.settings} onPress={handleLogout}>
+          <TouchableOpacity
+            style={styles.settings}
+            onPress={() => setIsCustomizing(!isCustomizing)}
+          >
             <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
         </View>
         {isCustomizing ? (
-          <Text>Customizing Avatar</Text>
+          <View style={{flex: 1}}>
+            <TopTabNavigator tabScreens={menuScreens} />
+          </View>
         ) : (
           <View>
             <View style={styles.infoContainer}>
@@ -168,7 +202,10 @@ const ProfileScreen = observer(() => {
                 Joined {dayjs(user.joindDate).format("MMMM YYYY")}
               </Text>
               <Text style={styles.accentDetail}>
-                {(user.friends && user.friends.filter(f => f.status === 'Friends').length) || 0} friends
+                {(user.friends &&
+                  user.friends.filter((f) => f.status === "Friends").length) ||
+                  0}{" "}
+                friends
               </Text>
               <View style={styles.buttons}>
                 <CustomButton

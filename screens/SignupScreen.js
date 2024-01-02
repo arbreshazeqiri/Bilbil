@@ -13,7 +13,7 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import CustomButton from "../components/CustomButton";
-import axios from "axios";
+import { registerUser } from "../api";
 import { Ionicons } from "@expo/vector-icons";
 import userStore from "../store/UserStore";
 import { useNavigation } from "@react-navigation/native";
@@ -43,11 +43,7 @@ const SignUpScreen = () => {
       password,
     };
 
-    axios
-    await registerUser(
-      user._id,
-      friendId,
-    )
+    await registerUser(user._id)
       .then((response) => {
         Alert.alert(
           "Registration successful",
