@@ -27,6 +27,7 @@ import {
 } from "../api";
 import TopTabNavigator from "../components/TopTabNavigator";
 import FeatureScreen from "../components/FeatureScreen";
+import { getAvatar } from "../utils";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -35,11 +36,7 @@ const ProfileScreen = observer(() => {
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [activeMenu, setActiveMenu] = useState(0);
-  const [avatarType, setAvatarType] = useState("Group5");
-  const [hair, setHair] = useState("gold");
-  const [skin, setSkin] = useState("#ad905b");
-  const [skinDetails, setSkinDetails] = useState("#6d5832");
+  const [avatar, setAvatar] = useState(0);
 
   const handleSearch = async () => {
     try {
@@ -174,7 +171,7 @@ const ProfileScreen = observer(() => {
       <View style={styles.base}>
         <View style={styles.picContainer}>
           <View style={styles.avatar}>
-            {/* <Group /> */}
+            {getAvatar(avatar)}
           </View>
           <TouchableOpacity
             style={styles.settings}
@@ -184,7 +181,7 @@ const ProfileScreen = observer(() => {
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }}>
-          <TopTabNavigator tabScreens={menuScreens} />
+          <TopTabNavigator tabScreens={menuScreens} setAvatar={(_) => setAvatar(_)} />
         </View>
       </View>
     </SafeAreaView>
@@ -193,7 +190,7 @@ const ProfileScreen = observer(() => {
       <View style={styles.base}>
         <View style={styles.picContainer}>
           <View style={styles.avatar}>
-            {/* <Group /> */}
+            {getAvatar(avatar)}
           </View>
           <TouchableOpacity
             style={styles.settings}
