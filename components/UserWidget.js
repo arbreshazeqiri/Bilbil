@@ -22,8 +22,8 @@ const UserWidget = ({
                         title=""
                         iconSize={22}
                         color="#212832"
-                        bgColor="#FF9100"
-                        borderColor={"#E58200"}
+                        bgColor="#944ADE"
+                        borderColor={"#8240C5"}
                         onPress={() => onSendRequest(user._id)}
                     />
                 ) : user.friendshipStatus === "F" ? (
@@ -33,8 +33,8 @@ const UserWidget = ({
                         title=""
                         iconSize={22}
                         color="#212832"
-                        bgColor="#FF9100"
-                        borderColor={"#E58200"}
+                        bgColor="#944ADE"
+                        borderColor={"#8240C5"}
                         onPress={() => onRemoveRequest(user._id)}
                     />
                 ) : user.friendshipStatus === "P" ? (
@@ -44,8 +44,8 @@ const UserWidget = ({
                         title=""
                         iconSize={22}
                         color="#212832"
-                        bgColor="#FF9100"
-                        borderColor={"#E58200"}
+                        bgColor="#944ADE"
+                        borderColor={"#8240C5"}
                         onPress={() => onRemoveRequest(user._id)}
                     />
                 ) : (
