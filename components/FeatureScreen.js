@@ -3,6 +3,8 @@ import { ScrollView, View, Text } from "react-native";
 import Group0 from "../assets/avatars/Group0";
 import Group1 from "../assets/avatars/Group1";
 import Group2 from "../assets/avatars/Group2";
+import Group3 from "../assets/avatars/Group3";
+import Group4 from "../assets/avatars/Group4";
 
 const FeatureScreen = ({ route }) => {
     const { tabIndex } = route.params;
@@ -21,6 +23,14 @@ const FeatureScreen = ({ route }) => {
         {
             name: 2,
             component: <Group2 />,
+        },
+        {
+            name: 3,
+            component: <Group3 />,
+        },
+        {
+            name: 4,
+            component: <Group4 />,
         },
     ];
 
