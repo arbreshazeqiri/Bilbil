@@ -37,6 +37,11 @@ const ProfileScreen = observer(() => {
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [avatar, setAvatar] = useState(0);
+  const [hair, setHair] = useState(null);
+  const [skin, setSkin] = useState(null);
+  const [skinDetails, setSkinDetails] = useState(null);
+  const [background, setBackground] = useState('lightblue');
+  const [eyes, setEyes] = useState(null);
 
   const handleSearch = async () => {
     try {
@@ -171,7 +176,9 @@ const ProfileScreen = observer(() => {
       <View style={styles.base}>
         <View style={styles.picContainer}>
           <View style={styles.avatar}>
-            {getAvatar(avatar)}
+            {getAvatar(avatar, {
+              colors: { hair, skin, skinDetails, eyes, background },
+            })}
           </View>
           <TouchableOpacity
             style={styles.settings}
@@ -181,7 +188,15 @@ const ProfileScreen = observer(() => {
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }}>
-          <TopTabNavigator tabScreens={menuScreens} setAvatar={(_) => setAvatar(_)} />
+          <TopTabNavigator
+            tabScreens={menuScreens}
+            setAvatar={(_) => setAvatar(_)}
+            setHair={(_) => setHair(_)}
+            setSkin={(_) => setSkin(_)}
+            setSkinDetails={(_) => setSkinDetails(_)}
+            setEyes={(_) => setEyes(_)}
+            setBackground={(_) => setBackground(_)}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -190,7 +205,9 @@ const ProfileScreen = observer(() => {
       <View style={styles.base}>
         <View style={styles.picContainer}>
           <View style={styles.avatar}>
-            {getAvatar(avatar)}
+            {getAvatar(avatar, {
+              colors: { hair, skin, skinDetails, eyes, background },
+            })}
           </View>
           <TouchableOpacity
             style={styles.settings}

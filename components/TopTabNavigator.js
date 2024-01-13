@@ -4,7 +4,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 
 const Tab = createMaterialTopTabNavigator();
 
-const TopTabNavigator = ({ tabScreens, setAvatar }) => {
+const TopTabNavigator = ({ tabScreens, setAvatar, setHair, setEyes, setSkin, setSkinDetails, setBackground }) => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -18,7 +18,7 @@ const TopTabNavigator = ({ tabScreens, setAvatar }) => {
           key={index}
           name={tab.name}
           component={tab.component}
-          initialParams={{ tabIndex: index , setAvatar }}
+          initialParams={{ tabIndex: index , setAvatar, setHair, setEyes, setSkin, setSkinDetails, setBackground }}
           options={{
             headerShown: false,
             tabBarShowLabel: false,
