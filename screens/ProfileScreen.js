@@ -27,41 +27,8 @@ import {
 } from "../api";
 import TopTabNavigator from "../components/TopTabNavigator";
 import { getAvatar, legend } from "../utils";
-import FeatureScreen from "../components/FeatureScreen";
-
-
-export const menuScreens = [
-  {
-    name: "Avatar",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/anonymity.png"),
-  },
-  {
-    name: "Hair",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/hair-dryer.png"),
-  },
-  {
-    name: "Skin",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/skin-tone.png"),
-  },
-  {
-    name: "Details",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/girl.png"),
-  },
-  {
-    name: "Eye",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/eye.png"),
-  },
-  {
-    name: "Background",
-    component: FeatureScreen,
-    iconSource: require("../assets/avatar-menu/paint.png"),
-  },
-];
+import { menuScreens } from '../utils/constants';
+import { useAvatarContext } from '../context/AvatarContext';
 
 
 const ProfileScreen = observer(() => {
@@ -71,12 +38,7 @@ const ProfileScreen = observer(() => {
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
-  const [avatar, setAvatar] = useState(0);
-  const [hair, setHair] = useState("#47323B");
-  const [skin, setSkin] = useState("#FFC19E");
-  const [skinDetails, setSkinDetails] = useState("#F0A47D");
-  const [background, setBackground] = useState('lightblue');
-  const [eyes, setEyes] = useState("#47323B");
+  const { avatarState } = useAvatarContext();
 
   useEffect(() => {
     if (searchInput !== "") handleSearch();
@@ -173,28 +135,22 @@ const ProfileScreen = observer(() => {
   return isCustomizing ? (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={{ ...styles.picContainer, backgroundColor: background }}>
+        <View style={{ ...styles.picContainer, backgroundColor: avatarState.background }}>
           <View style={styles.avatar}>
-            {getAvatar(avatar, {
-              colors: { hair, skin, skinDetails, eyes, background },
+            {getAvatar(avatarState.avatar, {
+              colors: { ...avatarState },
             })}
           </View>
           <TouchableOpacity
-            style={styles.settings}
+            style={styles.settingTwo}
             onPress={() => setIsCustomizing(!isCustomizing)}
           >
-            <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
+            <Ionicons name={"brush-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }}>
           <TopTabNavigator
             tabScreens={menuScreens}
-            setAvatar={(_) => setAvatar(_)}
-            setHair={(_) => setHair(_)}
-            setSkin={(_) => setSkin(_)}
-            setSkinDetails={(_) => setSkinDetails(_)}
-            setEyes={(_) => setEyes(_)}
-            setBackground={(_) => setBackground(_)}
           />
         </View>
       </View>
@@ -202,15 +158,21 @@ const ProfileScreen = observer(() => {
   ) : (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={{ ...styles.picContainer, backgroundColor: background }}>
+        <View style={{ ...styles.picContainer, backgroundColor: avatarState.background }}>
           <View style={styles.avatar}>
-            {getAvatar(avatar, {
-              colors: { hair, skin, skinDetails, eyes, background },
+            {getAvatar(avatarState.avatar, {
+              colors: { ...avatarState },
             })}
           </View>
           <TouchableOpacity
-            style={styles.settings}
+            style={styles.settingOne}
             onPress={() => setIsCustomizing(!isCustomizing)}
+          >
+            <Ionicons name={"brush-outline"} size={30} color={"#212832"} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.settingTwo}
+            onPress={handleLogout}
           >
             <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
@@ -302,7 +264,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  settings: {
+  settingOne: {
+    top: 20,
+    right: 40,
+    position: "absolute",
+  },
+  settingTwo: {
     top: 20,
     right: 10,
     position: "absolute",
