@@ -72,11 +72,11 @@ const ProfileScreen = observer(() => {
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [avatar, setAvatar] = useState(0);
-  const [hair, setHair] = useState(null);
-  const [skin, setSkin] = useState(null);
-  const [skinDetails, setSkinDetails] = useState(null);
+  const [hair, setHair] = useState("#47323B");
+  const [skin, setSkin] = useState("#FFC19E");
+  const [skinDetails, setSkinDetails] = useState("#F0A47D");
   const [background, setBackground] = useState('lightblue');
-  const [eyes, setEyes] = useState(null);
+  const [eyes, setEyes] = useState("#47323B");
 
   useEffect(() => {
     if (searchInput !== "") handleSearch();
