@@ -26,8 +26,43 @@ import {
   removeFriendRequest,
 } from "../api";
 import TopTabNavigator from "../components/TopTabNavigator";
+import { getAvatar, legend } from "../utils";
 import FeatureScreen from "../components/FeatureScreen";
-import { getAvatar } from "../utils";
+
+
+export const menuScreens = [
+  {
+    name: "Avatar",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/anonymity.png"),
+  },
+  {
+    name: "Hair",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/hair-dryer.png"),
+  },
+  {
+    name: "Skin",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/skin-tone.png"),
+  },
+  {
+    name: "Details",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/girl.png"),
+  },
+  {
+    name: "Eye",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/eye.png"),
+  },
+  {
+    name: "Background",
+    component: FeatureScreen,
+    iconSource: require("../assets/avatar-menu/paint.png"),
+  },
+];
+
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -42,6 +77,19 @@ const ProfileScreen = observer(() => {
   const [skinDetails, setSkinDetails] = useState(null);
   const [background, setBackground] = useState('lightblue');
   const [eyes, setEyes] = useState(null);
+
+  useEffect(() => {
+    if (searchInput !== "") handleSearch();
+  }, [JSON.stringify(user)]);
+
+  const [isLoaded] = useFonts({
+    baloo: BalooFont,
+    "baloo-semibold": BalooSemiBoldFont,
+  });
+
+  if (!isLoaded) {
+    return null;
+  }
 
   const handleSearch = async () => {
     try {
@@ -75,32 +123,6 @@ const ProfileScreen = observer(() => {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    if (searchInput !== "") handleSearch();
-  }, [JSON.stringify(user)]);
-
-  const [isLoaded] = useFonts({
-    baloo: BalooFont,
-    "baloo-semibold": BalooSemiBoldFont,
-  });
-
-  if (!isLoaded) {
-    return null;
-  }
-
-  const legend = [
-    {
-      value: 1,
-      src: require("../assets/navigation/streak.png"),
-      dsc: "Day streak",
-    },
-    {
-      value: 1,
-      src: require("../assets/navigation/level.png"),
-      dsc: "Level reached",
-    },
-  ];
 
   const handleSendFriendRequest = async (friendId) => {
     try {
@@ -148,33 +170,10 @@ const ProfileScreen = observer(() => {
     }
   };
 
-  const menuScreens = [
-    {
-      name: "Avatar",
-      component: FeatureScreen,
-      iconSource: require("../assets/avatar-menu/anonymity.png"),
-    },
-    {
-      name: "Hair",
-      component: FeatureScreen,
-      iconSource: require("../assets/avatar-menu/hair-dryer.png"),
-    },
-    {
-      name: "Skin",
-      component: FeatureScreen,
-      iconSource: require("../assets/avatar-menu/skin-tone.png"),
-    },
-    {
-      name: "Details",
-      component: FeatureScreen,
-      iconSource: require("../assets/avatar-menu/girl.png"),
-    },
-  ];
-
   return isCustomizing ? (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={styles.picContainer}>
+        <View style={{ ...styles.picContainer, backgroundColor: background }}>
           <View style={styles.avatar}>
             {getAvatar(avatar, {
               colors: { hair, skin, skinDetails, eyes, background },
@@ -203,7 +202,7 @@ const ProfileScreen = observer(() => {
   ) : (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={styles.picContainer}>
+        <View style={{ ...styles.picContainer, backgroundColor: background }}>
           <View style={styles.avatar}>
             {getAvatar(avatar, {
               colors: { hair, skin, skinDetails, eyes, background },
@@ -279,7 +278,7 @@ const ProfileScreen = observer(() => {
           />
         </View>
       </View>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 });
 
