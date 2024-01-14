@@ -12,8 +12,10 @@ const userSchema = new mongoose.Schema({
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  avatarType: { type: String },
-  avatarAttributes: { type: mongoose.Schema.ObjectId },
+  avatar: {
+    type: Object,
+    default: null,
+  },
   joindDate: { type: Date, default: Date.now },
   friends: [
     {

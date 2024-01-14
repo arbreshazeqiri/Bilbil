@@ -21,6 +21,7 @@ import dayjs from "dayjs";
 import { useNavigation } from "@react-navigation/native";
 import {
   searchUsers,
+  updateAvatar,
   sendFriendRequest,
   acceptFriendRequest,
   removeFriendRequest,
@@ -126,9 +127,21 @@ const ProfileScreen = observer(() => {
   };
 
   const handleLogout = async () => {
-    await userStore.logout();
+    //set avatar from user store in avatarcontext upon login
+    //check if avatarcontext is different from user.avatar, if so update
+    await updateAvatar(user._id, avatarState);
+    
+    try {
+      await userStore.logout();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+    
     if (!userStore.user) {
+      resetAvatar()
       navigation.navigate("Start");
+    } else {
+      console.warn("User state is persisting.");
     }
   };
 
@@ -254,7 +267,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "lightblue",
     width: "100%",
     height: 220,
     paddingTop: 20,

@@ -203,3 +203,19 @@ app.get("/user/:id", async (req, res) => {
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
+
+app.post("/updateAvatar", async (req, res) => {
+  try {
+    const { userId, avatar } = req.body;
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: { avatar: avatar } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Avatar updated successfully." });
+  } catch (error) {
+    console.error("Error updating avatar:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
