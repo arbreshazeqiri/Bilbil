@@ -18,8 +18,10 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import userStore from "../store/UserStore";
 import { runInAction } from "mobx";
+import { useAvatarContext } from "../context/AvatarContext";
 
 const LoginScreen = () => {
+  const { setAvatarObject } = useAvatarContext();
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +44,8 @@ const LoginScreen = () => {
     try {
       const response = await loginUser(user);
       const { user: userData } = response.data;
+      if (userData.avatar)
+        setAvatarObject(userData.avatar);
 
       runInAction(() => {
         userStore.setUser(userData);

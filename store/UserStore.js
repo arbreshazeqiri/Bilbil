@@ -9,7 +9,6 @@ class UserStore {
 
   constructor() {
     makeAutoObservable(this);
-    this.loadUser();
   }
 
   setUser(newUser) {
@@ -55,8 +54,8 @@ class UserStore {
     await AsyncStorage.removeItem("user");
     runInAction(() => {
       this.user = null;
+      this.loadUser();
     });
-    this.loadUser();
   }
 }
 

@@ -127,10 +127,9 @@ const ProfileScreen = observer(() => {
   };
 
   const handleLogout = async () => {
-    //set avatar from user store in avatarcontext upon login
-    //check if avatarcontext is different from user.avatar, if so update
-    await updateAvatar(user._id, avatarState);
-    
+    if (JSON.stringify(avatarState) !== JSON.stringify(user.avatar))
+      await updateAvatar(user._id, avatarState);
+
     try {
       await userStore.logout();
     } catch (error) {
@@ -138,7 +137,6 @@ const ProfileScreen = observer(() => {
     }
     
     if (!userStore.user) {
-      resetAvatar()
       navigation.navigate("Start");
     } else {
       console.warn("User state is persisting.");

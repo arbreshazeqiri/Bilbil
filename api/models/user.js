@@ -14,7 +14,14 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   avatar: {
     type: Object,
-    default: null,
+    default: {
+      avatar: 0,
+      hair: "#47323B",
+      skin: "#FFC19E",
+      skinDetails: "#F0A47D",
+      background: 'lightblue',
+      eyes: "#47323B"
+    },
   },
   joindDate: { type: Date, default: Date.now },
   friends: [

@@ -43,11 +43,11 @@ const SignUpScreen = () => {
       password,
     };
 
-    await registerUser(user._id)
+    await registerUser(user)
       .then((response) => {
         Alert.alert(
           "Registration successful",
-          "you have been registered successfully"
+          "You have been registered successfully."
         );
         setUsername("");
         setEmail("");
