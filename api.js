@@ -1,3 +1,4 @@
+import { BASE_URL } from '@env';
 import axios from "axios";
 
 const registerUser = async (userData) => {

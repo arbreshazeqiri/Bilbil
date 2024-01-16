@@ -23,7 +23,7 @@ const FeatureScreen = ({ route }) => {
                 {list.map((value, index) => (
                     <TouchableOpacity
                         onPress={() => {
-                            setAvatar(type, value);
+                            setAvatar(type, type === 'avatar' ? index : value);
                         }}
                         key={index}
                     >

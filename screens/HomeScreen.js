@@ -1,5 +1,6 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import userStore from "../store/UserStore";
 
 const HomeScreen = () => {
   const headerIcons = [
@@ -58,13 +59,21 @@ const HomeScreen = () => {
     </View>
   );
 
+  const handleLogout = async () => {
+    try {
+      await userStore.logout();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View>
         <HeaderIcons icons={headerIcons} />
       </View>
       <View style={styles.base}>
-        <Text style={styles.name}>Home</Text>
+        <Text style={styles.name} onPress={handleLogout}>Home</Text>
       </View>
     </SafeAreaView>
   );
