@@ -22,7 +22,6 @@ const Group14 = ({ colors: propColors }) => {
         viewBox="0 0 496 496"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        {...props}
       >
         <Path
           d="M200 336C376 336 400 248 400 152C400 56.184 360.152 40.064 360 40L160 240C149.58 265.314 146.799 293.124 152 320L200 336Z"

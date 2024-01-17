@@ -4,6 +4,15 @@ import Group2 from "../assets/avatars/Group2";
 import Group3 from "../assets/avatars/Group3";
 import Group4 from "../assets/avatars/Group4";
 import Group5 from "../assets/avatars/Group5";
+import Group6 from "../assets/avatars/Group6";
+import Group7 from "../assets/avatars/Group7";
+import Group8 from "../assets/avatars/Group8";
+import Group9 from "../assets/avatars/Group9";
+import Group10 from "../assets/avatars/Group10";
+import Group11 from "../assets/avatars/Group11";
+import Group12 from "../assets/avatars/Group12";
+import Group13 from "../assets/avatars/Group13";
+import Group14 from "../assets/avatars/Group14";
 
 export const getAvatar = (index, props) => {
   switch (index) {
@@ -19,6 +28,24 @@ export const getAvatar = (index, props) => {
       return <Group4 {...props} />;
     case 5:
       return <Group5 {...props} />;
+    case 6:
+      return <Group6 {...props} />;
+    case 7:
+      return <Group7 {...props} />;
+    case 8:
+      return <Group8 {...props} />;
+    case 9:
+      return <Group9 {...props} />;
+    case 10:
+      return <Group10 {...props} />;
+    case 11:
+      return <Group11 {...props} />;
+    case 12:
+      return <Group12 {...props} />;
+    case 13:
+      return <Group13 {...props} />;
+    case 14:
+      return <Group14 {...props} />;
     default:
       return <Group0 {...props} />;
   }
@@ -44,6 +71,15 @@ export const avatars = [
   <Group3 />,
   <Group4 />,
   <Group5 />,
+  <Group6 />,
+  <Group7 />,
+  <Group8 />,
+  <Group9 />,
+  <Group10 />,
+  <Group11 />,
+  <Group12 />,
+  <Group13 />,
+  <Group14 />,
 ];
 
 export const hairColors = [
@@ -117,8 +153,6 @@ export const hairColors = [
   "#7584b3",
   "#95b3c5",
 ];
-
-
 
 export const skinColors = [
   "#FFC6B7",
