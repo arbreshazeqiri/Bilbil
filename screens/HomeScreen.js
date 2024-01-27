@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
@@ -6,8 +7,11 @@ import { headerIcons, levels } from "../utils/constants";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import CustomButton from "../components/CustomButton";
+import { FontAwesome } from "@expo/vector-icons";
+import Level from "../components/Level"
 
 const HomeScreen = () => {
+  const [level, setLevel] = useState(null)
   const [isLoaded] = useFonts({
     baloo: BalooFont,
     "baloo-semibold": BalooSemiBoldFont,
@@ -31,7 +35,8 @@ const HomeScreen = () => {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
-        padding: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
         backgroundColor: "#212832",
       }}
     >
@@ -55,10 +60,6 @@ const HomeScreen = () => {
     </View>
   );
 
-  const handleContinueLevel = () => {
-
-  }
-
   const Levels = ({ levels }) => {
     return (
       <ScrollView
@@ -74,7 +75,7 @@ const HomeScreen = () => {
           const isDisabled = level.status === "Locked"
           return (
             <View
-              style={{ backgroundColor: isDisabled ? 'gray' : level.color, flexDirection: "row", paddingHorizontal: 10, paddingVertical: 20, borderRadius: 10, alignItems: "center", justifyContent: 'space-between', width: '100%' }}
+              style={{ backgroundColor: isDisabled ? 'gray' : level.color, flexDirection: "row", padding: 20, borderRadius: 10, alignItems: "center", justifyContent: 'space-between', width: '100%' }}
               key={index}
             >
               <View style={{ flexDirection: 'column', alignItems: 'start', justifyContent: 'space-between' }}>
@@ -88,20 +89,24 @@ const HomeScreen = () => {
                     {level.chapter}
                   </Text>
                 )}
-                {level.status && (
-                  <Text style={{ color: isDisabled ? '#3c3c3c' : "white", fontWeight: 600, fontSize: 18 }}>
+                {level.status && isDisabled ?
+                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 4 }}>
+                    <FontAwesome name={"lock"} size={18} color={'#3c3c3c'} />
+                    <Text style={{ color: '#3c3c3c', fontWeight: 600, fontSize: 18 }}> {level.units} units </Text>
+                  </View> :
+                  <Text style={{ color: "white", fontWeight: 600, fontSize: 18 }}>
                     {level.status}
                   </Text>
-                )}
+                }
                 <View style={styles.button}>
                   <CustomButton
                     title={isDisabled ? level.status : "Continue"}
                     style={{ textTransform: 'capitalize' }}
-                    color={isDisabled? "#3c3c3c" : "#212832"}
-                    bgColor={isDisabled? "#9b9a9a" : "white"}
-                    borderColor={isDisabled? "#707070" : "#cecece"}
+                    color={isDisabled ? "#3c3c3c" : level.color}
+                    bgColor={isDisabled ? "#9b9a9a" : "white"}
+                    borderColor={isDisabled ? "#707070" : "#cecece"}
                     isDisabled={isDisabled}
-                    onPress={handleContinueLevel}
+                    onPress={() => setLevel(level)}
                   />
                 </View>
               </View>
@@ -128,7 +133,11 @@ const HomeScreen = () => {
         <HeaderIcons icons={headerIcons} />
       </View>
       <View style={styles.base}>
-        <Levels levels={levels} />
+        {level !== null ?
+          <Level level={level} setLevel={(val) => setLevel(val)} />
+          :
+          <Levels levels={levels} />
+        }
       </View>
     </SafeAreaView>
   );
@@ -138,6 +147,7 @@ const styles = StyleSheet.create({
   base: {
     flex: 1,
     backgroundColor: "#212832",
+    paddingVertical: 5,
     padding: 20,
   },
   nameContainer: {
