@@ -16,6 +16,7 @@ const CustomButton = ({
   iconSize = 30,
   fontSize = 18,
   hasVerticalPadding = true,
+  isDisabled = false,
 }) => {
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -54,7 +55,7 @@ const CustomButton = ({
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.appButtonContainer}>
+    <TouchableOpacity onPress={onPress} style={styles.appButtonContainer} disabled={isDisabled}>
       {icon && <Ionicons name={iconName} size={iconSize} color={color} />}
       <Text style={styles.appButtonText}>{title}</Text>
     </TouchableOpacity>

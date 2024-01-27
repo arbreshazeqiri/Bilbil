@@ -1,5 +1,6 @@
-import { BASE_URL } from '@env';
 import axios from "axios";
+
+const BASE_URL = "http://192.168.1.9:3000";
 
 const registerUser = async (userData) => {
     try {
@@ -93,6 +94,16 @@ const updateAvatar = async (userId, avatar) => {
     }
 };
 
+const translateText = async (text) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/translate`, { text });
+        return response;
+    } catch (error) {
+        console.error("Error translating text:", error);
+        throw error;
+    }
+};
+
 export {
     registerUser,
     loginUser,
@@ -102,4 +113,5 @@ export {
     removeFriendRequest,
     getUserById,
     updateAvatar,
+    translateText,
 };
