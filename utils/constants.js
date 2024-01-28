@@ -154,3 +154,36 @@ export const darkerColors = [
   '#7f3ec1',
   '#d03131'
 ];
+
+export const exerciseTypes = [
+  "Listening",
+  "Comprehension", 
+  "Rearrangement", 
+  "Labeling", 
+  "Blanks", 
+  "Roleplay", 
+  "Translation",
+  "Speaking"
+];
+
+export const otherExercises = [
+  'Stories',
+  'Matching'
+]
+
+export const generateExerciseSequence = () => {
+  let allExercises = [];
+  allExercises.push(...exerciseTypes);
+
+  let sequence = [];
+  for (let i = 0; i < 8; i++) {
+      sequence.push(exerciseTypes[i]);
+  }
+
+  allExercises.sort(() => Math.random() - 0.5);
+  for (let i = 0; i < 2; i++) {
+      sequence.push(allExercises[i]);
+  }
+
+  return sequence;
+}

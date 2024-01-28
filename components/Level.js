@@ -23,20 +23,19 @@ const Level = ({ level, setLevel }) => {
         <AntDesign
           name="arrowleft"
           size={32}
-          color={"#2E3845"}
+          color={"#afafaf97"}
           onPress={() => setLevel(null)}
         />
         <Text style={styles.title}>{level.chapter}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.course}>
         {units[level.index].map((unit, i) => (
-          <View style={{ flexDirection: "column" }}>
+          <View key={i} style={{ flexDirection: "column" }}>
             <View
               style={{
                 ...styles.banner,
                 backgroundColor: colors[i % colors.length],
               }}
-              key={i}
             >
               <Text
                 style={{
@@ -52,7 +51,10 @@ const Level = ({ level, setLevel }) => {
                 {unit}
               </Text>
             </View>
-            <UnitLayout color={colors[i % colors.length]} darkerColor={darkerColors[i % darkerColors.length]}/>
+            <UnitLayout
+              color={colors[i % colors.length]}
+              darkerColor={darkerColors[i % darkerColors.length]}
+            />
           </View>
         ))}
       </ScrollView>
@@ -71,7 +73,7 @@ const styles = StyleSheet.create({
     gap: 20,
     borderBottomWidth: 2,
     paddingBottom: 10,
-    borderColor: "#2E3845",
+    borderColor: "#afafaf97",
   },
   title: {
     alignSelf: "center",
@@ -79,7 +81,7 @@ const styles = StyleSheet.create({
     fontSize: 26,
     fontWeight: "700",
     fontFamily: "baloo",
-    color: "#2E3845",
+    color: "#afafaf97",
   },
   course: {
     flexDirection: "column",

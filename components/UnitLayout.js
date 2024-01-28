@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import CustomButton from "./CustomButton";
+import CustomModal from "./CustomModal";
+import Lesson from "./Lesson";
 
 const UnitLayout = ({ color, darkerColor }) => {
+  const [startLesson, setStartLesson] = useState(false);
   const rows = [
     [0, 1, 0],
     [1, 0, 0],
@@ -18,6 +21,9 @@ const UnitLayout = ({ color, darkerColor }) => {
 
   return (
     <View style={styles.container}>
+      <CustomModal visible={startLesson} transparent={true} dismiss={() => setStartLesson(false)}>
+        <Lesson startLesson={startLesson} setStartLesson={(val) => setStartLesson(val)}/>
+      </CustomModal>
       {rows.map((row, i) => (
         <View key={i} style={styles.row}>
           {row.map((box, boxIndex) => (
@@ -33,6 +39,7 @@ const UnitLayout = ({ color, darkerColor }) => {
                 borderColor={box ? darkerColor : "transparent"}
                 borderRadius={50}
                 isDisabled={!box}
+                onPress={() => setStartLesson(true)}
               />
             </View>
           ))}

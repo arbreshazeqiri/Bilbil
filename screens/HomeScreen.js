@@ -68,7 +68,8 @@ const HomeScreen = () => {
           justifyContent: "center",
           alignItems: "center",
           width: "100%",
-          gap: 20
+          gap: 20,
+          paddingVertical: 10,
         }}
       >
         {levels.map((level, index) => {
@@ -157,9 +158,6 @@ const styles = StyleSheet.create({
   name: {
     color: "white",
     fontSize: 50,
-  },
-  greyscale: {
-    filter: 'grayscale(100%)',
   },
   button: {
     marginTop: 10,
