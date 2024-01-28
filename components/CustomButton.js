@@ -17,6 +17,7 @@ const CustomButton = ({
   fontSize = 18,
   hasVerticalPadding = true,
   isDisabled = false,
+  borderRadius = 15,
 }) => {
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -35,7 +36,7 @@ const CustomButton = ({
       shadowColor: borderColor,
       shadowRadius: 2,
       backgroundColor: bgColor,
-      borderRadius: 15,
+      borderRadius: borderRadius,
       paddingVertical: hasVerticalPadding ? 12 : 4,
       paddingHorizontal: 12,
       borderColor: borderColor,
@@ -44,6 +45,8 @@ const CustomButton = ({
       borderBottomWidth: 5,
       display: "flex",
       gap: 4,
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     appButtonText: {
       fontSize: fontSize,
@@ -57,7 +60,7 @@ const CustomButton = ({
   return (
     <TouchableOpacity onPress={onPress} style={styles.appButtonContainer} disabled={isDisabled}>
       {icon && <Ionicons name={iconName} size={iconSize} color={color} />}
-      <Text style={styles.appButtonText}>{title}</Text>
+      {title && <Text style={styles.appButtonText}>{title}</Text>}
     </TouchableOpacity>
   );
 };
