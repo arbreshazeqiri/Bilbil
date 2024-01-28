@@ -86,7 +86,7 @@ const HomeScreen = () => {
                   </Text>
                 )}
                 {level.chapter && (
-                  <Text style={{ fontFamily: 'baloo', color: isDisabled ? '#3c3c3c' : "white", fontWeight: 900, fontSize: 25 }}>
+                  <Text style={{ fontFamily: 'baloo-semibold', color: isDisabled ? '#3c3c3c' : "white", fontWeight: 900, fontSize: 25 }}>
                     {level.chapter}
                   </Text>
                 )}

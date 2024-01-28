@@ -31,10 +31,6 @@ const CustomButton = ({
     appButtonContainer: {
       width: "100%",
       height: "100%",
-      shadowOpacity: 1,
-      shadowOffset: { width: 4, height: 2 },
-      shadowColor: borderColor,
-      shadowRadius: 2,
       backgroundColor: bgColor,
       borderRadius: borderRadius,
       paddingVertical: hasVerticalPadding ? 12 : 4,
@@ -46,7 +42,7 @@ const CustomButton = ({
       display: "flex",
       gap: 4,
       justifyContent: 'center',
-      alignItems: 'center'
+      alignItems: 'center',
     },
     appButtonText: {
       fontSize: fontSize,
