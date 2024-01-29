@@ -12,6 +12,7 @@ import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
+import ThoughtBubble from "../ThoughtBubble";
 
 const Listening = () => {
   const [input, setInput] = useState("");
@@ -25,9 +26,7 @@ const Listening = () => {
   const playSound = async (rate = 1) => {
     try {
       const soundObject = new Audio.Sound();
-      await soundObject.loadAsync({
-        uri: "https://nkprod-coredatastack-pa7jx42xiwhf-tasksbucket-13qb6gn1l5ooi.s3.us-east-1.amazonaws.com/1b96847a-c8bb-44fd-ac75-d6043762d7aa/result.mp3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAUENQVYXORYD4N3EU%2F20240128%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240128T184744Z&X-Amz-Expires=86400&X-Amz-Signature=9a7c0344bdf16030601003d4a9d95098a6a5003392a5b4477b5c7f354af49d5a&X-Amz-SignedHeaders=host&response-content-disposition=attachment%3B%20filename%3D%22P%25C3%25ABrsh%25C3%25ABndetje%2520.mp3%22&x-id=GetObject",
-      });
+      await soundObject.loadAsync(require("../../assets/audios/Pershendetje.m4a"));
 
       await soundObject.setRateAsync(rate, true);
       await soundObject.playAsync();
@@ -47,11 +46,15 @@ const Listening = () => {
           style={styles.image}
           source={require("../../assets/exercises/listening.png")}
         />
-        <View style={styles.triangle} />
-        <View style={styles.triangleTwo} />
-        <View style={styles.thoughtBubble}>
+        <ThoughtBubble>
           <TouchableOpacity
-            style={{ alignSelf: "center", borderRightWidth: 1, borderColor: "#AFAFAF", paddingRight: 20, paddingVertical: 30 }}
+            style={{
+              alignSelf: "center",
+              borderRightWidth: 1,
+              borderColor: "#AFAFAF",
+              paddingRight: 20,
+              paddingVertical: 30,
+            }}
             onPress={() => playSound()}
           >
             <Ionicons name={"volume-medium"} size={40} color={"#944ADE"} />
@@ -71,7 +74,7 @@ const Listening = () => {
               x0.7
             </Text>
           </TouchableOpacity>
-        </View>
+        </ThoughtBubble>
       </View>
       <View style={styles.textArea}>
         <TextInput
@@ -81,7 +84,7 @@ const Listening = () => {
           value={input}
           placeholder="Type in Albanian"
           placeholderTextColor="#AFAFAF"
-          keyboardType="visible-password" // Set the keyboardType to enable the Albanian keyboard
+          keyboardType="default"
         />
       </View>
     </KeyboardAvoidingView>
@@ -133,54 +136,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     fontSize: 16,
-  },
-  thoughtBubble: {
-    flex: 1,
-    paddingHorizontal: 30,
-    gap: 20,
-    height: 100,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignContent: "center",
-    backgroundColor: "#212832",
-    borderColor: '#AFAFAF',
-    borderWidth: 1,
-    borderRadius: 20,
-  },
-  triangle: {
-    width: 0,
-    height: 0,
-    marginTop: 35,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 0, // Adjust the width to change the size of the triangle
-    borderRightWidth: 13,
-    borderBottomWidth: 26, // Adjust the height to change the size of the triangle
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    borderBottomColor: "#ababab", // Adjust the color of the triangle
-    transform: [
-      { rotate: "-90deg" }, // Rotate the triangle to point left
-    ],
-  },
-  triangleTwo: {
-    width: 0,
-    height: 0,
-    marginTop: 41,
-    position: 'relative',
-    marginLeft: -10,
-    backgroundColor: "transparent",
-    borderStyle: "solid",
-    borderLeftWidth: 0, // Adjust the width to change the size of the triangle
-    borderRightWidth: 10,
-    borderBottomWidth: 16, // Adjust the height to change the size of the triangle
-    borderLeftColor: "transparent",
-    borderRightColor: "transparent",
-    zIndex: 9,
-    borderBottomColor: "#212832", // Adjust the color of the triangle
-    transform: [
-      { rotate: "-90deg" }, // Rotate the triangle to point left
-    ],
   },
 });
 
