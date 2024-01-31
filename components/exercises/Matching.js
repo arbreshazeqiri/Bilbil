@@ -1,12 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
 
 const Matching = () => {
-  const [checked, setChecked] = useState(null);
+  const [checked, setChecked] = useState([]);
+  const [shuffledKeys, setShuffledKeys] = useState([]);
+  const [shuffledValues, setShuffledValues] = useState([]);
+
+  useEffect(() => {
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    };
+
+    const keys = Object.keys(pairs);
+    const values = Object.values(pairs);
+
+    setShuffledKeys(shuffleArray(keys));
+    setShuffledValues(shuffleArray(values));
+  }, []);
 
   const handleSetChecked = (index) => {
-    setChecked(index);
+    if (checked.includes(index)) {
+      setChecked((prevChecked) =>
+        prevChecked.filter((option) => option !== index)
+      );
+    } else {
+      setChecked((prevChecked) => [...prevChecked, index]);
+    }
+  };
+
+  const pairs = {
+    mollë: "apple",
+    laps: "pencil",
+    zjarr: "fire",
+    tigër: "tiger",
   };
 
   return (
@@ -17,16 +48,31 @@ const Matching = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Tap the matching pairs</Text>
       </View>
-      <View style={styles.cardsContainer}>
-        {[0, 1, 2, 3].map((index) => (
-          <CustomCard
-            key={index}
-            index={index}
-            label={index}
-            isChecked={checked === index}
-            setIsChecked={handleSetChecked}
-          />
-        ))}
+      <View style={{ flexDirection: "row", gap: 20 }}>
+        <View style={styles.cardsContainer}>
+          {shuffledKeys.map((key, index) => (
+            <CustomCard
+              key={key}
+              index={key}
+              height={80}
+              label={key}
+              isChecked={checked.includes(key)}
+              setIsChecked={(val) => handleSetChecked(val)}
+            />
+          ))}
+        </View>
+        <View style={styles.cardsContainer}>
+          {shuffledValues.map((option, index) => (
+            <CustomCard
+              key={option}
+              index={option}
+              height={80}
+              label={option}
+              isChecked={checked.includes(option)}
+              setIsChecked={(val) => handleSetChecked(val)}
+            />
+          ))}
+        </View>
       </View>
     </KeyboardAvoidingView>
   );
@@ -56,11 +102,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   cardsContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    justifyContent: "space-around",
+    flexDirection: "column",
     gap: 20,
-    rowGap: 40,
   },
 });
 

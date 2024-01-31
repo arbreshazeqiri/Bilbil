@@ -1,11 +1,11 @@
 import React from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 
-const Card = ({ index, src, label, isChecked, setIsChecked }) => {
+const Card = ({ index, height = 200, src, label, isChecked, setIsChecked }) => {
   const styles = StyleSheet.create({
     cardContainer: {
       width: 150,
-      height: 200,
+      height: height,
       paddingVertical: 15,
       justifyContent: 'space-around',
       alignItems: "center",
