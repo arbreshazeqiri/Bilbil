@@ -6,3 +6,4 @@ export { default as Blanks } from './Blanks';
 export { default as Roleplay } from './Roleplay';
 export { default as Translation } from './Translation';
 export { default as Speaking } from './Speaking';
+export { default as Matching } from './Matching';

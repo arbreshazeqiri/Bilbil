@@ -157,7 +157,8 @@ export const darkerColors = [
 
 export const exerciseTypes = [
   "Listening",
-  "Comprehension", 
+  "Comprehension",
+  "Matching",
   "Rearrangement", 
   "Labeling", 
   "Blanks", 
@@ -176,12 +177,12 @@ export const generateExerciseSequence = () => {
   allExercises.push(...exerciseTypes);
 
   let sequence = [];
-  for (let i = 0; i < 8; i++) {
+  for (let i = 0; i < exerciseTypes.length; i++) {
       sequence.push(exerciseTypes[i]);
   }
 
   allExercises.sort(() => Math.random() - 0.5);
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
       sequence.push(allExercises[i]);
   }
 

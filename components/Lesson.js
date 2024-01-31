@@ -40,6 +40,8 @@ const Lesson = ({ startLesson, setStartLesson }) => {
         return <Exercises.Listening />;
       case "Comprehension":
         return <Exercises.Comprehension />;
+      case "Matching":
+        return <Exercises.Matching />;
       case "Rearrangement":
         return <Exercises.Rearrangement />;
       case "Labeling":

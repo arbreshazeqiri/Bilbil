@@ -10,7 +10,7 @@ const Card = ({ index, src, label, isChecked, setIsChecked }) => {
       justifyContent: 'space-around',
       alignItems: "center",
       borderRadius: 8,
-      backgroundColor: "transparent",
+      backgroundColor: isChecked? "#2D1E3B" : "transparent",
       borderColor: isChecked ? "#8240C5" : "#2E3845",
       borderWidth: 1,
       borderTopWidth: 2,
@@ -31,7 +31,7 @@ const Card = ({ index, src, label, isChecked, setIsChecked }) => {
   return (
     <TouchableOpacity onPress={() => setIsChecked(index)}>
       <View style={styles.cardContainer}>
-        <Image style={styles.image} source={src} />
+        {src && <Image style={styles.image} source={src} />}
         <Text style={styles.label}>{label}</Text>
       </View>
     </TouchableOpacity>
