@@ -13,8 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
 import ThoughtBubble from "../ThoughtBubble";
+import CustomButton from "../CustomButton";
 
-const Listening = () => {
+const Listening = ({ onComplete }) => {
   const [input, setInput] = useState("");
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -34,6 +35,11 @@ const Listening = () => {
       console.log("Playback failed due to audio decoding errors", error);
     }
   };
+
+  const handleNextStep = () => {
+    onComplete(true);
+  };
+
 
   return (
     <KeyboardAvoidingView
@@ -87,6 +93,18 @@ const Listening = () => {
           keyboardType="default"
         />
       </View>
+      <View style={styles.buttons}>
+        <CustomButton
+          icon={false}
+          iconName={"person-remove"}
+          title="CHECK"
+          iconSize={22}
+          color="#212832"
+          bgColor="#93D334"
+          borderColor={"#7BB836"}
+          onPress={handleNextStep}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -96,8 +114,8 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flexDirection: "column",
-    justifyContent: "start",
-    alignSelf: "flex-start",
+    justifyContent: "space-between",
+    alignSelf: "start",
     paddingVertical: 30,
     paddingHorizontal: 15,
     gap: 20,
@@ -136,6 +154,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     fontSize: 16,
+  },
+  buttons: {
+    display: "flex",
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

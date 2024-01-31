@@ -11,8 +11,9 @@ import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomCheckbox from "../CustomCheckbox";
+import CustomButton from "../CustomButton";
 
-const Comprehension = () => {
+const Comprehension = ({ onComplete }) => {
   const [checked, setChecked] = useState(null);
   const sounds = [
     require("../../assets/audios/Sa-vjec-je.m4a"),
@@ -29,6 +30,10 @@ const Comprehension = () => {
     } catch (error) {
       console.log("Playback failed due to audio decoding errors", error);
     }
+  };
+
+  const handleNextStep = () => {
+    onComplete(true);
   };
 
   return (
@@ -109,6 +114,18 @@ const Comprehension = () => {
           setIsChecked={(val) => setChecked(val)}
         />
       </View>
+      <View style={styles.buttons}>
+        <CustomButton
+          icon={false}
+          iconName={"person-remove"}
+          title="CHECK"
+          iconSize={22}
+          color="#212832"
+          bgColor="#93D334"
+          borderColor={"#7BB836"}
+          onPress={handleNextStep}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
@@ -118,11 +135,11 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flexDirection: "column",
-    justifyContent: "start",
-    alignSelf: "flex-start",
-    paddingVertical: 50,
+    justifyContent: "space-between",
+    alignSelf: "start",
+    paddingVertical: 30,
     paddingHorizontal: 15,
-    gap: 40,
+    gap: 20,
   },
   header: {
     color: "white",
@@ -142,6 +159,13 @@ const styles = StyleSheet.create({
   bottom: {
     flexDirection: "column",
     gap: 25,
+  },
+  buttons: {
+    display: "flex",
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

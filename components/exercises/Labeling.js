@@ -1,17 +1,23 @@
 import React, { useState } from "react";
 import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
+import CustomButton from "../CustomButton";
 
-const Labeling = () => {
+const Labeling = ({ onComplete }) => {
   const [checked, setChecked] = useState(null);
 
   const handleSetChecked = (index) => {
     setChecked(index);
   };
 
+  const handleNextStep = () => {
+    onComplete(true);
+  };
+
+
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={styles.base}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.headerContainer}>
@@ -30,16 +36,32 @@ const Labeling = () => {
           />
         ))}
       </View>
+      <View style={styles.buttons}>
+        <CustomButton
+          icon={false}
+          iconName={"person-remove"}
+          title="CHECK"
+          iconSize={22}
+          color="#212832"
+          bgColor="#93D334"
+          borderColor={"#7BB836"}
+          onPress={handleNextStep}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  base: {
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignSelf: "start",
+    paddingVertical: 30,
     paddingHorizontal: 15,
-    paddingVertical: 50,
-    gap: 40,
+    gap: 20,
   },
   headerContainer: {
     paddingHorizontal: 15,
@@ -63,6 +85,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     gap: 20,
     rowGap: 40,
+  },
+  buttons: {
+    display: "flex",
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

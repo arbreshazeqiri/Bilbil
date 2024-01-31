@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
+import { checkMatching } from "../../utils/constants";
+import CustomButton from "../CustomButton";
 
-const Matching = () => {
+const Matching = ({ onComplete }) => {
   const [checked, setChecked] = useState([]);
   const [shuffledKeys, setShuffledKeys] = useState([]);
   const [shuffledValues, setShuffledValues] = useState([]);
@@ -40,15 +42,20 @@ const Matching = () => {
     tigër: "tiger",
   };
 
+  const handleNextStep = () => {
+    const isCorrect = checkMatching(pairs, checked);
+    onComplete(isCorrect);
+  };
+
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={styles.base}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.headerContainer}>
         <Text style={styles.header}>Tap the matching pairs</Text>
       </View>
-      <View style={{ flexDirection: "row", gap: 20 }}>
+      <View style={{ flexDirection: "row", justifyContent: 'center', gap: 20 }}>
         <View style={styles.cardsContainer}>
           {shuffledKeys.map((key, index) => (
             <CustomCard
@@ -74,16 +81,32 @@ const Matching = () => {
           ))}
         </View>
       </View>
+      <View style={styles.buttons}>
+        <CustomButton
+          icon={false}
+          iconName={"person-remove"}
+          title="CHECK"
+          iconSize={22}
+          color="#212832"
+          bgColor="#93D334"
+          borderColor={"#7BB836"}
+          onPress={handleNextStep}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  base: {
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignSelf: "start",
+    paddingVertical: 30,
     paddingHorizontal: 15,
-    paddingVertical: 50,
-    gap: 40,
+    gap: 20,
   },
   headerContainer: {
     paddingHorizontal: 15,
@@ -104,6 +127,13 @@ const styles = StyleSheet.create({
   cardsContainer: {
     flexDirection: "column",
     gap: 20,
+  },
+  buttons: {
+    display: "flex",
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

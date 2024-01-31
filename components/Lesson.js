@@ -4,7 +4,6 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import LoadingBar from "../components/LoadingBar";
-import CustomButton from "./CustomButton";
 import { generateExerciseSequence } from "../utils/constants";
 import * as Exercises from "../components/exercises";
 
@@ -27,8 +26,8 @@ const Lesson = ({ startLesson, setStartLesson }) => {
     }
   }, [isLoaded]);
 
-  const handleNextStep = () => {
-    if (progress < steps) {
+  const handleNextStep = (isCorrect) => {
+    if (isCorrect && progress < steps) {
       setProgress((prevProgress) => prevProgress + 1);
       setCurrentExercise(exerciseSequence[progress + 1]);
     }
@@ -37,15 +36,15 @@ const Lesson = ({ startLesson, setStartLesson }) => {
   const getExercise = () => {
     switch (currentExercise) {
       case "Listening":
-        return <Exercises.Listening />;
+        return <Exercises.Listening onComplete={(val) => handleNextStep(val)} />;
       case "Comprehension":
-        return <Exercises.Comprehension />;
+        return <Exercises.Comprehension onComplete={(val) => handleNextStep(val)} />;
       case "Matching":
-        return <Exercises.Matching />;
+        return <Exercises.Matching onComplete={(val) => handleNextStep(val)} />;
       case "Rearrangement":
         return <Exercises.Rearrangement />;
       case "Labeling":
-        return <Exercises.Labeling />;
+        return <Exercises.Labeling onComplete={(val) => handleNextStep(val)} />;
       case "Blanks":
         return <Exercises.Blanks />;
       case "Roleplay":
@@ -69,18 +68,6 @@ const Lesson = ({ startLesson, setStartLesson }) => {
         <LoadingBar steps={steps} progress={progress} />
       </View>
       {getExercise()}
-      <View style={styles.buttons}>
-        <CustomButton
-          icon={false}
-          iconName={"person-remove"}
-          title="CHECK"
-          iconSize={22}
-          color="#212832"
-          bgColor="#93D334"
-          borderColor={"#7BB836"}
-          onPress={handleNextStep}
-        />
-      </View>
     </View>
   );
 };
@@ -97,13 +84,6 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     justifySelf: "center",
     marginTop: -15,
-  },
-  buttons: {
-    display: "flex",
-    width: "92%",
-    height: 55,
-    justifyContent: "center",
-    alignItems: "center",
   },
 });
 

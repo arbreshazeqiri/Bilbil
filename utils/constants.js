@@ -119,11 +119,12 @@ export const levels = [
     color: "#944ADE",
     size: 80,
     units: 10,
-  }
-]
+  },
+];
 
 export const units = [
-  ["Greet people, Order in a cafe",
+  [
+    "Greet people, Order in a cafe",
     "Describe your family, Talk about food likes",
     "Say where you’re from, Plan to travel abroad",
     "Talk about work, Use the present tense",
@@ -132,45 +133,43 @@ export const units = [
     "Give health advice, Describe shared housing",
     "Discuss hotel stays, Refer to extended family",
     "Alphabet, Common expressions",
-    "Numbers 1-100, Days of the week, Months, Colors"]
-]
+    "Numbers 1-100, Days of the week, Months, Colors",
+  ],
+];
 
 export const colors = [
-  '#FF9100',
-  '#FFC700',
-  '#4AD0FF',
-  '#95D600',
-  '#DE4A8C',
-  '#944ADE',
-  '#EF3A3A'
+  "#FF9100",
+  "#FFC700",
+  "#4AD0FF",
+  "#95D600",
+  "#DE4A8C",
+  "#944ADE",
+  "#EF3A3A",
 ];
 
 export const darkerColors = [
-  '#d67a00',
-  '#d6a802',
-  '#0293c8',
-  '#73a301',
-  '#c4407b',
-  '#7f3ec1',
-  '#d03131'
+  "#d67a00",
+  "#d6a802",
+  "#0293c8",
+  "#73a301",
+  "#c4407b",
+  "#7f3ec1",
+  "#d03131",
 ];
 
 export const exerciseTypes = [
   "Listening",
   "Comprehension",
   "Matching",
-  "Rearrangement", 
-  "Labeling", 
-  "Blanks", 
-  "Roleplay", 
+  "Rearrangement",
+  "Labeling",
+  "Blanks",
+  "Roleplay",
   "Translation",
-  "Speaking"
+  "Speaking",
 ];
 
-export const otherExercises = [
-  'Stories',
-  'Matching'
-]
+export const otherExercises = ["Stories", "Matching"];
 
 export const generateExerciseSequence = () => {
   let allExercises = [];
@@ -178,13 +177,34 @@ export const generateExerciseSequence = () => {
 
   let sequence = [];
   for (let i = 0; i < exerciseTypes.length; i++) {
-      sequence.push(exerciseTypes[i]);
+    sequence.push(exerciseTypes[i]);
   }
 
   allExercises.sort(() => Math.random() - 0.5);
   for (let i = 0; i < 1; i++) {
-      sequence.push(allExercises[i]);
+    sequence.push(allExercises[i]);
   }
 
   return sequence;
-}
+};
+
+export const checkMatching = (pairs, checked) => {
+  if (checked.length === 0) {
+    return false;
+  }
+
+  if (checked.length % 2 !== 0) {
+    return false;
+  }
+
+  for (let i = 0; i < checked.length; i += 2) {
+    const key = checked[i];
+    const value = checked[i + 1];
+
+    if (!(key in pairs) || pairs[key] !== value) {
+      return false;
+    }
+  }
+
+  return true;
+};
