@@ -42,7 +42,7 @@ const Lesson = ({ startLesson, setStartLesson }) => {
       case "Matching":
         return <Exercises.Matching onComplete={(val) => handleNextStep(val)} />;
       case "Rearrangement":
-        return <Exercises.Rearrangement />;
+        return <Exercises.Rearrangement onComplete={(val) => handleNextStep(val)} />;
       case "Labeling":
         return <Exercises.Labeling onComplete={(val) => handleNextStep(val)} />;
       case "Blanks":

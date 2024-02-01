@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.1.9:3000";
+const BASE_URL = "http://192.168.2.3:3000";
 
 const registerUser = async (userData) => {
     try {
