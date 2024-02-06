@@ -10,7 +10,7 @@ const Draggable = ({ text, isDropped, onDrop }) => {
     <TouchableOpacity onPress={() => !isDropped & handlePress()}>
       <View style={isDropped ? styles.dropped : styles.draggable}>
         <Text
-          style={isDropped ? { color: "transparent" } : styles.draggableText}
+          style={isDropped ? { color: "transparent", fontFamily: "baloo-semibold", } : styles.draggableText}
         >
           {text}
         </Text>
@@ -38,9 +38,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,
-    paddingTop: 12,
-    paddingBottom: 13,
-    paddingHorizontal: 13
+    paddingTop: 10,
+    paddingBottom: 8,
+    paddingHorizontal: 12,
+    borderColor: "#a8a8a8",
+    borderWidth: 1,
+    borderTopWidth: 2,
+    borderBottomWidth: 5,
   },
   draggableText: {
     color: "white",
