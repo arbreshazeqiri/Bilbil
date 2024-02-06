@@ -1,20 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const Draggable = ({ text, isDropped, onDrop }) => {
-  const [hasBeenDropped, setHasBeenDropped] = useState(false);
-
   const handlePress = () => {
-    if (!isDropped && !hasBeenDropped) {
-      setHasBeenDropped(true); // Update the state to indicate the word has been dropped
-      onDrop(text); // Notify the parent component that the word has been dropped
-    }
+    onDrop(text);
   };
 
   return (
-    <TouchableOpacity onPress={handlePress}>
-      <View style={isDropped || hasBeenDropped ? styles.dropped : styles.draggable}>
-        <Text style={isDropped || hasBeenDropped ? { color: "transparent" } : styles.draggableText}>
+    <TouchableOpacity onPress={() => !isDropped & handlePress()}>
+      <View style={isDropped ? styles.dropped : styles.draggable}>
+        <Text
+          style={isDropped ? { color: "transparent" } : styles.draggableText}
+        >
           {text}
         </Text>
       </View>

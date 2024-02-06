@@ -1,10 +1,11 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Text,
   Image,
   View,
   StyleSheet,
   KeyboardAvoidingView,
+  TouchableOpacity,
   Platform,
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";
@@ -12,24 +13,40 @@ import CustomButton from "../CustomButton";
 import Draggable from "../Draggable";
 
 const Rearrangement = ({ onComplete }) => {
+  const sentence = "Unë ndez zjarrin";
+  const words = sentence.split(" ");
+  const randomWords = ["random", "words", "to", "add"];
+
   const [placedWords, setPlacedWords] = useState([]);
+  const [combinedWords, setCombinedWords] = useState(
+    [...words, ...randomWords]
+      .sort(() => Math.random() - 0.5)
+      .map((word) => ({ word, isDropped: false }))
+  );
 
   const handleNextStep = () => {
     onComplete(true);
   };
 
   const handleDrop = (word) => {
-    const newWord = { word: word.word, isDropped: true };
-    setPlacedWords((prevPlaced) => [...prevPlaced, newWord]);
+    if (word.isDropped) {
+      setPlacedWords((prevPlaced) =>
+        prevPlaced.filter((w) => w.word !== word.word)
+      );
+      setCombinedWords((prevCombined) =>
+        prevCombined.map((w) =>
+          w.word === word.word ? { ...w, isDropped: false } : w
+        )
+      );
+    } else {
+      setPlacedWords((prevPlaced) => [...prevPlaced, { ...word, isDropped: true }]);
+      setCombinedWords((prevCombined) =>
+        prevCombined.map((w) =>
+          w.word === word.word ? { ...w, isDropped: true } : w
+        )
+      );
+    }
   };
-
-  const sentence = "Unë ndez zjarrin";
-  const words = sentence.split(" ");
-  const randomWords = ["random", "words", "to", "add"];
-  const combinedWords = useMemo(() => {
-    const combined = [...words, ...randomWords].sort(() => Math.random() - 0.5);
-    return combined.map((word) => ({ word, isDropped: false }));
-  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -64,9 +81,13 @@ const Rearrangement = ({ onComplete }) => {
           <View style={styles.dashedLine} />
           <View style={styles.placedWords}>
             {placedWords.map((w, index) => (
-              <View key={index} style={styles.placedWordContainer}>
+              <TouchableOpacity
+                key={index}
+                style={styles.placedWordContainer}
+                onPress={() => handleDrop(w)}
+              >
                 <Text style={styles.placedWordText}>{w.word}</Text>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
