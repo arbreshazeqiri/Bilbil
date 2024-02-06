@@ -15,6 +15,8 @@ module.exports = function(api) {
           allowUndefined: true,
         },
       ],
+      'react-native-reanimated/plugin', // Add Reanimated Babel plugin here
+      '@babel/plugin-transform-react-jsx-source',
     ],
   };
 };
