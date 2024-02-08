@@ -41,56 +41,49 @@ const RearrangementTwo = () => {
       
         if (isReleasedInPlacement) {
           // Check if the word should be moved from storage to placement or rearranged within placement
-          const existingWordIndex = placementWords.findIndex((w) => w.id === currentId);
+          const updatedPlacementWords = [...placementWords];
+          const existingWordIndex = updatedPlacementWords.findIndex((w) => w.id === currentId);
+      
+          // Remove the word from its current position in the placement area, if it exists
           if (existingWordIndex !== -1) {
-            // Remove the word from its current position in placement area
-            const updatedPlacementWords = [...placementWords];
             updatedPlacementWords.splice(existingWordIndex, 1);
-      
-            // Find the index where the word should be inserted in the placement area
-            const insertionIndex = updatedPlacementWords.findIndex((w) => {
-              const wordPosition = wordPositions[w.id];
-              return (
-                wordPosition.x._value > currentPosition.x._value && wordPosition.y._value > currentPosition.y._value
-              );
-            });
-      
-            // Insert the word at the appropriate index
-            updatedPlacementWords.splice(insertionIndex, 0, word);
-            setPlacementWords(updatedPlacementWords);
-          } else {
-            // If the word is not in the placement area, just add it to the end
-            setPlacementWords([...placementWords, word]);
           }
+      
+          // Find the index where the word should be inserted in the placement area
+          let insertionIndex = updatedPlacementWords.findIndex((w) => {
+            const wordPosition = wordPositions[w.id];
+            return (
+              wordPosition.x._value > currentPosition.x._value && wordPosition.y._value > currentPosition.y._value
+            );
+          });
+      
+          // If the insertion index is -1, it means the word is dropped at the end
+          if (insertionIndex === -1) {
+            insertionIndex = updatedPlacementWords.length;
+          }
+      
+          // Insert the word at the appropriate index
+          updatedPlacementWords.splice(insertionIndex, 0, word);
+          setPlacementWords(updatedPlacementWords);
       
           // Remove the word from the storage area
           const updatedStorageWords = storageWords.filter((w) => w.id !== currentId);
           setStorageWords(updatedStorageWords);
         } else {
           // Check if the word should be moved from placement to storage or rearranged within storage
-          const existingWordIndex = storageWords.findIndex((w) => w.id === currentId);
+          const updatedStorageWords = [...storageWords];
+          const existingWordIndex = updatedStorageWords.findIndex((w) => w.id === currentId);
+      
+          // Remove the word from its current position in the storage area, if it exists
           if (existingWordIndex !== -1) {
-            // Remove the word from its current position in storage area
-            const updatedStorageWords = [...storageWords];
             updatedStorageWords.splice(existingWordIndex, 1);
-      
-            // Find the index where the word should be inserted in the storage area
-            const insertionIndex = updatedStorageWords.findIndex((w) => {
-              const wordPosition = wordPositions[w.id];
-              return (
-                wordPosition.x._value > currentPosition.x._value && wordPosition.y._value > currentPosition.y._value
-              );
-            });
-      
-            // Insert the word at the appropriate index
-            updatedStorageWords.splice(insertionIndex, 0, word);
-            setStorageWords(updatedStorageWords);
-          } else {
-            // If the word is not in the storage area, just add it to the end
-            setStorageWords([...storageWords, word]);
           }
+      
+          // Insert the word at the end of the storage area
+          updatedStorageWords.push(word);
+          setStorageWords(updatedStorageWords);
         }
-      },
+      }, 
     });
   });
 
@@ -138,11 +131,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   placementArea: {
-    alignItems: "center",
+    alignItems: "start",
   },
   wordsContainer: {
     flexDirection: "row",
-    justifyContent: "center",
     alignItems: "center",
     flexWrap: "wrap",
   },
