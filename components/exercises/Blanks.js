@@ -11,8 +11,7 @@ import {
 import CustomButton from "../CustomButton";
 import { checkRearrangement } from "../../utils/constants";
 
-const Blanks = ({ onComplete }) => {
-  const sentence = "Zogjtë fluturojnë mbi det";
+const Blanks = ({ sentence = "", missingIndices = [], onComplete }) => {
   const words = sentence.split(" ");
   const randomWords = ["random", "words", "to", "add"];
   const [storageWords, setStorageWords] = useState(
@@ -23,26 +22,25 @@ const Blanks = ({ onComplete }) => {
   const [placementWords, setPlacementWords] = useState([]);
 
   const handleNextStep = () => {
-    const isCorrect = checkRearrangement(
-      sentence,
-      placementWords.map((w) => w.text)
-    );
+    let structuredSentence = [...words];
+    missingIndices.forEach((index, i) => {
+      if (placementWords[i]) {
+        structuredSentence[index] = placementWords[i].text;
+      }
+    });
+
+    const isCorrect = checkRearrangement(sentence, structuredSentence);
     onComplete(isCorrect);
   };
 
   const handleTap = (word) => {
     if (placementWords.includes(word)) {
-      // Remove the word from placementWords
       setPlacementWords((prev) => prev.filter((w) => w.id !== word.id));
     } else {
-      // Check if there is already a word at max capacity
-      if (placementWords.length === 2) return;
-
-      // Add the word to placementWords
+      if (placementWords.length === missingIndices.length) return;
       setPlacementWords((prev) => [...prev, word]);
     }
 
-    // Toggle isDropped for the word in storageWords
     const updatedWords = storageWords.map((w) => {
       if (w.id === word.id) {
         return { ...w, isDropped: !w.isDropped };
@@ -66,6 +64,36 @@ const Blanks = ({ onComplete }) => {
     ));
   };
 
+  const renderTextArea = () => {
+    let placementCounter = 0
+    return (
+      <View style={styles.textArea}>
+        {words.map((word, index) => {
+          const missing = missingIndices.includes(index);
+          if (!missing) {
+            return (
+              <Text key={index} style={styles.props}>
+                {word}
+              </Text>
+            );
+          } else if (placementWords.length > 0 && placementCounter < placementWords.length) {
+            const placementWord = placementWords[placementCounter];
+            placementCounter++;
+            return (
+              <TouchableOpacity key={index} onPress={() => handleTap(placementWord)}>
+                <View style={styles.wordContainer}>
+                  <Text style={styles.wordText}>{placementWord.text}</Text>
+                </View>
+              </TouchableOpacity>
+            );
+          } else {
+            return <View key={index} style={styles.dashedLine} />;
+          }
+        })}
+      </View>
+    );
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.base}
@@ -77,29 +105,7 @@ const Blanks = ({ onComplete }) => {
           style={styles.image}
           source={require("../../assets/exercises/blanks.png")}
         />
-        <View style={styles.textArea}>
-          <Text style={styles.props}>Zogjtë</Text>
-          {placementWords[0] ? (
-              <TouchableOpacity onPress={() => handleTap(placementWords[0])}>
-              <View style={styles.wordContainer}>
-                <Text style={styles.wordText}>{placementWords[0].text}</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.dashedLine} />
-          )}
-          <Text style={styles.props}>mbi</Text>
-          {placementWords[1] ? (
-            <TouchableOpacity onPress={() => handleTap(placementWords[1])}>
-              <View style={styles.wordContainer}>
-                <Text style={styles.wordText}>{placementWords[1].text}</Text>
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.dashedLine} />
-          )}
-          <Text style={styles.props}>.</Text>
-        </View>
+        {renderTextArea()}
       </View>
       <View style={styles.draggableWords}>{renderWords(storageWords)}</View>
       <View style={styles.buttons}>
@@ -161,14 +167,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: "gray",
     alignSelf: "flex-end",
-  },
-  placedWords: {
-    position: "absolute",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 34,
-    rowGap: 11,
-    gap: 10,
   },
   wordContainer: {
     backgroundColor: "#212832",

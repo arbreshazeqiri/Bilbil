@@ -36,17 +36,29 @@ const Lesson = ({ startLesson, setStartLesson }) => {
   const getExercise = () => {
     switch (currentExercise) {
       case "Listening":
-        return <Exercises.Listening onComplete={(val) => handleNextStep(val)} />;
+        return (
+          <Exercises.Listening onComplete={(val) => handleNextStep(val)} />
+        );
       case "Comprehension":
-        return <Exercises.Comprehension onComplete={(val) => handleNextStep(val)} />;
+        return (
+          <Exercises.Comprehension onComplete={(val) => handleNextStep(val)} />
+        );
       case "Matching":
         return <Exercises.Matching onComplete={(val) => handleNextStep(val)} />;
       case "Rearrangement":
-        return <Exercises.Rearrangement onComplete={(val) => handleNextStep(val)} />;
+        return (
+          <Exercises.Rearrangement onComplete={(val) => handleNextStep(val)} />
+        );
       case "Labeling":
         return <Exercises.Labeling onComplete={(val) => handleNextStep(val)} />;
       case "Blanks":
-        return <Exercises.Blanks />;
+        return (
+          <Exercises.Blanks
+            onComplete={(val) => handleNextStep(val)}
+            sentence="Zogjtë fluturojnë mbi det"
+            missingIndices={[1, 3]}
+          />
+        );
       case "Roleplay":
         return <Exercises.Roleplay />;
       case "Translation":
