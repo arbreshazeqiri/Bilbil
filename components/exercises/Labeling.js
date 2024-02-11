@@ -30,7 +30,7 @@ const Labeling = ({ onComplete }) => {
             key={index}
             index={index}
             label={"fire"}
-            src={require(`../../assets/items/fire.png`)}
+            src={require(`../../assets/items/zjarr.png`)}
             isChecked={checked === index}
             setIsChecked={handleSetChecked}
           />

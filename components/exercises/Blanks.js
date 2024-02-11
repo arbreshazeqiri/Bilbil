@@ -153,6 +153,7 @@ const styles = StyleSheet.create({
     gap: 10,
     flexDirection: "row",
     flexWrap: "wrap",
+    rowGap: 40,
     flex: 1,
   },
   props: {
@@ -206,6 +207,7 @@ const styles = StyleSheet.create({
   },
   draggableWords: {
     width: "100%",
+    justifyContent: 'space-between',
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,

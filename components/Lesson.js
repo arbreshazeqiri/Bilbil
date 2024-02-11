@@ -60,11 +60,11 @@ const Lesson = ({ startLesson, setStartLesson }) => {
           />
         );
       case "Roleplay":
-        return <Exercises.Roleplay />;
+        return <Exercises.Roleplay onComplete={(val) => handleNextStep(val)} />;
       case "Translation":
-        return <Exercises.Translation />;
+        return <Exercises.Translation sentence={"Birds fly above the sea"} translation={"Zogjtë fluturojnë mbi det"} onComplete={(val) => handleNextStep(val)} />;
       case "Speaking":
-        return <Exercises.Speaking />;
+        return <Exercises.Speaking onComplete={(val) => handleNextStep(val)} />;
       default:
         return null;
     }

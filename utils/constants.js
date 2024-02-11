@@ -158,6 +158,7 @@ export const darkerColors = [
 ];
 
 export const exerciseTypes = [
+  "Translation",
   "Listening",
   "Comprehension",
   "Matching",
@@ -165,7 +166,6 @@ export const exerciseTypes = [
   "Labeling",
   "Blanks",
   "Roleplay",
-  "Translation",
   "Speaking",
 ];
 
@@ -177,13 +177,11 @@ export const generateExerciseSequence = () => {
 
   let sequence = [];
   for (let i = 0; i < exerciseTypes.length; i++) {
-    sequence.push('Blanks');
+    sequence.push(exerciseTypes[i]);
   }
 
   allExercises.sort(() => Math.random() - 0.5);
-  for (let i = 0; i < 1; i++) {
-    sequence.push('Rearrangement');
-  }
+  sequence.push(allExercises[0]);
 
   return sequence;
 };
@@ -197,11 +195,17 @@ export const checkMatching = (pairs, checked) => {
     return false;
   }
 
+  const pairKeys = Object.keys(pairs);
+
   for (let i = 0; i < checked.length; i += 2) {
     const key = checked[i];
     const value = checked[i + 1];
 
-    if (!(key in pairs) || pairs[key] !== value) {
+    const isValidPair =
+      (key in pairs && pairs[key] === value) ||
+      (pairKeys.includes(value) && pairs[value] === key);
+
+    if (!isValidPair) {
       return false;
     }
   }

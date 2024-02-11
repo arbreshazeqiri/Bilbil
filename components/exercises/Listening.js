@@ -91,6 +91,7 @@ const Listening = ({ onComplete }) => {
           placeholder="Type in Albanian"
           placeholderTextColor="#AFAFAF"
           keyboardType="default"
+          multiline
         />
       </View>
       <View style={styles.buttons}>
@@ -148,10 +149,7 @@ const styles = StyleSheet.create({
     borderColor: "#AFAFAF",
     backgroundColor: "#2B3440",
     height: 200,
-    paddingHorizontal: 5,
-    paddingVertical: 0,
-    textAlignVertical: "top",
-    paddingVertical: 10,
+    paddingTop: 15,
     paddingHorizontal: 15,
     fontSize: 16,
   },
