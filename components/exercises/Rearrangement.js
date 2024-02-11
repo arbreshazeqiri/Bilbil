@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
+import { checkRearrangement } from "../../utils/constants";
 
 const Rearrangement = ({ onComplete }) => {
   const sentence = "Unë ndez zjarrin";
@@ -25,7 +26,8 @@ const Rearrangement = ({ onComplete }) => {
   const [wordPositions, setWordPositions] = useState({});
 
   const handleNextStep = () => {
-    onComplete(true);
+    const isCorrect = checkRearrangement(sentence, placementWords.map(w => w.text));
+    onComplete(isCorrect);
   };
 
   useEffect(() => {

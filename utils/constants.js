@@ -208,3 +208,8 @@ export const checkMatching = (pairs, checked) => {
 
   return true;
 };
+
+export const checkRearrangement = (sentence, answer) => {
+  const answerJoined = answer.join(" ");
+  return sentence == answerJoined;
+}
