@@ -177,7 +177,7 @@ export const generateExerciseSequence = () => {
 
   let sequence = [];
   for (let i = 0; i < exerciseTypes.length; i++) {
-    sequence.push('Rearrangement');
+    sequence.push('Blanks');
   }
 
   allExercises.sort(() => Math.random() - 0.5);
