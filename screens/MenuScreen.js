@@ -1,6 +1,7 @@
 import HomeScreen from "./HomeScreen";
 import PracticeScreen from "./PracticeScreen";
 import ProfileScreen from "./ProfileScreen";
+import NewsScreen from "./NewsScreen";
 import TabNavigator from "../components/TabNavigator";
 
 const tabScreens = [
@@ -19,6 +20,11 @@ const tabScreens = [
     component: ProfileScreen,
     iconSource: require("../assets/navigation/profile-f.png"),
   },
+  {
+    name: "News",
+    component: NewsScreen,
+    iconSource: require("../assets/navigation/news.png"),
+  }
 ];
 
 const MenuScreen = () => {

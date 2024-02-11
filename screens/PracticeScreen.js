@@ -6,6 +6,7 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { practices } from "../utils/constants";
 import { LinearGradient } from "expo-linear-gradient";
+import Practice from "../components/Practice"
 
 const PracticeScreen = () => {
   const [practice, setPractice] = useState(null);
@@ -61,7 +62,7 @@ const PracticeScreen = () => {
           {practices.map((practice, index) => {
             const { name, image, size } = practice;
             return (
-              <TouchableOpacity style={styles.container} key={index} onPress={() => setPractice(name)}>
+              <TouchableOpacity style={styles.container} key={index} onPress={() => setPractice(practice)}>
                 <View
                   style={{
                     flexDirection: "column",
@@ -101,7 +102,7 @@ const PracticeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        {practice !== null ? <Practice type={practice} /> : <Practices />}
+        {practice !== null ? <Practice practice={practice} setPractice={(val) => setPractice(val)}/> : <Practices />}
       </View>
     </SafeAreaView>
   );
@@ -122,10 +123,9 @@ const styles = StyleSheet.create({
     height: 350,
   },
   bannerContent: {
-    positon: 'absolute',
     flexDirection: 'column',
     alignItems: 'center',
-    bottom: '70%',
+    bottom: '80%',
     gap: 20,
   },
   bannerImage: {
