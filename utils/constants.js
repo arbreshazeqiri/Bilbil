@@ -157,6 +157,27 @@ export const darkerColors = [
   "#d03131",
 ];
 
+export const practices = [
+  {
+    index: 0,
+    name: 'Mistakes',
+    image: require("../assets/practice/mistake.png"),
+    size: 70,
+  },
+  {
+    index: 1,
+    name: 'Stories',
+    image: require("../assets/practice/story.png"),
+    size: 70,
+  },
+  {
+    index: 2,
+    name: 'Timed Word-Matching',
+    image: require("../assets/practice/time.png"),
+    size: 70,
+  },
+];
+
 export const roleplayQuestions = [
   {
     question: "Si e ke emrin?",

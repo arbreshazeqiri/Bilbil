@@ -112,8 +112,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#212832",
-    paddingTop: 0,
     padding: 20,
+    paddingTop: 0,
+    marginTop: -100,
     gap: 20,
   },
   brand: {

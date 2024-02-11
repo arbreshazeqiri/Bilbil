@@ -66,7 +66,7 @@ const SignUpScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <StatusBar backgroundColor={"#212832"} barStyle={"light-content"} />
       <View style={styles.base}>
         <View style={styles.brand}>
