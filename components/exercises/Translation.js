@@ -43,7 +43,7 @@ const Translation = ({ sentence, translation, onComplete }) => {
             style={{
               color: "white",
               fontFamily: "baloo-semibold",
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: 500,
               alignSelf: 'center'
             }}

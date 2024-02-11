@@ -157,6 +157,19 @@ export const darkerColors = [
   "#d03131",
 ];
 
+export const roleplayQuestions = [
+  {
+    question: "Si e ke emrin?",
+    answers: ["Unë quhem Beni.", "Emri im është Beni.", "Unë jam student.", "Beni."],
+    correctAnswers: [0, 1, 3]
+  },
+  {
+    question: "Sa vjeç je?",
+    answers: ["5", "Pesë.", "Jam pesë vjeç.", "Jo."],
+    correctAnswers: [0, 1, 2]
+  },
+];
+
 export const exerciseTypes = [
   "Translation",
   "Listening",

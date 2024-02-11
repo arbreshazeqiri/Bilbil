@@ -4,7 +4,7 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import LoadingBar from "../components/LoadingBar";
-import { generateExerciseSequence } from "../utils/constants";
+import { generateExerciseSequence, roleplayQuestions } from "../utils/constants";
 import * as Exercises from "../components/exercises";
 
 const Lesson = ({ startLesson, setStartLesson }) => {
@@ -60,9 +60,9 @@ const Lesson = ({ startLesson, setStartLesson }) => {
           />
         );
       case "Roleplay":
-        return <Exercises.Roleplay onComplete={(val) => handleNextStep(val)} />;
+        return <Exercises.Roleplay onComplete={(val) => handleNextStep(val)} questions={roleplayQuestions}/>;
       case "Translation":
-        return <Exercises.Translation sentence={"Birds fly above the sea"} translation={"Zogjtë fluturojnë mbi det"} onComplete={(val) => handleNextStep(val)} />;
+        return <Exercises.Translation sentence={"Birds fly over the sea"} translation={"Zogjtë fluturojnë mbi det"} onComplete={(val) => handleNextStep(val)} />;
       case "Speaking":
         return <Exercises.Speaking onComplete={(val) => handleNextStep(val)} />;
       default:
