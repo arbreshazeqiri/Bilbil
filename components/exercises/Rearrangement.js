@@ -1,51 +1,153 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   Image,
   View,
   StyleSheet,
   KeyboardAvoidingView,
-  TouchableOpacity,
-  Platform,
+  PanResponder,
+  Animated,
+  Platform
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
-import Draggable from "../Draggable";
 
 const Rearrangement = ({ onComplete }) => {
   const sentence = "Unë ndez zjarrin";
   const words = sentence.split(" ");
   const randomWords = ["random", "words", "to", "add"];
-
-  const [placedWords, setPlacedWords] = useState([]);
-  const [combinedWords, setCombinedWords] = useState(
+  const [storageWords, setStorageWords] = useState(
     [...words, ...randomWords]
       .sort(() => Math.random() - 0.5)
-      .map((word) => ({ word, isDropped: false }))
+      .map((word, index) => ({ id: index, text: word }))
   );
+  const [placementWords, setPlacementWords] = useState([]);
+  const [wordPositions, setWordPositions] = useState({});
 
   const handleNextStep = () => {
     onComplete(true);
   };
 
-  const handleDrop = (word) => {
-    if (word.isDropped) {
-      setPlacedWords((prevPlaced) =>
-        prevPlaced.filter((w) => w.word !== word.word)
-      );
-      setCombinedWords((prevCombined) =>
-        prevCombined.map((w) =>
-          w.word === word.word ? { ...w, isDropped: false } : w
-        )
-      );
-    } else {
-      setPlacedWords((prevPlaced) => [...prevPlaced, { ...word, isDropped: true }]);
-      setCombinedWords((prevCombined) =>
-        prevCombined.map((w) =>
-          w.word === word.word ? { ...w, isDropped: true } : w
-        )
-      );
-    }
+  useEffect(() => {
+    const positions = {};
+    [...storageWords, ...placementWords].forEach((word) => {
+      positions[word.id] = new Animated.ValueXY();
+    });
+    setWordPositions(positions);
+  }, [storageWords, placementWords]);
+
+  const panResponders = {};
+  [...storageWords, ...placementWords].forEach((word) => {
+    panResponders[word.id] = PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: (event, gesture) => {
+        wordPositions[word.id].setValue({
+          x: gesture.dx,
+          y: gesture.dy,
+        });
+      },
+      onPanResponderRelease: (event, gesture) => {
+        const { id: currentId } = word;
+        const currentPosition = wordPositions[currentId];
+        const isDragged = gesture.dx !== 0 || gesture.dy !== 0;
+
+        if (!isDragged) {
+          const updatedPlacementWords = [...placementWords];
+          const existingWordIndex = updatedPlacementWords.findIndex(
+            (w) => w.id === currentId
+          );
+
+          // Remove the word from its current position in the placement area, if it exists
+          if (existingWordIndex !== -1) {
+            updatedPlacementWords.splice(existingWordIndex, 1);
+          }
+
+          if (!placementWords.includes(word)) {
+            updatedPlacementWords.push(word);
+            setPlacementWords(updatedPlacementWords);
+
+            // Remove the word from the storage area
+            const updatedStorageWords = storageWords.filter(
+              (w) => w.id !== currentId
+            );
+            setStorageWords(updatedStorageWords);
+          } else {
+            updatedPlacementWords.filter((w) => w.id !== currentId);
+            setPlacementWords(updatedPlacementWords);
+
+            // Remove the word from the storage area
+            const updatedStorageWords = [...storageWords, word];
+            setStorageWords(updatedStorageWords);
+          }
+          // Insert the word at the end of the placement area
+        } else {
+          // Determine if the word was released in the storage or placement area
+          const isReleasedInPlacement = gesture.moveY > 100; // Adjust the threshold according to your UI
+
+          if (isReleasedInPlacement) {
+            // Check if the word should be moved from storage to placement or rearranged within placement
+            const updatedPlacementWords = [...placementWords];
+            const existingWordIndex = updatedPlacementWords.findIndex(
+              (w) => w.id === currentId
+            );
+
+            // Remove the word from its current position in the placement area, if it exists
+            if (existingWordIndex !== -1) {
+              updatedPlacementWords.splice(existingWordIndex, 1);
+            }
+
+            const isMovementLeftToRight = gesture.dx > 0;
+
+            // Find the index where the word should be inserted in the placement area
+            let insertionIndex = updatedPlacementWords.findIndex((w) => {
+              const wordPosition = wordPositions[w.id];
+              const wordRight = wordPosition.x._value + w.text.length + 10;
+          
+              if (isMovementLeftToRight) {
+                  // For left-to-right movement
+                  return wordPosition.x._value > currentPosition.x._value || wordPosition.y._value > currentPosition.y._value;
+              } else {
+                  // For right-to-left movement
+                  return wordRight < currentPosition.x._value || wordPosition.y._value < currentPosition.y._value;
+              }
+          });
+          
+          // If no word is surpassed, leave it where it is
+          if (insertionIndex === -1) {
+              insertionIndex = updatedPlacementWords.length; // Insert at the end
+          }
+          
+          // Insert the word at the appropriate index
+          updatedPlacementWords.splice(insertionIndex, 0, word);
+          
+            setPlacementWords(updatedPlacementWords);
+            setWordPositions({...wordPositions});
+            // Remove the word from the storage area
+            const updatedStorageWords = storageWords.filter(
+              (w) => w.id !== currentId
+            );
+            setStorageWords(updatedStorageWords);
+          }
+        }
+      },
+    });
+  });
+
+  const renderWords = (words, place) => {
+    return words.map((word, index) => (
+      <Animated.View
+        key={word.id}
+        style={[
+          styles.wordContainer,
+          {
+            transform: wordPositions[word.id]?.getTranslateTransform(),
+          },
+        ]}
+        {...panResponders[word.id].panHandlers}
+      >
+        <Text style={styles.wordText}>{word.text}</Text>
+      </Animated.View>
+    ));
   };
 
   return (
@@ -70,7 +172,7 @@ const Rearrangement = ({ onComplete }) => {
               width: "100%",
             }}
           >
-            Unë ndez zjarrin.
+            I light the fire.
           </Text>
         </ThoughtBubble>
       </View>
@@ -80,26 +182,11 @@ const Rearrangement = ({ onComplete }) => {
           <View style={styles.dashedLine} />
           <View style={styles.dashedLine} />
           <View style={styles.placedWords}>
-            {placedWords.map((w, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.placedWordContainer}
-                onPress={() => handleDrop(w)}
-              >
-                <Text style={styles.placedWordText}>{w.word}</Text>
-              </TouchableOpacity>
-            ))}
+           {renderWords(placementWords, 'place')}
           </View>
         </View>
         <View style={styles.draggableWords}>
-          {combinedWords.map((word, index) => (
-            <Draggable
-              key={word.word + index}
-              text={word.word}
-              isDropped={word.isDropped}
-              onDrop={() => handleDrop(word)}
-            />
-          ))}
+          {renderWords(storageWords, 'storage')}
         </View>
       </View>
       <View style={styles.buttons}>
@@ -165,7 +252,9 @@ const styles = StyleSheet.create({
     rowGap: 11,
     gap: 10,
   },
-  placedWordContainer: {
+  wordContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
     backgroundColor: "#212832",
     justifyContent: "center",
     alignItems: "center",
@@ -178,22 +267,18 @@ const styles = StyleSheet.create({
     borderTopWidth: 2,
     borderBottomWidth: 5,
   },
-  placedWordText: {
+  wordText: {
     fontSize: 16,
     color: "white",
     fontFamily: "baloo-semibold",
   },
   draggableWords: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: 10,
-  },
-  draggableWord: {
-    margin: 5,
+    marginTop: 25,
   },
   buttons: {
     display: "flex",
