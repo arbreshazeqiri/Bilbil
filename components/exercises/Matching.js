@@ -44,7 +44,7 @@ const Matching = ({ onComplete }) => {
 
   const handleNextStep = () => {
     const isCorrect = checkMatching(pairs, checked);
-    onComplete(isCorrect);
+    onComplete(true);
   };
 
   return (
@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

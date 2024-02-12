@@ -27,7 +27,9 @@ const Listening = ({ onComplete }) => {
   const playSound = async (rate = 1) => {
     try {
       const soundObject = new Audio.Sound();
-      await soundObject.loadAsync(require("../../assets/audios/Pershendetje.m4a"));
+      await soundObject.loadAsync(
+        require("../../assets/audios/Pershendetje.m4a")
+      );
 
       await soundObject.setRateAsync(rate, true);
       await soundObject.playAsync();
@@ -39,7 +41,6 @@ const Listening = ({ onComplete }) => {
   const handleNextStep = () => {
     onComplete(true);
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -91,6 +92,7 @@ const Listening = ({ onComplete }) => {
           placeholder="Type in Albanian"
           placeholderTextColor="#AFAFAF"
           keyboardType="default"
+          textAlignVertical="top"
           multiline
         />
       </View>
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

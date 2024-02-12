@@ -14,27 +14,28 @@ const Labeling = ({ onComplete }) => {
     onComplete(true);
   };
 
-
   return (
     <KeyboardAvoidingView
       style={styles.base}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.headerContainer}>
-        <Text style={styles.header}>Select the correct image</Text>
-        <Text style={styles.word}>zjarr</Text>
-      </View>
-      <View style={styles.cardsContainer}>
-        {[0, 1, 2, 3].map((index) => (
-          <CustomCard
-            key={index}
-            index={index}
-            label={"fire"}
-            src={require(`../../assets/items/zjarr.png`)}
-            isChecked={checked === index}
-            setIsChecked={handleSetChecked}
-          />
-        ))}
+      <View style={styles.content}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>Select the correct image</Text>
+          <Text style={styles.word}>zjarr</Text>
+        </View>
+        <View style={styles.cardsContainer}>
+          {[0, 1, 2, 3].map((index) => (
+            <CustomCard
+              key={index}
+              index={index}
+              label={"fire"}
+              src={require(`../../assets/items/zjarr.png`)}
+              isChecked={checked === index}
+              setIsChecked={handleSetChecked}
+            />
+          ))}
+        </View>
       </View>
       <View style={styles.buttons}>
         <CustomButton
@@ -59,14 +60,16 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
-    gap: 20,
+  },
+  content: {
+    gap: 15,
   },
   headerContainer: {
     paddingHorizontal: 15,
     marginBottom: 10,
-    gap: 10,
+    gap: 2,
   },
   header: {
     color: "white",
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     fontFamily: "baloo-semibold",
   },
   word: {
-    fontSize: 20,
+    fontSize: 25,
     color: "#944ADE",
     fontFamily: "baloo-semibold",
     fontWeight: "600",
@@ -83,8 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-around",
-    gap: 20,
-    rowGap: 40,
+    rowGap: 30,
   },
   buttons: {
     display: "flex",

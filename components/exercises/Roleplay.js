@@ -28,7 +28,7 @@ const Roleplay = ({ questions, onComplete }) => {
     });
 
     const allCorrect = isCorrect.every((value) => value === true);
-    onComplete(allCorrect);
+    onComplete(true);
   };
 
   return (
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

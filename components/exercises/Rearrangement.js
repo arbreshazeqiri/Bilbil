@@ -27,7 +27,7 @@ const Rearrangement = ({ onComplete }) => {
 
   const handleNextStep = () => {
     const isCorrect = checkRearrangement(sentence, placementWords.map(w => w.text));
-    onComplete(isCorrect);
+    onComplete(true);
   };
 
   useEffect(() => {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 30,
   },
@@ -235,6 +235,7 @@ const styles = StyleSheet.create({
   textArea: {
     flex: 1,
     flexDirection: "column",
+    justifyContent: 'space-between',
   },
   dashedLines: {
     width: "100%",
@@ -280,7 +281,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    marginTop: 25,
   },
   buttons: {
     display: "flex",

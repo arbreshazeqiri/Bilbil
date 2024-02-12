@@ -42,7 +42,7 @@ const ThoughtBubble = ({
     triangleTwo: {
       width: 0,
       height: 0,
-      marginTop: 41,
+      marginTop: 40.5,
       position: "relative",
       marginLeft: position === 'right' && -10,
       backgroundColor: "transparent",

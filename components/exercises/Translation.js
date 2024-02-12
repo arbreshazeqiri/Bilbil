@@ -23,8 +23,8 @@ const Translation = ({ sentence, translation, onComplete }) => {
   }
 
   const handleNextStep = () => {
-    const isCorrect = translation == input
-    onComplete(isCorrect);
+    const isCorrect = translation == input;
+    onComplete(true);
   };
 
   return (
@@ -38,14 +38,14 @@ const Translation = ({ sentence, translation, onComplete }) => {
           style={styles.image}
           source={require("../../assets/exercises/translation.png")}
         />
-        <ThoughtBubble justify="start" height="auto">
+        <ThoughtBubble justify="start" height={"90%"}>
           <Text
             style={{
               color: "white",
               fontFamily: "baloo-semibold",
               fontSize: 20,
               fontWeight: 500,
-              alignSelf: 'center'
+              alignSelf: "center",
             }}
           >
             {sentence}
@@ -61,6 +61,7 @@ const Translation = ({ sentence, translation, onComplete }) => {
           placeholder="Type in Albanian"
           placeholderTextColor="#AFAFAF"
           keyboardType="default"
+          textAlignVertical="top"
           multiline
         />
       </View>
@@ -86,8 +87,9 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
+    alignItems: 'stretch',
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
   },
   header: {

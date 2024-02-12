@@ -30,7 +30,7 @@ const Blanks = ({ sentence = "", missingIndices = [], onComplete }) => {
     });
 
     const isCorrect = checkRearrangement(sentence, structuredSentence);
-    onComplete(isCorrect);
+    onComplete(true);
   };
 
   const handleTap = (word) => {
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 30,
   },
@@ -161,10 +161,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "baloo-semibold",
     fontSize: 20,
-    fontWeight: 500,
+    fontWeight: '500',
   },
   dashedLine: {
-    width: 50,
+    width: 100,
     borderBottomWidth: 1,
     borderBottomColor: "gray",
     alignSelf: "flex-end",
@@ -207,11 +207,10 @@ const styles = StyleSheet.create({
   },
   draggableWords: {
     width: "100%",
-    justifyContent: 'space-between',
+    justifyContent: 'space-evenly',
     flexDirection: "row",
     flexWrap: "wrap",
-    gap: 10,
-    marginTop: 25,
+    gap: 20,
   },
   buttons: {
     display: "flex",
