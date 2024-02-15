@@ -4,6 +4,7 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
+import * as Practices from "../components/practices";
 
 const Practice = ({ practice, setPractice }) => {
   const [isLoaded] = useFonts({
@@ -15,17 +16,39 @@ const Practice = ({ practice, setPractice }) => {
     return null;
   }
 
+  const getExercise = () => {
+    switch (practice.name) {
+      case "Mistakes":
+        return (
+          <Practices.Mistakes onComplete={(val) => handleNextStep(val)} />
+        );
+      case "Stories":
+        return (
+          <Practices.Stories onComplete={(val) => handleNextStep(val)} />
+        );
+      case "Timed Word-Matching":
+        return (
+          <Practices.TimedMatching onComplete={(val) => handleNextStep(val)} />
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.base}>
-      <View style={styles.header}>
-        <AntDesign
-          name="arrowleft"
-          size={32}
-          color={"#afafaf97"}
-          onPress={() => setPractice(null)}
-        />
-        <Text style={styles.title}>{practice.name}</Text>
-      </View>
+      {practice.header && (
+        <View style={styles.header}>
+          <AntDesign
+            name="arrowleft"
+            size={32}
+            color={"#afafaf97"}
+            onPress={() => setPractice(null)}
+          />
+          <Text style={styles.title}>{practice.name}</Text>
+        </View>
+      )}
+      {getExercise()}
     </ScrollView>
   );
 };

@@ -163,18 +163,21 @@ export const practices = [
     name: 'Mistakes',
     image: require("../assets/practice/mistake.png"),
     size: 70,
+    header: true,
   },
   {
     index: 1,
     name: 'Stories',
     image: require("../assets/practice/story.png"),
     size: 70,
+    header: true,
   },
   {
     index: 2,
     name: 'Timed Word-Matching',
     image: require("../assets/practice/time.png"),
     size: 70,
+    header: false,
   },
 ];
 
@@ -202,8 +205,6 @@ export const exerciseTypes = [
   "Roleplay",
   "Speaking",
 ];
-
-export const otherExercises = ["Stories", "Matching"];
 
 export const generateExerciseSequence = () => {
   let allExercises = [];
