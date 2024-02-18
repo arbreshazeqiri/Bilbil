@@ -5,60 +5,77 @@ import CustomModal from "../CustomModal";
 import CustomCard from "../CustomCard";
 import { Feather } from "@expo/vector-icons";
 import { colorsObj, checkMatching } from "../../utils/constants";
+import { pairs } from "../../utils/language";
 
 const TimedMatching = ({ setPractice }) => {
   const [steps, setSteps] = useState(10);
   const [progress, setProgress] = useState(0);
-  const [time, setTime] = useState("1:45");
+  const [time, setTime] = useState(105);
   const [checked, setChecked] = useState([]);
-  const [shuffledKeys, setShuffledKeys] = useState([]);
-  const [shuffledValues, setShuffledValues] = useState([]);
+  const [shuffledPairs, setShuffledPairs] = useState([]);
+  const [isOver, setIsOver] = useState(false);
 
   useEffect(() => {
-    const shuffleArray = (array) => {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
+    // Function to shuffle pairs
+    const shufflePairs = () => {
+      let pairsArray = Object.entries(pairs);
+      let shuffledArray = [];
+
+      while (pairsArray.length) {
+        shuffledArray = shuffledArray.concat(
+          pairsArray.splice(0, Math.min(10, pairsArray.length))
+        );
+        shuffledArray.sort(() => Math.random() - 0.5);
       }
-      return array;
+
+      setShuffledPairs(shuffledArray);
     };
 
-    const keys = Object.keys(pairs);
-    const values = Object.values(pairs);
-
-    setShuffledKeys(shuffleArray(keys));
-    setShuffledValues(shuffleArray(values));
+    shufflePairs();
   }, []);
 
-  const handleSetChecked = (index) => {
-    if (checked.includes(index)) {
-      setChecked((prevChecked) =>
-        prevChecked.filter((option) => option !== index)
-      );
-    } else {
-      setChecked((prevChecked) => [...prevChecked, index]);
-    }
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTime((prevTime) => {
+        if (prevTime === 0) {
+          clearInterval(timer);
+          setIsOver(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const handleSetChecked = (pair) => {
     if (checked.length === 2) {
-      handleNextStep();
+      return;
     }
+
+    setChecked((prevChecked) => [...prevChecked, pair]);
   };
 
-  const pairs = {
-    mollë: "apple",
-    laps: "pencil",
-    zjarr: "fire",
-    tigër: "tiger",
-  };
-
-  const handleNextStep = () => {
-    const isCorrect = checkMatching(pairs, checked);
-    if (isCorrect) {
-      setProgress((prevProgress) => prevProgress + 1);
-      // delete this pair and replace with a new one
-    } else {
-      setChecked([])
+  useEffect(() => {
+    if (checked.length === 2) {
+      const isCorrect = checkMatching(pairs, checked);
+      if (isCorrect) {
+        setProgress((prevProgress) => prevProgress + 1);
+        setShuffledPairs((prevPairs) =>
+          prevPairs.filter(
+            (pair) => pair[0] !== checked[0] && pair[1] !== checked[1]
+          )
+        );
+      }
+      setChecked([]);
     }
-    if (progress === steps) onComplete(true);
+  }, [checked]);
+
+  const formatTime = () => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   };
 
   return (
@@ -74,13 +91,15 @@ const TimedMatching = ({ setPractice }) => {
               steps={steps}
               progress={progress}
               color={colorsObj.red}
+              checkpointNumber={3}
+              checkpointValues={[5, 15, 25]}
             />
           </View>
           <View style={styles.timer}>
             <View style={{ backgroundColor: "white", borderRadius: 12 }}>
               <Feather name="clock" color={colorsObj.red} size={22} />
             </View>
-            <Text style={styles.time}>{time}</Text>
+            <Text style={styles.time}>{formatTime()}</Text>
           </View>
         </View>
         <View style={styles.headerContainer}>
@@ -90,26 +109,26 @@ const TimedMatching = ({ setPractice }) => {
           style={{ flexDirection: "row", justifyContent: "center", gap: 20 }}
         >
           <View style={styles.cardsContainer}>
-            {shuffledKeys.map((key, index) => (
+            {shuffledPairs.map((pair, index) => (
               <CustomCard
-                key={key}
-                index={key}
+                key={index}
+                index={index}
                 height={80}
-                label={key}
-                isChecked={checked.includes(key)}
-                setIsChecked={(val) => handleSetChecked(val)}
+                label={pair[0]}
+                isChecked={checked.includes(pair[0])}
+                setIsChecked={() => handleSetChecked(pair[0])}
               />
             ))}
           </View>
           <View style={styles.cardsContainer}>
-            {shuffledValues.map((option, index) => (
+            {shuffledPairs.map((pair, index) => (
               <CustomCard
-                key={option}
-                index={option}
+                key={index}
+                index={index}
                 height={80}
-                label={option}
-                isChecked={checked.includes(option)}
-                setIsChecked={(val) => handleSetChecked(val)}
+                label={pair[1]}
+                isChecked={checked.includes(pair[1])}
+                setIsChecked={() => handleSetChecked(pair[1])}
               />
             ))}
           </View>
@@ -121,14 +140,15 @@ const TimedMatching = ({ setPractice }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    gap: 30,
+    width: "100%",
+    height: "100%",
+    gap: 20,
   },
   header: {
     width: "90%",
     flexDirection: "row",
     alignSelf: "center",
-    marginTop: -27,
+    marginTop: "-8%",
   },
   bar: {
     width: "85%",

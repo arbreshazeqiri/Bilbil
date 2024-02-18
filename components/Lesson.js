@@ -4,7 +4,8 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import LoadingBar from "../components/LoadingBar";
-import { generateExerciseSequence, roleplayQuestions } from "../utils/constants";
+import { generateExerciseSequence } from "../utils/constants";
+import { roleplayQuestions } from "../utils/language";
 import * as Exercises from "../components/exercises";
 
 const Lesson = ({ startLesson, setStartLesson }) => {
