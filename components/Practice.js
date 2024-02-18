@@ -20,15 +20,15 @@ const Practice = ({ practice, setPractice }) => {
     switch (practice.name) {
       case "Mistakes":
         return (
-          <Practices.Mistakes onComplete={(val) => handleNextStep(val)} />
+          <Practices.Mistakes setPractice={(val) => setPractice(val)} onComplete={(val) => handleNextStep(val)} />
         );
       case "Stories":
         return (
-          <Practices.Stories onComplete={(val) => handleNextStep(val)} />
+          <Practices.Stories setPractice={(val) => setPractice(val)} onComplete={(val) => handleNextStep(val)} />
         );
       case "Timed Word-Matching":
         return (
-          <Practices.TimedMatching onComplete={(val) => handleNextStep(val)} />
+          <Practices.TimedMatching setPractice={(val) => setPractice(val)} onComplete={(val) => handleNextStep(val)} />
         );
       default:
         return null;

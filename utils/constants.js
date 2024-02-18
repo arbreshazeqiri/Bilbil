@@ -137,6 +137,26 @@ export const units = [
   ],
 ];
 
+export const colorsObj = {
+  orange: "#FF9100",
+  yellow: "#FFC700",
+  blue: "#4AD0FF",
+  green: "#95D600",
+  pink: "#DE4A8C",
+  purple: "#944ADE",
+  red: "#EF3A3A",
+};
+
+export const darkerColorsObj = {
+  orange: "#d67a00",
+  yellow: "#d6a802",
+  blue: "#0293c8",
+  green: "#73a301",
+  pink: "#c4407b",
+  purple: "#7f3ec1",
+  red: "#d03131",
+};
+
 export const colors = [
   "#FF9100",
   "#FFC700",
@@ -160,21 +180,21 @@ export const darkerColors = [
 export const practices = [
   {
     index: 0,
-    name: 'Mistakes',
+    name: "Mistakes",
     image: require("../assets/practice/mistake.png"),
     size: 70,
     header: true,
   },
   {
     index: 1,
-    name: 'Stories',
+    name: "Stories",
     image: require("../assets/practice/story.png"),
     size: 70,
     header: true,
   },
   {
     index: 2,
-    name: 'Timed Word-Matching',
+    name: "Timed Word-Matching",
     image: require("../assets/practice/time.png"),
     size: 70,
     header: false,
@@ -184,13 +204,18 @@ export const practices = [
 export const roleplayQuestions = [
   {
     question: "Si e ke emrin?",
-    answers: ["Unë quhem Beni.", "Emri im është Beni.", "Unë jam student.", "Beni."],
-    correctAnswers: [0, 1, 3]
+    answers: [
+      "Unë quhem Beni.",
+      "Emri im është Beni.",
+      "Unë jam student.",
+      "Beni.",
+    ],
+    correctAnswers: [0, 1, 3],
   },
   {
     question: "Sa vjeç je?",
     answers: ["5", "Pesë.", "Jam pesë vjeç.", "Jo."],
-    correctAnswers: [0, 1, 2]
+    correctAnswers: [0, 1, 2],
   },
 ];
 
@@ -251,4 +276,4 @@ export const checkMatching = (pairs, checked) => {
 export const checkRearrangement = (sentence, answer) => {
   const answerJoined = answer.join(" ");
   return sentence == answerJoined;
-}
+};
