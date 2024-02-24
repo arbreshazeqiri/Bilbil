@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import LoadingBar from "../LoadingBar";
+import LoadingBar from "../CheckpointLoadingBar";
 import CustomModal from "../CustomModal";
 import CustomCard from "../CustomCard";
 import { Feather } from "@expo/vector-icons";
@@ -12,26 +12,24 @@ const TimedMatching = ({ setPractice }) => {
   const [progress, setProgress] = useState(0);
   const [time, setTime] = useState(105);
   const [checked, setChecked] = useState([]);
-  const [shuffledPairs, setShuffledPairs] = useState([]);
+  const [shuffledKeys, setShuffledKeys] = useState([]);
+  const [shuffledValues, setShuffledValues] = useState([]);
   const [isOver, setIsOver] = useState(false);
 
   useEffect(() => {
-    // Function to shuffle pairs
-    const shufflePairs = () => {
-      let pairsArray = Object.entries(pairs);
-      let shuffledArray = [];
-
-      while (pairsArray.length) {
-        shuffledArray = shuffledArray.concat(
-          pairsArray.splice(0, Math.min(10, pairsArray.length))
-        );
-        shuffledArray.sort(() => Math.random() - 0.5);
+    const shuffleArray = (array) => {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
       }
-
-      setShuffledPairs(shuffledArray);
+      return array;
     };
 
-    shufflePairs();
+    const keys = Object.keys(pairs).slice(0, 10);
+    const values = Object.values(pairs).slice(0, 10);
+
+    setShuffledKeys(shuffleArray(keys));
+    setShuffledValues(shuffleArray(values));
   }, []);
 
   useEffect(() => {
@@ -62,10 +60,11 @@ const TimedMatching = ({ setPractice }) => {
       const isCorrect = checkMatching(pairs, checked);
       if (isCorrect) {
         setProgress((prevProgress) => prevProgress + 1);
-        setShuffledPairs((prevPairs) =>
-          prevPairs.filter(
-            (pair) => pair[0] !== checked[0] && pair[1] !== checked[1]
-          )
+        setShuffledKeys((prevKeys) =>
+          prevKeys.filter((key) => key !== checked[0])
+        );
+        setShuffledValues((prevValues) =>
+          prevValues.filter((value) => value !== checked[1])
         );
       }
       setChecked([]);
@@ -109,26 +108,26 @@ const TimedMatching = ({ setPractice }) => {
           style={{ flexDirection: "row", justifyContent: "center", gap: 20 }}
         >
           <View style={styles.cardsContainer}>
-            {shuffledPairs.map((pair, index) => (
+            {shuffledKeys.slice(0, 5).map((key, index) => (
               <CustomCard
-                key={index}
-                index={index}
+                key={key}
+                index={key}
                 height={80}
-                label={pair[0]}
-                isChecked={checked.includes(pair[0])}
-                setIsChecked={() => handleSetChecked(pair[0])}
+                label={key}
+                isChecked={checked.includes(key)}
+                setIsChecked={(val) => handleSetChecked(val)}
               />
             ))}
           </View>
           <View style={styles.cardsContainer}>
-            {shuffledPairs.map((pair, index) => (
+            {shuffledValues.slice(0, 5).map((option, index) => (
               <CustomCard
-                key={index}
-                index={index}
+                key={option}
+                index={option}
                 height={80}
-                label={pair[1]}
-                isChecked={checked.includes(pair[1])}
-                setIsChecked={() => handleSetChecked(pair[1])}
+                label={option}
+                isChecked={checked.includes(option)}
+                setIsChecked={(val) => handleSetChecked(val)}
               />
             ))}
           </View>
