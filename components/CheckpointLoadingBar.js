@@ -1,28 +1,48 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { colorsObj } from "../utils/constants";
 
 const LoadingBar = ({
   steps = 10,
   progress = 0,
-  color = colorsObj.green,
-  checkpointNumber = 3,
-  checkpointValues = [],
+  color = colorsObj.red,
+  updateXpReached,
 }) => {
-  const barWidth = (progress == 0
-    ? "0%"
-    : progress >= steps
-    ? "100%"
-    : `${((progress - 1) / steps) * 100}%`);
+  const checkpointNumber = 3;
+  const checkpointValues = [5, 15, 25];
+  const checkpointPositions = [20, 50, 90];
+
+  const barWidth =
+    progress == 0
+      ? "0%"
+      : progress >= steps
+      ? "100%"
+      : `${(progress / steps) * 100}%`;
+
+  useEffect(() => {
+    let xpReached = 0;
+
+    for (let i = 0; i < checkpointNumber; i++) {
+      const checkpointPosition = checkpointPositions[i];
+      const checkpointValue = checkpointValues[i];
+
+      const isReached = progress > steps * (checkpointPosition / 100);
+
+      if (isReached) {
+        xpReached += checkpointValue;
+      }
+    }
+
+    updateXpReached(xpReached);
+  }, [progress]);
 
   const renderCheckpoints = () => {
     const checkpoints = [];
-    const checkpointPositions = [20, 50, 90];
 
     for (let i = 0; i < checkpointNumber; i++) {
       const checkpointPosition = checkpointPositions[i];
 
-      const isReached = progress > steps * (checkpointPosition / 100) + 1;
+      const isReached = progress > steps * (checkpointPosition / 100);
 
       const checkpointBackgroundColor = isReached ? color : "#3c3c3c";
 
