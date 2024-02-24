@@ -118,3 +118,190 @@ export const roleplayQuestions = [
     correctAnswers: [0, 1, 2],
   },
 ];
+
+export const stories = [
+  {
+    title: "Happy Birthday!",
+    dialogue: {
+      A: "Hej, si je sot?",
+      B: "Mirë, faleminderit! Ti?",
+      A: "Edhe unë mirë. E di që sot është ditëlindja e Dritës?",
+      B: "Po, e di. Duhet të bëjmë diçka për të.",
+      A: "Absolutisht! Mendon se duhet të organizojmë një darkë surprizë?",
+      B: "Ide shumë e mirë! Le të organizojmë një darkë të bukur për të.",
+      A: "Le të ftojmë të gjithë shoqërinë!",
+      B: "Po, duhet të thërrasim të gjithë shoqërinë. Do të jetë një surprizë e mrekullueshme për të.",
+      A: `Do vish në dyqan t'i blejmë disa dhurata të bukura?`,
+      B: "Po, patjetër! Jam shumë e entuziazmuar!",
+    },
+    questions: [
+      {
+        q: "What is the occasion mentioned in the dialogue?",
+        a: "Wedding",
+        b: "Birthday",
+        c: "Graduation",
+        d: "Anniversary",
+      },
+      {
+        q: "What do the characters plan to do for their friend?",
+        a: "Organize a surprise party",
+        b: "Go on a vacation",
+        c: "Watch a movie",
+        d: "Study together",
+      },
+      {
+        q: "What does Person 2 think about the idea of organizing a surprise dinner?",
+        a: "Thinks it's a bad idea",
+        b: "Thinks it's too expensive",
+        c: "Thinks it's a great idea",
+        d: "Thinks it's unnecessary",
+      },
+      {
+        q: "What do the characters suggest doing after deciding to organize the surprise dinner?",
+        a: "Going shopping for groceries",
+        b: "Going to the beach",
+        c: "Going to the movies",
+        d: "Going shopping for gifts",
+      },
+    ],
+  },
+  {
+    title: "A Weekend Getaway",
+    dialogue: {
+      A: "Hej, si je sot?",
+      B: "Mirë, faleminderit! Çfarë plane ke për fundjavën?",
+      A: "Mendoj se do të shkojmë në një udhëtim në mal.",
+      B: "Uau! Kur do të shkoni? A mund të vi edhe unë?",
+      A:
+        "Po, patjetër! Mendoj të nisemi herët të premten dhe të kthehemi të dielën pasdite.",
+      B: "Tingëllon bukur! A di ndonjë vend të bukur atje?",
+      A:
+        "Po, kam dëgjuar për një liqen të mrekullueshëm me rrugë për ecje rreth tij.",
+      B: "Fantastike! A duhet të marrim ushqime për një piknik?",
+      A:
+        "Absolutisht! Do të përgatis sendviça dhe petulla për të na mbushur me energji për ecje.",
+    },
+    questions: [
+      {
+        q: "What are the characters planning for the weekend?",
+        a: "Going to a concert",
+        b: "Staying at home",
+        c: "Going on a road trip to the mountains",
+        d: "Visiting a museum",
+      },
+      {
+        q: "When do they plan to leave for their trip?",
+        a: "Friday night",
+        b: "Saturday morning",
+        c: "Sunday morning",
+        d: "Monday morning",
+      },
+      {
+        q: "What kind of place are they planning to visit in the mountains?",
+        a: "A shopping mall",
+        b: "A lake with hiking trails",
+        c: "An amusement park",
+        d: "A movie theater",
+      },
+      {
+        q: "What activity do they plan to do after hiking?",
+        a: "Go shopping",
+        b: "Have a picnic",
+        c: "Visit a museum",
+        d: "Go to a concert",
+      },
+    ],
+  },
+  {
+    title: "Planning a Beach Day",
+    dialogue: {
+      Person1: "Hej, si je?",
+      Person2: "Mirë, faleminderit! Ti?",
+      Person1: "Edhe unë mirë. Po mendon të shkojmë në plazh këtë fundjavë?",
+      Person2: "Ide shumë e mirë! Kur do të shkojmë?",
+      Person1: "Mendoj të nisemi herët të shtunën dhe të kthehemi pasdite.",
+      Person2: "Fenomenale! A ke ndonjë plazh në mendje?",
+      Person1: "Po, një plazh i vogël i cili është shumë i qetë dhe i pastër.",
+      Person2:
+        "Bukur! A duhet të marrim një shampanjë dhe pije të tjera?",
+      Person1:
+        "Sigurisht! Do të sjellim disa pije freskuese.",
+    },
+    questions: [
+      {
+        q: "What are the characters planning for the weekend?",
+        a: "Going shopping",
+        b: "Staying at home",
+        c: "Going to the beach",
+        d: "Visiting a museum",
+      },
+      {
+        q: "When do they plan to leave for their trip?",
+        a: "Saturday night",
+        b: "Saturday morning",
+        c: "Sunday morning",
+        d: "Monday morning",
+      },
+      {
+        q: "What kind of place are they planning to visit?",
+        a: "A shopping mall",
+        b: "A lake with hiking trails",
+        c: "A quiet and clean beach",
+        d: "An amusement park",
+      },
+      {
+        q: "What will they bring for their beach day?",
+        a: "Books",
+        b: "Cold drinks",
+        c: "Soccer ball",
+        d: "Camera",
+      },
+    ],
+  },
+  {
+    title: "Planning a Movie Night",
+    dialogue: {
+      Person1: "Hej, si je sot?",
+      Person2: "Mirë, faleminderit! Çfarë ke në mendje për këtë fundjavë?",
+      Person1: "Po mendoja të organizojmë një mbrëmje kinemaje në shtëpi.",
+      Person2: "Hmmm... Çfarë filma do të shohim?",
+      Person1: "Mendoj që të shohim një film komedi dhe një film aksion.",
+      Person2: "Fantastike! Kur do të organizojmë këtë mbrëmje?",
+      Person1:
+        "Mendoj të premten mbrëma dhe të shohim filma deri vonë.",
+      Person2: "Supeerr! Do të sjellim thjesht popcorn dhe pije gazi?",
+      Person1:
+        "Po, do të jetë një zgjedhje e thjeshtë por e shijshme për mbrëmjen tonë kinemaje.",
+    },
+    questions: [
+      {
+        q: "What are the characters planning for the weekend?",
+        a: "Going shopping",
+        b: "Staying at home",
+        c: "Going to the beach",
+        d: "Organizing a movie night at home",
+      },
+      {
+        q: "What kind of movies do they plan to watch?",
+        a: "Horror and thriller",
+        b: "Comedy and action",
+        c: "Documentary and drama",
+        d: "Romantic and fantasy",
+      },
+      {
+        q: "When do they plan to start their movie night?",
+        a: "Saturday morning",
+        b: "Saturday afternoon",
+        c: "Saturday evening",
+        d: "Sunday morning",
+      },
+      {
+        q: "What snacks do they plan to have during the movie night?",
+        a: "Popcorn and soft drinks",
+        b: "Pizza and salad",
+        c: "Cookies and tea",
+        d: "Chips and juice",
+      },
+    ],
+  },
+];
