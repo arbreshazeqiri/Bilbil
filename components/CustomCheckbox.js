@@ -35,7 +35,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     fontSize: 20,
     color: 'white',
-    fontFamily: 'baloo'
+    fontFamily: 'baloo',
+    flexWrap: 'wrap',
+    width: '80%',
   },
 });
 

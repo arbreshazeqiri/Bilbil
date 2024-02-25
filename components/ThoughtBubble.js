@@ -15,6 +15,7 @@ const ThoughtBubble = ({
       paddingHorizontal: pH,
       gap: gap,
       height: height,
+      minHeight: 100,
       flexDirection: "row",
       justifyContent: justify,
       alignContent: "center",

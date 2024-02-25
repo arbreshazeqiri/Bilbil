@@ -246,7 +246,7 @@ const styles = StyleSheet.create({
     backgroundColor: colorsObj.red,
     height: 200,
     width: 200,
-    borderRadius: "100%",
+    borderRadius: 100,
     justifyContent: "center",
     alignItems: "center",
   },

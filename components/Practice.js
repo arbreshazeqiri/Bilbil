@@ -19,9 +19,9 @@ const Practice = ({ practice, setPractice }) => {
   const getExercise = () => {
     switch (practice.name) {
       case "Mistakes":
-        return <Practices.Mistakes setPractice={(val) => setPractice(val)} />;
+        return <Practices.Mistakes />;
       case "Stories":
-        return <Practices.Stories setPractice={(val) => setPractice(val)} />;
+        return <Practices.Stories />;
       case "Timed Word-Matching":
         return (
           <Practices.TimedMatching setPractice={(val) => setPractice(val)} />
