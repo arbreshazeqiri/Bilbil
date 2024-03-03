@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://100.82.134.181:3000";
+const BASE_URL = "http://192.168.1.6:3000";
 
 const registerUser = async (userData) => {
   try {
@@ -94,13 +94,15 @@ const updateAvatar = async (userId, avatar) => {
   }
 };
 
-const translateText = async (text) => {
+const logMistake = async (userId, mistake) => {
   try {
-    const response = await axios.post(`${BASE_URL}/translate`, { text });
+    const response = await axios.post(`${BASE_URL}/logMistake`, {
+      userId,
+      mistake,
+    });
     return response;
   } catch (error) {
-    console.error("Error translating text:", error);
-    throw error;
+    console.error("Error saving mistake:", error);
   }
 };
 
@@ -113,5 +115,5 @@ export {
   removeFriendRequest,
   getUserById,
   updateAvatar,
-  translateText,
+  logMistake,
 };

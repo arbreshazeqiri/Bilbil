@@ -10,8 +10,9 @@ import {
 } from "react-native";
 import CustomButton from "../CustomButton";
 import { checkRearrangement } from "../../utils/constants";
+import { logMistake } from "../../api";
 
-const Blanks = ({ sentence = "", missingIndices = [], onComplete }) => {
+const Blanks = ({ user, sentence = "", missingIndices = [], onComplete }) => {
   const words = sentence.split(" ");
   const randomWords = ["random", "words", "to", "add"];
   const [storageWords, setStorageWords] = useState(
@@ -21,7 +22,7 @@ const Blanks = ({ sentence = "", missingIndices = [], onComplete }) => {
   );
   const [placementWords, setPlacementWords] = useState([]);
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     let structuredSentence = [...words];
     missingIndices.forEach((index, i) => {
       if (placementWords[i]) {
@@ -30,7 +31,14 @@ const Blanks = ({ sentence = "", missingIndices = [], onComplete }) => {
     });
 
     const isCorrect = checkRearrangement(sentence, structuredSentence);
-    onComplete(true);
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: 'Complete the sentence',
+        prop: sentence,
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
 
   const handleTap = (word) => {

@@ -14,8 +14,9 @@ import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Listening = ({ onComplete }) => {
+const Listening = ({ user, sentence, onComplete }) => {
   const [input, setInput] = useState("");
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -38,8 +39,16 @@ const Listening = ({ onComplete }) => {
     }
   };
 
-  const handleNextStep = () => {
-    onComplete(true);
+  const handleNextStep = async () => {
+    const isCorrect = sentence === input;
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: "Type what you hear",
+        prop: sentence,
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
 
   return (

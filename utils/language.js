@@ -101,7 +101,7 @@ export const pairs = {
   sekondë: "second",
 };
 
-export const roleplayQuestions = [
+export const roleplay = [
   {
     question: "Si e ke emrin?",
     answers: [
@@ -467,3 +467,47 @@ export const stories = [
     ],
   },
 ];
+
+export const comprehension = {
+  dialogue: ["Sa vjeç je?", "Pesë."],
+  characters: [
+    require("../assets/exercises/comprehension-1.png"),
+    require("../assets/exercises/comprehension-2.png"),
+  ],
+  sounds: [
+    require("../assets/audios/Sa-vjec-je.m4a"),
+    require("../assets/audios/Pese.m4a"),
+  ],
+  question: {
+    q: "Sa vjeç je?",
+    options: [
+      "... four years old.",
+      "... five years old.",
+      "... six years old.",
+    ],
+    correct: 1,
+  },
+};
+
+export const labeling = {
+  word: "zjarr",
+  options: [
+    {
+      label: "sea",
+      source: require(`../assets/items/sea.png`),
+    },
+    {
+      label: "mountains",
+      source: require(`../assets/items/mountains.png`),
+    },
+    {
+      label: "fire",
+      source: require(`../assets/items/fire.png`),
+    },
+    {
+      label: "water",
+      source: require(`../assets/items/water.png`),
+    },
+  ],
+  correct: 2,
+};

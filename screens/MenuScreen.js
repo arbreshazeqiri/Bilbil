@@ -24,13 +24,11 @@ const tabScreens = [
     name: "News",
     component: NewsScreen,
     iconSource: require("../assets/navigation/news.png"),
-  }
+  },
 ];
 
 const MenuScreen = () => {
-  return (
-    <TabNavigator tabScreens={tabScreens} />
-  );
+  return <TabNavigator tabScreens={tabScreens} />;
 };
 
 export default MenuScreen;

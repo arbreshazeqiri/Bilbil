@@ -1,8 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {
-  getUserById,
-} from '../api';
+import { getUserById } from "../api";
 
 class UserStore {
   user = null;
@@ -17,7 +15,7 @@ class UserStore {
     });
     AsyncStorage.setItem("user", JSON.stringify(newUser));
     AsyncStorage.setItem("authToken", newUser.token);
-    this.loadUser()
+    this.loadUser();
   }
 
   async loadUser() {

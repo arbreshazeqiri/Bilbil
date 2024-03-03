@@ -44,8 +44,7 @@ const LoginScreen = () => {
     try {
       const response = await loginUser(user);
       const { user: userData } = response.data;
-      if (userData.avatar)
-        setAvatarObject(userData.avatar);
+      if (userData.avatar) setAvatarObject(userData.avatar);
 
       runInAction(() => {
         userStore.setUser(userData);

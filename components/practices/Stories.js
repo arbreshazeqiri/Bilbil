@@ -38,7 +38,11 @@ const Stories = () => {
     </View>
   );
 
-  return story ? <Story story={story} setStory={(val) => setStory(val)} /> : <Stories />;
+  return story ? (
+    <Story story={story} setStory={(val) => setStory(val)} />
+  ) : (
+    <Stories />
+  );
 };
 
 const styles = StyleSheet.create({

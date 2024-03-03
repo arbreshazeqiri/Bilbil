@@ -35,7 +35,7 @@ const PracticeScreen = () => {
           flexDirection: "column",
           justifyContent: "space-evenly",
           alignItems: "center",
-          gap: 10
+          gap: 10,
         }}
       >
         <View style={styles.banner}>

@@ -202,6 +202,7 @@ export const practices = [
 ];
 
 export const exerciseTypes = [
+  "Speaking",
   "Translation",
   "Listening",
   "Comprehension",
@@ -210,7 +211,6 @@ export const exerciseTypes = [
   "Labeling",
   "Blanks",
   "Roleplay",
-  "Speaking",
 ];
 
 export const generateExerciseSequence = () => {

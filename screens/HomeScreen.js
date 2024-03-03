@@ -8,10 +8,10 @@ import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import CustomButton from "../components/CustomButton";
 import { FontAwesome } from "@expo/vector-icons";
-import Level from "../components/Level"
+import Level from "../components/Level";
 
 const HomeScreen = () => {
-  const [level, setLevel] = useState(null)
+  const [level, setLevel] = useState(null);
   const [isLoaded] = useFonts({
     baloo: BalooFont,
     "baloo-semibold": BalooSemiBoldFont,
@@ -27,7 +27,7 @@ const HomeScreen = () => {
     } catch (error) {
       console.error("Error during logout:", error);
     }
-  }
+  };
 
   const HeaderIcons = ({ icons }) => (
     <View
@@ -51,7 +51,10 @@ const HomeScreen = () => {
             style={{ width: icon.size, height: icon.size }}
           />
           {icon.value && (
-            <Text style={{ color: "white", fontWeight: 900, fontSize: 18 }} onPress={handleLogout}>
+            <Text
+              style={{ color: "white", fontWeight: 900, fontSize: 18 }}
+              onPress={handleLogout}
+            >
               {icon.value}
             </Text>
           )}
@@ -73,36 +76,88 @@ const HomeScreen = () => {
         }}
       >
         {levels.map((level, index) => {
-          const isDisabled = level.status === "Locked"
+          const isDisabled = level.status === "Locked";
           return (
             <View
-              style={{ backgroundColor: isDisabled ? 'gray' : level.color, flexDirection: "row", padding: 20, borderRadius: 10, alignItems: "center", justifyContent: 'space-between', width: '100%' }}
+              style={{
+                backgroundColor: isDisabled ? "gray" : level.color,
+                flexDirection: "row",
+                padding: 20,
+                borderRadius: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+                width: "100%",
+              }}
               key={index}
             >
-              <View style={{ flexDirection: 'column', alignItems: 'start', justifyContent: 'space-between' }}>
+              <View
+                style={{
+                  flexDirection: "column",
+                  alignItems: "start",
+                  justifyContent: "space-between",
+                }}
+              >
                 {level.cefr && (
-                  <Text style={{ alignSelf: 'flex-start', backgroundColor: isDisabled ? 'rgba(91, 91, 91, 0.2)' : `rgba(255, 255, 255, 0.5)`, fontFamily: 'baloo-semibold', borderRadius: 6, paddingHorizontal: 6, color: isDisabled ? '#3c3c3c' : "white", fontWeight: 600, fontSize: 18 }}>
+                  <Text
+                    style={{
+                      alignSelf: "flex-start",
+                      backgroundColor: isDisabled
+                        ? "rgba(91, 91, 91, 0.2)"
+                        : `rgba(255, 255, 255, 0.5)`,
+                      fontFamily: "baloo-semibold",
+                      borderRadius: 6,
+                      paddingHorizontal: 6,
+                      color: isDisabled ? "#3c3c3c" : "white",
+                      fontWeight: 600,
+                      fontSize: 18,
+                    }}
+                  >
                     {level.cefr}
                   </Text>
                 )}
                 {level.chapter && (
-                  <Text style={{ fontFamily: 'baloo-semibold', color: isDisabled ? '#3c3c3c' : "white", fontWeight: 900, fontSize: 25 }}>
+                  <Text
+                    style={{
+                      fontFamily: "baloo-semibold",
+                      color: isDisabled ? "#3c3c3c" : "white",
+                      fontWeight: 900,
+                      fontSize: 25,
+                    }}
+                  >
                     {level.chapter}
                   </Text>
                 )}
-                {level.status && isDisabled ?
-                  <View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 4 }}>
-                    <FontAwesome name={"lock"} size={18} color={'#3c3c3c'} />
-                    <Text style={{ color: '#3c3c3c', fontWeight: 600, fontSize: 18 }}> {level.units} units </Text>
-                  </View> :
-                  <Text style={{ color: "white", fontWeight: 600, fontSize: 18 }}>
+                {level.status && isDisabled ? (
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      paddingHorizontal: 4,
+                    }}
+                  >
+                    <FontAwesome name={"lock"} size={18} color={"#3c3c3c"} />
+                    <Text
+                      style={{
+                        color: "#3c3c3c",
+                        fontWeight: 600,
+                        fontSize: 18,
+                      }}
+                    >
+                      {" "}
+                      {level.units} units{" "}
+                    </Text>
+                  </View>
+                ) : (
+                  <Text
+                    style={{ color: "white", fontWeight: 600, fontSize: 18 }}
+                  >
                     {level.status}
                   </Text>
-                }
+                )}
                 <View style={styles.button}>
                   <CustomButton
                     title={isDisabled ? level.status : "Continue"}
-                    style={{ textTransform: 'capitalize' }}
+                    style={{ textTransform: "capitalize" }}
                     color={isDisabled ? "#3c3c3c" : level.color}
                     bgColor={isDisabled ? "#9b9a9a" : "white"}
                     borderColor={isDisabled ? "#707070" : "#cecece"}
@@ -117,16 +172,16 @@ const HomeScreen = () => {
                 style={{
                   width: level.size,
                   height: level.size,
-                  tintColor: isDisabled && '#3c3c3c',
+                  tintColor: isDisabled && "#3c3c3c",
                   opacity: isDisabled ? 0.5 : 1,
                 }}
               />
             </View>
-          )
+          );
         })}
       </ScrollView>
-    )
-  }
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
@@ -134,11 +189,11 @@ const HomeScreen = () => {
         <HeaderIcons icons={headerIcons} />
       </View>
       <View style={styles.base}>
-        {level !== null ?
+        {level !== null ? (
           <Level level={level} setLevel={(val) => setLevel(val)} />
-          :
+        ) : (
           <Levels levels={levels} />
-        }
+        )}
       </View>
     </SafeAreaView>
   );

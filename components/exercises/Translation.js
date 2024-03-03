@@ -11,8 +11,9 @@ import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Translation = ({ sentence, translation, onComplete }) => {
+const Translation = ({ user, sentence, translation, onComplete }) => {
   const [input, setInput] = useState("");
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -22,9 +23,14 @@ const Translation = ({ sentence, translation, onComplete }) => {
     return null;
   }
 
-  const handleNextStep = () => {
-    const isCorrect = translation == input;
-    onComplete(true);
+  const handleNextStep = async () => {
+    const isCorrect = translation === input;
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: "Translate this sentence",
+        prop: sentence,
+      }).then().catch((err) => console.log(err));
   };
 
   return (
@@ -87,7 +93,7 @@ const styles = StyleSheet.create({
     height: "100%",
     flexDirection: "column",
     justifyContent: "space-between",
-    alignItems: 'stretch',
+    alignItems: "stretch",
     alignSelf: "start",
     paddingTop: 30,
     paddingHorizontal: 15,

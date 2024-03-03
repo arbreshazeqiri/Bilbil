@@ -2,16 +2,26 @@ import React, { useState } from "react";
 import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Labeling = ({ onComplete }) => {
+const Labeling = ({ user, cards, onComplete }) => {
   const [checked, setChecked] = useState(null);
+  const { correct, options, word } = cards;
 
   const handleSetChecked = (index) => {
     setChecked(index);
   };
 
-  const handleNextStep = () => {
-    onComplete(true);
+  const handleNextStep = async () => {
+    const isCorrect = checked === correct;
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: "Select the correct image",
+        prop: word,
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
 
   return (
@@ -22,15 +32,15 @@ const Labeling = ({ onComplete }) => {
       <View style={styles.content}>
         <View style={styles.headerContainer}>
           <Text style={styles.header}>Select the correct image</Text>
-          <Text style={styles.word}>zjarr</Text>
+          <Text style={styles.word}>{word}</Text>
         </View>
         <View style={styles.cardsContainer}>
-          {[0, 1, 2, 3].map((index) => (
+          {options.map((option, index) => (
             <CustomCard
               key={index}
               index={index}
-              label={"fire"}
-              src={require(`../../assets/items/zjarr.png`)}
+              label={option.label}
+              src={option.source}
               isChecked={checked === index}
               setIsChecked={handleSetChecked}
             />

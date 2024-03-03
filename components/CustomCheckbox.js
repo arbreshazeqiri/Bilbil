@@ -1,11 +1,13 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import React from "react";
+import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const Checkbox = ({ index, text, isChecked, setIsChecked }) => {
-
   return (
-    <TouchableOpacity style={styles.checkboxContainer} onPress={() => setIsChecked(index)}>
+    <TouchableOpacity
+      style={styles.checkboxContainer}
+      onPress={() => setIsChecked(index)}
+    >
       <View style={[styles.checkbox, isChecked && styles.checkedCheckbox]}>
         {isChecked && <FontAwesome5 name="check" color="white" size={30} />}
       </View>
@@ -16,28 +18,28 @@ const Checkbox = ({ index, text, isChecked, setIsChecked }) => {
 
 const styles = StyleSheet.create({
   checkboxContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   checkbox: {
     width: 45,
     height: 45,
     borderRadius: 6,
-    backgroundColor: '#3c3c3c',
+    backgroundColor: "#3c3c3c",
     marginRight: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   checkedCheckbox: {
-    backgroundColor: '#93D334',
+    backgroundColor: "#93D334",
   },
   label: {
-    alignSelf: 'center',
+    alignSelf: "center",
     fontSize: 20,
-    color: 'white',
-    fontFamily: 'baloo',
-    flexWrap: 'wrap',
-    width: '80%',
+    color: "white",
+    fontFamily: "baloo",
+    flexWrap: "wrap",
+    width: "80%",
   },
 });
 

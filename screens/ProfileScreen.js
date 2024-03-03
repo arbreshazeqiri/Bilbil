@@ -28,9 +28,8 @@ import {
 } from "../api";
 import TopTabNavigator from "../components/TopTabNavigator";
 import { getAvatar, legend } from "../utils";
-import { menuScreens } from '../utils/constants';
-import { useAvatarContext } from '../context/AvatarContext';
-
+import { menuScreens } from "../utils/constants";
+import { useAvatarContext } from "../context/AvatarContext";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -135,7 +134,7 @@ const ProfileScreen = observer(() => {
     } catch (error) {
       console.error("Error during logout:", error);
     }
-    
+
     if (!userStore.user) {
       navigation.navigate("Start");
     } else {
@@ -146,7 +145,12 @@ const ProfileScreen = observer(() => {
   return isCustomizing ? (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={{ ...styles.picContainer, backgroundColor: avatarState.background }}>
+        <View
+          style={{
+            ...styles.picContainer,
+            backgroundColor: avatarState.background,
+          }}
+        >
           <View style={styles.avatar}>
             {getAvatar(avatarState.avatar, {
               colors: { ...avatarState },
@@ -160,16 +164,19 @@ const ProfileScreen = observer(() => {
           </TouchableOpacity>
         </View>
         <View style={{ flex: 1 }}>
-          <TopTabNavigator
-            tabScreens={menuScreens}
-          />
+          <TopTabNavigator tabScreens={menuScreens} />
         </View>
       </View>
     </SafeAreaView>
   ) : (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        <View style={{ ...styles.picContainer, backgroundColor: avatarState.background }}>
+        <View
+          style={{
+            ...styles.picContainer,
+            backgroundColor: avatarState.background,
+          }}
+        >
           <View style={styles.avatar}>
             {getAvatar(avatarState.avatar, {
               colors: { ...avatarState },
@@ -181,10 +188,7 @@ const ProfileScreen = observer(() => {
           >
             <Ionicons name={"brush-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.settingTwo}
-            onPress={handleLogout}
-          >
+          <TouchableOpacity style={styles.settingTwo} onPress={handleLogout}>
             <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
         </View>
@@ -251,7 +255,7 @@ const ProfileScreen = observer(() => {
           />
         </View>
       </View>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 });
 
