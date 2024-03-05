@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { useFonts } from "expo-font";
 import {
   StyleSheet,
   Text,
   View,
   Image,
   TouchableOpacity,
+  TextInput,
   Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
-import BalooFont from "../assets/fonts/Baloo.ttf";
 import { Ionicons } from "@expo/vector-icons";
 import CustomButton from "../components/CustomButton";
 import LegendItem from "../components/LegendItem";
@@ -28,8 +26,13 @@ import {
 } from "../api";
 import TopTabNavigator from "../components/TopTabNavigator";
 import { getAvatar, legend } from "../utils";
-import { menuScreens } from "../utils/constants";
+import {
+  colorsObj,
+  menuScreens,
+  settings as settingsList,
+} from "../utils/constants";
 import { useAvatarContext } from "../context/AvatarContext";
+import { AntDesign } from "@expo/vector-icons";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
@@ -38,20 +41,12 @@ const ProfileScreen = observer(() => {
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
+  const [settings, setSettings] = useState(false);
   const { avatarState } = useAvatarContext();
 
   useEffect(() => {
     if (searchInput !== "") handleSearch();
   }, [JSON.stringify(user)]);
-
-  const [isLoaded] = useFonts({
-    baloo: BalooFont,
-    "baloo-semibold": BalooSemiBoldFont,
-  });
-
-  if (!isLoaded) {
-    return null;
-  }
 
   const handleSearch = async () => {
     try {
@@ -168,7 +163,7 @@ const ProfileScreen = observer(() => {
         </View>
       </View>
     </SafeAreaView>
-  ) : (
+  ) : !settings ? (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
         <View
@@ -188,7 +183,10 @@ const ProfileScreen = observer(() => {
           >
             <Ionicons name={"brush-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.settingTwo} onPress={handleLogout}>
+          <TouchableOpacity
+            style={styles.settingTwo}
+            onPress={() => setSettings(true)}
+          >
             <Ionicons name={"settings-outline"} size={30} color={"#212832"} />
           </TouchableOpacity>
         </View>
@@ -256,6 +254,58 @@ const ProfileScreen = observer(() => {
         </View>
       </View>
     </SafeAreaView>
+  ) : (
+    <SafeAreaView style={styles.baseSettings}>
+      <View>
+        <View style={styles.header}>
+          <AntDesign
+            name="arrowleft"
+            size={32}
+            color={"#afafaf97"}
+            onPress={() => setSettings(false)}
+          />
+          <Text style={styles.title}>Profile</Text>
+        </View>
+        <View style={styles.inputs}>
+          {settingsList.map((s, i) => {
+            return (
+              <View style={styles.inputSet} key={i}>
+                <Text style={styles.inputText}>{s.text}</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => setUser({ ...user, [s.value]: text })}
+                  value={user[s.value]}
+                  placeholder={s.placeholder}
+                  placeholderTextColor="#AFAFAF"
+                />
+              </View>
+            );
+          })}
+        </View>
+      </View>
+      <View style={styles.buttonsContainer}>
+        <View style={styles.buttons}>
+          <CustomButton
+            title="DELETE ACCOUNT"
+            color={colorsObj.red}
+            bgColor={"#212832"}
+            borderColor={"#afafaf97"}
+            onPress={handleLogout}
+            hasTopBorder={true}
+          />
+        </View>
+        <View style={styles.buttons}>
+          <CustomButton
+            title="SIGN OUT"
+            color={"#afafaf97"}
+            bgColor="#212832"
+            borderColor={"#afafaf97"}
+            onPress={handleLogout}
+            hasTopBorder={true}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 });
 
@@ -264,6 +314,14 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     backgroundColor: "#212832",
+  },
+  baseSettings: {
+    height: "100%",
+    width: "100%",
+    paddingVertical: 30,
+    paddingHorizontal: 20,
+    backgroundColor: "#212832",
+    justifyContent: 'space-between'
   },
   picContainer: {
     flexDirection: "row",
@@ -280,7 +338,7 @@ const styles = StyleSheet.create({
   },
   settingOne: {
     top: 20,
-    right: 40,
+    right: 50,
     position: "absolute",
   },
   settingTwo: {
@@ -295,7 +353,7 @@ const styles = StyleSheet.create({
   },
   name: {
     color: "white",
-    fontSize: 30,
+    fontSize: 28,
     fontFamily: "baloo-semibold",
   },
   infoContainer: {
@@ -334,12 +392,66 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
   },
+  buttons: {
+    display: "flex",
+    width: "100%",
+    height: 55,
+    justifyContent: "center",
+    alignItems: "center",
+  },
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     marginTop: 150,
   },
+  header: {
+    justifyContent: "flex-start",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20,
+    borderBottomWidth: 2,
+    paddingBottom: 10,
+    borderColor: "#afafaf97",
+  },
+  title: {
+    alignSelf: "center",
+    alignContent: "center",
+    fontSize: 26,
+    fontWeight: "700",
+    fontFamily: "baloo",
+    color: "#afafaf97",
+  },
+  inputs: {
+    paddingVertical: 20,
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignContent: "center",
+    gap: 20,
+  },
+  input: {
+    color: "white",
+    width: "100%",
+    borderRadius: 10,
+    height: 40,
+    fontWeight: "semibold",
+    borderWidth: 1,
+    borderColor: "#AFAFAF",
+    padding: 10,
+    backgroundColor: "#2B3440",
+  },
+  inputText: {
+    color: "white",
+    fontFamily: "baloo-semibold",
+    fontSize: 18,
+  },
+  inputSet: {
+    gap: 5,
+    flexDirection: "column",
+  },
+  buttonsContainer: {
+    gap: 20
+  }
 });
 
 export default ProfileScreen;

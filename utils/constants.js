@@ -259,3 +259,26 @@ export const checkRearrangement = (sentence, answer) => {
   const answerJoined = answer.join(" ");
   return sentence == answerJoined;
 };
+
+export const settings = [
+  {
+    value: 'name',
+    text: 'Name',
+    placeholder: 'Full Name'
+  },
+  {
+    value: 'username',
+    text: 'Username',
+    placeholder: 'Username'
+  },
+  {
+    value: 'password',
+    text: 'Password',
+    placeholder: 'New Password'
+  },
+  {
+    value: 'email',
+    text: 'Email',
+    placeholder: 'Email'
+  },
+]
