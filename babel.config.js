@@ -1,22 +1,24 @@
-module.exports = function(api) {
+module.exports = function (api) {
   api.cache(true);
 
   return {
-    presets: ['module:metro-react-native-babel-preset'],
+    presets: ["module:metro-react-native-babel-preset"],
     plugins: [
       [
-        'module:react-native-dotenv',
+        "module:react-native-dotenv",
         {
-          moduleName: '@env',
-          path: '.env',
+          moduleName: "@env",
+          path: ".env",
           blacklist: null,
           whitelist: null,
           safe: false,
           allowUndefined: true,
         },
       ],
-      'react-native-reanimated/plugin', // Add Reanimated Babel plugin here
-      '@babel/plugin-transform-react-jsx-source',
+      "react-native-reanimated/plugin",
+      "@babel/plugin-transform-react-jsx-source",
+      "@babel/plugin-transform-class-properties",
+      '@babel/plugin-transform-private-methods'
     ],
   };
 };
