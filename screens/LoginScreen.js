@@ -45,7 +45,10 @@ const LoginScreen = () => {
       const response = await loginUser(user);
       const { user: userData } = response.data;
       if (userData.avatar) setAvatarObject(userData.avatar);
-      await userStore.setUser(userData).then(() => navigation.navigate("Menu"));
+      runInAction(() => {
+        userStore.setUser(userData);
+      });
+      navigation.navigate("Menu");
     } catch (error) {
       Alert.alert("Login error");
       console.error("error", error);

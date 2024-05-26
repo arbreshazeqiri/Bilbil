@@ -17,6 +17,7 @@ const Roleplay = ({ user, questions, onComplete }) => {
   const [checked, setChecked] = useState(new Array(questions.length).fill([]));
 
   const handleNextStep = async () => {
+    if (checked.length === 0) return;
     const incorrectQuestions = [];
 
     questions.forEach((q, index) => {

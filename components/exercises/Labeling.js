@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, Platform, KeyboardAvoidingView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import CustomCard from "../CustomCard";
 import CustomButton from "../CustomButton";
 import { logMistake } from "../../api";
@@ -13,6 +19,7 @@ const Labeling = ({ user, cards, onComplete }) => {
   };
 
   const handleNextStep = async () => {
+    if (checked === null) return;
     const isCorrect = checked === correct;
     if (isCorrect) onComplete(isCorrect);
     else

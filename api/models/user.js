@@ -37,10 +37,17 @@ const userSchema = new mongoose.Schema({
     },
   ],
   progress: {
-    level: { type: Number, default: 0 },
+    chapter: { type: Number, default: 0 },
     unit: { type: Number, default: 0 },
     lesson: { type: Number, default: 0 },
   },
+  activity: [
+    {
+      type: { type: String },
+      description: { type: String },
+      timestamp: { type: Date, default: Date.now },
+    }
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

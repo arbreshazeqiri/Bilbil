@@ -106,6 +106,45 @@ const logMistake = async (userId, mistake) => {
   }
 };
 
+const updateProgress = async (userId, progress) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/updateProgress`, {
+      userId,
+      progress,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error saving progress:", error);
+  }
+};
+
+const addActivity = async (userId, type, description) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/addActivity`, {
+      userId,
+      type,
+      description,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding activity:", error);
+    throw error;
+  }
+};
+
+const getFriendsActivity = async (userId) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/getFriendActivity`, {
+      userId,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching friend activities:", error);
+    throw error;
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -116,4 +155,7 @@ export {
   getUserById,
   updateAvatar,
   logMistake,
+  updateProgress,
+  addActivity,
+  getFriendsActivity,
 };

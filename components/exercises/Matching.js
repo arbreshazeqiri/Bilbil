@@ -50,6 +50,7 @@ const Matching = ({ user, onComplete }) => {
   };
 
   const handleNextStep = async () => {
+    if (checked.length === 0) return;
     const isCorrect = checkMatching(pairs, checked);
     if (isCorrect) onComplete(isCorrect);
     else

@@ -27,6 +27,7 @@ const Rearrangement = ({ user, onComplete }) => {
   const [wordPositions, setWordPositions] = useState({});
 
   const handleNextStep = async () => {
+    if (placementWords.length === 0) return;
     const isCorrect = checkRearrangement(
       sentence,
       placementWords.map((w) => w.text)
@@ -34,7 +35,7 @@ const Rearrangement = ({ user, onComplete }) => {
     if (isCorrect) onComplete(true);
     else
       await logMistake(user._id, {
-        title: 'Translate this sentence',
+        title: "Translate this sentence",
         prop: sentence,
       })
         .then()

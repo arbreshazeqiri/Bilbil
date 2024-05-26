@@ -77,7 +77,7 @@ const HomeScreen = () => {
         }}
       >
         {levels.map((level, index) => {
-          const isDisabled = user.progress.chapter < index;
+          const isDisabled = user?.progress?.chapter < index;
           return (
             <View
               style={{

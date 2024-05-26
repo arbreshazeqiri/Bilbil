@@ -52,8 +52,6 @@ class UserStore {
     await AsyncStorage.removeItem("authToken");
     runInAction(() => {
       this.user = null;
-      this.token = null;
-      this.loadUser();
     });
   }
 }

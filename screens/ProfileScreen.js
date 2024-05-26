@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  Switch,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -43,6 +44,7 @@ const ProfileScreen = observer(() => {
   const [isCustomizing, setIsCustomizing] = useState(false);
   const [settings, setSettings] = useState(false);
   const { avatarState } = useAvatarContext();
+  const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
     if (searchInput !== "") handleSearch();
@@ -274,13 +276,23 @@ const ProfileScreen = observer(() => {
                 <TextInput
                   style={styles.input}
                   onChangeText={(text) => setUser({ ...user, [s.value]: text })}
-                  value={user[s.value]}
+                  value={s.value === "password" ? "********" : user[s.value]}
                   placeholder={s.placeholder}
                   placeholderTextColor="#AFAFAF"
+                  secureTextEntry={s.value === "password"}
                 />
               </View>
             );
           })}
+        </View>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text style={styles.inputText}>Notifications</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#767577"}}
+            thumbColor={isEnabled ? "#944ADE" : "#f4f3f4"}
+            onValueChange={() => setIsEnabled(!isEnabled)}
+            value={isEnabled}
+          />
         </View>
       </View>
       <View style={styles.buttonsContainer}>
@@ -321,7 +333,7 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
     paddingHorizontal: 20,
     backgroundColor: "#212832",
-    justifyContent: 'space-between'
+    justifyContent: "space-between",
   },
   picContainer: {
     flexDirection: "row",
@@ -450,8 +462,8 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   buttonsContainer: {
-    gap: 20
-  }
+    gap: 20,
+  },
 });
 
 export default ProfileScreen;

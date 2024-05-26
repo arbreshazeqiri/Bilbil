@@ -7,7 +7,6 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
-const Activity = require("./models/Activity");
 
 const app = express();
 const port = 3000;
@@ -305,46 +304,61 @@ app.post("/logMistake", async (req, res) => {
   }
 });
 
+app.post("/updateProgress", async (req, res) => {
+  try {
+    const { userId, progress } = req.body;
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { progress: progress } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Progress updated successfully." });
+  } catch (error) {
+    console.error("Error updating progress:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.post("/addActivity", async (req, res) => {
   try {
     const { userId, type, description } = req.body;
 
-    const activity = new Activity({
-      userId,
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.activity.push({
       type,
       description,
+      timestamp: new Date()
     });
 
-    await activity.save();
+    await user.save();
 
-    res.status(200).json({ message: "Activity logged successfully", activity });
+    res.status(200).json({ message: "Activity logged successfully", activity: user.activity });
   } catch (error) {
     console.error("Error logging activity:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-app.post("/complete-lesson", async (req, res) => {
-  const { userId, unitId, lessonId } = req.body;
+app.post("/getFriendActivity", async (req, res) => {
+  try {
+    const { userId } = req.body;
 
-  const user = await User.findById(userId);
-  const unit = user.progress.units.find((unit) => unit.unitId === unitId);
-
-  if (!unit.completedLessons.includes(lessonId)) {
-    unit.completedLessons.push(lessonId);
-
-    if (unit.completedLessons.length === 10) {
-      unit.completed = true;
-      await Activity.create({
-        userId,
-        type: "unit",
-        description: `Completed unit ${unitId}`,
-      });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    await user.save();
-    res.send("Lesson completed");
-  } else {
-    res.status(400).send("Lesson already completed");
+    const friendIds = user.friends.map(friend => friend.friendId);
+    const activities = await User.find({ _id: { $in: friendIds } }).select('activity');
+
+    res.status(200).json({ activities });
+  } catch (error) {
+    console.error("Error fetching friend activities:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });

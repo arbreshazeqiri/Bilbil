@@ -41,6 +41,7 @@ const Listening = ({ user, sentence, onComplete }) => {
   };
 
   const handleNextStep = async () => {
+    if (input.length === 0) return;
     const isCorrect = sentence === input;
     if (isCorrect) onComplete(isCorrect);
     else
