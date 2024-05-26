@@ -44,8 +44,7 @@ const LoginScreen = () => {
     try {
       const response = await loginUser(user);
       const { user: userData } = response.data;
-      if (userData.avatar)
-        setAvatarObject(userData.avatar);
+      if (userData.avatar) setAvatarObject(userData.avatar);
 
       runInAction(() => {
         userStore.setUser(userData);
@@ -85,7 +84,7 @@ const LoginScreen = () => {
               onPress={() => setShowPassword(!showPassword)}
             >
               <Ionicons
-                name={showPassword ? "ios-eye" : "ios-eye-off"}
+                name={showPassword ? "eye" : "eye-off"}
                 size={20}
                 color={showPassword ? "#B76DF2" : "#AFAFAF"}
               />

@@ -105,6 +105,60 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/changePassword", async (req, res) => {
+  try {
+    const { userId, oldPassword, newPassword } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: "Invalid old password" });
+    }
+
+    const saltRounds = 10;
+    const hashedNewPassword = await bcrypt.hash(newPassword, saltRounds);
+
+    user.password = hashedNewPassword;
+    await user.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    console.error("Error changing password:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.delete("/deleteAccount/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.name = "Deleted User";
+
+    user.email = "";
+    user.password = "";
+    user.token = "";
+
+    await user.save();
+
+    res.status(200).json({ message: "User account deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user account:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
 app.post("/search", async (req, res) => {
   try {
     const { searchInput } = req.body;
@@ -207,7 +261,7 @@ app.get("/user/:id", async (req, res) => {
 app.post("/updateAvatar", async (req, res) => {
   try {
     const { userId, avatar } = req.body;
-    const updatedUser = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
       userId,
       { $set: { avatar: avatar } },
       { new: true }
@@ -216,6 +270,36 @@ app.post("/updateAvatar", async (req, res) => {
     res.status(200).json({ message: "Avatar updated successfully." });
   } catch (error) {
     console.error("Error updating avatar:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/logMistake", async (req, res) => {
+  try {
+    const { userId, mistake } = req.body;
+    const user = await User.findById(userId);
+    if (
+      user.mistakes.some(
+        (m) => m.title === mistake.title && m.prop === mistake.prop
+      )
+    ) {
+      return res.status(400).json({ message: "Mistake exists." });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: { mistakes: mistake },
+        $slice: -30,
+      },
+      { new: true }
+    );
+
+    res
+      .status(200)
+      .json({ message: "Mistake logged successfully.", user: updatedUser });
+  } catch (error) {
+    console.error("Error logging mistake:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

@@ -41,8 +41,8 @@ const CustomButton = ({
       borderBottomWidth: 5,
       display: "flex",
       gap: 4,
-      justifyContent: 'center',
-      alignItems: 'center',
+      justifyContent: "center",
+      alignItems: "center",
     },
     appButtonText: {
       fontSize: fontSize,
@@ -54,7 +54,11 @@ const CustomButton = ({
   });
 
   return (
-    <TouchableOpacity onPress={onPress} style={styles.appButtonContainer} disabled={isDisabled}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={styles.appButtonContainer}
+      disabled={isDisabled}
+    >
       {icon && <Ionicons name={iconName} size={iconSize} color={color} />}
       {title && <Text style={styles.appButtonText}>{title}</Text>}
     </TouchableOpacity>

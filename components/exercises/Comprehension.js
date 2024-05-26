@@ -12,13 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomCheckbox from "../CustomCheckbox";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Comprehension = ({ onComplete }) => {
+const Comprehension = ({ user, exercise, onComplete }) => {
   const [checked, setChecked] = useState(null);
-  const sounds = [
-    require("../../assets/audios/Sa-vjec-je.m4a"),
-    require("../../assets/audios/Pese.m4a"),
-  ];
+  const { characters, sounds, dialogue, question } = exercise;
+  const { q, options, correct } = question;
 
   const playSound = async (src, rate = 1) => {
     try {
@@ -32,8 +31,16 @@ const Comprehension = ({ onComplete }) => {
     }
   };
 
-  const handleNextStep = () => {
-    onComplete(true);
+  const handleNextStep = async () => {
+    const isCorrect = checked === correct;
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: 'Choose the correct answer for: ' + q,
+        prop: options[correct],
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
 
   return (
@@ -41,78 +48,49 @@ const Comprehension = ({ onComplete }) => {
       style={styles.base}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={require("../../assets/exercises/comprehension-1.png")}
-        />
-        <ThoughtBubble gap={10} pH={15} justify={"start"}>
-          <TouchableOpacity
-            style={{
-              alignSelf: "center",
-            }}
-            onPress={() => playSound(sounds[0])}
-          >
-            <Ionicons name={"volume-medium"} size={30} color={"#944ADE"} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              alignSelf: "center",
-              color: "white",
-              fontFamily: "baloo",
-              fontSize: 22,
-            }}
-          >
-            Sa vjeç je?
-          </Text>
-        </ThoughtBubble>
-      </View>
-      <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={require("../../assets/exercises/comprehension-2.png")}
-        />
-        <ThoughtBubble gap={10} pH={15} justify={"start"}>
-          <TouchableOpacity
-            style={{
-              alignSelf: "center",
-            }}
-            onPress={() => playSound(sounds[1])}
-          >
-            <Ionicons name={"volume-medium"} size={30} color={"#944ADE"} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              alignSelf: "center",
-              color: "white",
-              fontFamily: "baloo",
-              fontSize: 25,
-            }}
-          >
-            Pesë.
-          </Text>
-        </ThoughtBubble>
-      </View>
+      {dialogue.map((d, i) => {
+        return (
+          <View style={styles.container} key={i}>
+            <Image
+              style={styles.image}
+              source={characters[i]}
+            />
+            <ThoughtBubble gap={10} pH={15} justify={"start"}>
+              <TouchableOpacity
+                style={{
+                  alignSelf: "center",
+                }}
+                onPress={() => playSound(sounds[i])}
+              >
+                <Ionicons name={"volume-medium"} size={30} color={"#944ADE"} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  alignSelf: "center",
+                  color: "white",
+                  fontFamily: "baloo",
+                  fontSize: 22,
+                }}
+              >
+                {d}
+              </Text>
+            </ThoughtBubble>
+          </View>
+        );
+      })}
       <View style={styles.bottom}>
-        <Text style={styles.header}>The blue bird is saying it is...</Text>
-        <CustomCheckbox
-          index={0}
-          text={"... four years old."}
-          isChecked={checked === 0}
-          setIsChecked={(val) => setChecked(val)}
-        />
-        <CustomCheckbox
-          index={1}
-          text={"... five years old."}
-          isChecked={checked === 1}
-          setIsChecked={(val) => setChecked(val)}
-        />
-        <CustomCheckbox
-          index={2}
-          text={"... six years old."}
-          isChecked={checked === 2}
-          setIsChecked={(val) => setChecked(val)}
-        />
+        <Text style={styles.header}>{q}</Text>
+        {options.map((o, i) => {
+          return (
+            <CustomCheckbox
+              key={i}
+              index={i}
+              text={o}
+              isChecked={checked === i}
+              setIsChecked={(val) => setChecked(val)}
+            />
+          )
+        })}
       </View>
       <View style={styles.buttons}>
         <CustomButton
@@ -137,7 +115,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

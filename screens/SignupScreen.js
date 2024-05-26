@@ -106,7 +106,7 @@ const SignUpScreen = () => {
               onPress={() => setShowPassword(!showPassword)}
             >
               <Ionicons
-                name={showPassword ? "ios-eye" : "ios-eye-off"}
+                name={showPassword ? "eye" : "eye-off"}
                 size={20}
                 color={showPassword ? "#B76DF2" : "#AFAFAF"}
               />

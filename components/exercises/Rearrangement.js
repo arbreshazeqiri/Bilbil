@@ -7,13 +7,14 @@ import {
   KeyboardAvoidingView,
   PanResponder,
   Animated,
-  Platform
+  Platform,
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
 import { checkRearrangement } from "../../utils/constants";
+import { logMistake } from "../../api";
 
-const Rearrangement = ({ onComplete }) => {
+const Rearrangement = ({ user, onComplete }) => {
   const sentence = "Unë ndez zjarrin";
   const words = sentence.split(" ");
   const randomWords = ["random", "words", "to", "add"];
@@ -25,9 +26,19 @@ const Rearrangement = ({ onComplete }) => {
   const [placementWords, setPlacementWords] = useState([]);
   const [wordPositions, setWordPositions] = useState({});
 
-  const handleNextStep = () => {
-    const isCorrect = checkRearrangement(sentence, placementWords.map(w => w.text));
-    onComplete(isCorrect);
+  const handleNextStep = async () => {
+    const isCorrect = checkRearrangement(
+      sentence,
+      placementWords.map((w) => w.text)
+    );
+    if (isCorrect) onComplete(true);
+    else
+      await logMistake(user._id, {
+        title: 'Translate this sentence',
+        prop: sentence,
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -104,26 +115,32 @@ const Rearrangement = ({ onComplete }) => {
             let insertionIndex = updatedPlacementWords.findIndex((w) => {
               const wordPosition = wordPositions[w.id];
               const wordRight = wordPosition.x._value + w.text.length + 10;
-          
+
               if (isMovementLeftToRight) {
-                  // For left-to-right movement
-                  return wordPosition.x._value > currentPosition.x._value || wordPosition.y._value > currentPosition.y._value;
+                // For left-to-right movement
+                return (
+                  wordPosition.x._value > currentPosition.x._value ||
+                  wordPosition.y._value > currentPosition.y._value
+                );
               } else {
-                  // For right-to-left movement
-                  return wordRight < currentPosition.x._value || wordPosition.y._value < currentPosition.y._value;
+                // For right-to-left movement
+                return (
+                  wordRight < currentPosition.x._value ||
+                  wordPosition.y._value < currentPosition.y._value
+                );
               }
-          });
-          
-          // If no word is surpassed, leave it where it is
-          if (insertionIndex === -1) {
+            });
+
+            // If no word is surpassed, leave it where it is
+            if (insertionIndex === -1) {
               insertionIndex = updatedPlacementWords.length; // Insert at the end
-          }
-          
-          // Insert the word at the appropriate index
-          updatedPlacementWords.splice(insertionIndex, 0, word);
-          
+            }
+
+            // Insert the word at the appropriate index
+            updatedPlacementWords.splice(insertionIndex, 0, word);
+
             setPlacementWords(updatedPlacementWords);
-            setWordPositions({...wordPositions});
+            setWordPositions({ ...wordPositions });
             // Remove the word from the storage area
             const updatedStorageWords = storageWords.filter(
               (w) => w.id !== currentId
@@ -184,11 +201,11 @@ const Rearrangement = ({ onComplete }) => {
           <View style={styles.dashedLine} />
           <View style={styles.dashedLine} />
           <View style={styles.placedWords}>
-           {renderWords(placementWords, 'place')}
+            {renderWords(placementWords, "place")}
           </View>
         </View>
         <View style={styles.draggableWords}>
-          {renderWords(storageWords, 'storage')}
+          {renderWords(storageWords, "storage")}
         </View>
       </View>
       <View style={styles.buttons}>
@@ -214,7 +231,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 30,
   },
@@ -235,6 +252,7 @@ const styles = StyleSheet.create({
   textArea: {
     flex: 1,
     flexDirection: "column",
+    justifyContent: "space-between",
   },
   dashedLines: {
     width: "100%",
@@ -275,12 +293,11 @@ const styles = StyleSheet.create({
     fontFamily: "baloo-semibold",
   },
   draggableWords: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 10,
-    marginTop: 25,
   },
   buttons: {
     display: "flex",

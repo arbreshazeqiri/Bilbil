@@ -21,8 +21,15 @@ const UnitLayout = ({ color, darkerColor }) => {
 
   return (
     <View style={styles.container}>
-      <CustomModal visible={startLesson} transparent={true} dismiss={() => setStartLesson(false)}>
-        <Lesson startLesson={startLesson} setStartLesson={(val) => setStartLesson(val)}/>
+      <CustomModal
+        visible={startLesson}
+        transparent={true}
+        dismiss={() => setStartLesson(false)}
+      >
+        <Lesson
+          startLesson={startLesson}
+          setStartLesson={(val) => setStartLesson(val)}
+        />
       </CustomModal>
       {rows.map((row, i) => (
         <View key={i} style={styles.row}>

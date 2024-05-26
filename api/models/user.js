@@ -12,6 +12,12 @@ const userSchema = new mongoose.Schema({
   },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  mistakes: [
+    {
+      title: { type: String },
+      prop: { type: String },
+    },
+  ],
   avatar: {
     type: Object,
     default: {
@@ -19,8 +25,8 @@ const userSchema = new mongoose.Schema({
       hair: "#47323B",
       skin: "#FFC19E",
       skinDetails: "#F0A47D",
-      background: 'lightblue',
-      eyes: "#47323B"
+      background: "lightblue",
+      eyes: "#47323B",
     },
   },
   joindDate: { type: Date, default: Date.now },

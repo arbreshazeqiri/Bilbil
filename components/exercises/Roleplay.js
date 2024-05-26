@@ -10,12 +10,15 @@ import {
 import ThoughtBubble from "../ThoughtBubble";
 import CustomCheckbox from "../CustomCheckbox";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Roleplay = ({ questions, onComplete }) => {
+const Roleplay = ({ user, questions, onComplete }) => {
   const [checked, setChecked] = useState(new Array(questions.length).fill([]));
 
-  const handleNextStep = () => {
-    const isCorrect = questions.map((q, index) => {
+  const handleNextStep = async () => {
+    const incorrectQuestions = [];
+
+    questions.forEach((q, index) => {
       const correctAnswers = q.correctAnswers || [];
       const isCheckedForQuestion = checked[index] || [];
 
@@ -24,11 +27,28 @@ const Roleplay = ({ questions, onComplete }) => {
       );
       const isLengthMatched =
         isCheckedForQuestion.length === correctAnswers.length;
-      return isAllCorrectIncluded && isLengthMatched;
+
+      if (!(isAllCorrectIncluded && isLengthMatched)) {
+        incorrectQuestions.push(q);
+      }
     });
 
-    const allCorrect = isCorrect.every((value) => value === true);
-    onComplete(allCorrect);
+    if (incorrectQuestions.length === 0) {
+      onComplete(true);
+    } else {
+      const incorrectQuestionTitles = incorrectQuestions
+        .map((q) => q.question)
+        .join(", ");
+      const correctOptions = incorrectQuestions
+        .map((q) => q.answers.filter((o, i) => q.correctAnswers.includes(i)))
+        .join(", ");
+      await logMistake(user._id, {
+        title: "Choose the correct answer(s) for: " + incorrectQuestionTitles,
+        prop: correctOptions,
+      })
+        .then()
+        .catch((err) => console.log(err));
+    }
   };
 
   return (
@@ -128,7 +148,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

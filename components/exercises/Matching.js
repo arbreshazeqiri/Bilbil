@@ -3,8 +3,9 @@ import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
 import { checkMatching } from "../../utils/constants";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Matching = ({ onComplete }) => {
+const Matching = ({ user, onComplete }) => {
   const [checked, setChecked] = useState([]);
   const [shuffledKeys, setShuffledKeys] = useState([]);
   const [shuffledValues, setShuffledValues] = useState([]);
@@ -42,9 +43,14 @@ const Matching = ({ onComplete }) => {
     tigër: "tiger",
   };
 
-  const handleNextStep = () => {
+  const handleNextStep = async () => {
     const isCorrect = checkMatching(pairs, checked);
-    onComplete(isCorrect);
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: "Tap the matching pairs",
+        prop: Object.values(pairs).toString(),
+      }).then().catch((err) => console.log(err));
   };
 
   return (
@@ -104,7 +110,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

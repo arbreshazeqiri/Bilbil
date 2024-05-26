@@ -14,8 +14,9 @@ import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";
 import { useFonts } from "expo-font";
 import ThoughtBubble from "../ThoughtBubble";
 import CustomButton from "../CustomButton";
+import { logMistake } from "../../api";
 
-const Listening = ({ onComplete }) => {
+const Listening = ({ user, sentence, onComplete }) => {
   const [input, setInput] = useState("");
   const [isLoaded] = useFonts({
     "baloo-semibold": BalooSemiBoldFont,
@@ -27,7 +28,9 @@ const Listening = ({ onComplete }) => {
   const playSound = async (rate = 1) => {
     try {
       const soundObject = new Audio.Sound();
-      await soundObject.loadAsync(require("../../assets/audios/Pershendetje.m4a"));
+      await soundObject.loadAsync(
+        require("../../assets/audios/Pershendetje.m4a")
+      );
 
       await soundObject.setRateAsync(rate, true);
       await soundObject.playAsync();
@@ -36,10 +39,17 @@ const Listening = ({ onComplete }) => {
     }
   };
 
-  const handleNextStep = () => {
-    onComplete(true);
+  const handleNextStep = async () => {
+    const isCorrect = sentence === input;
+    if (isCorrect) onComplete(isCorrect);
+    else
+      await logMistake(user._id, {
+        title: "Type what you hear",
+        prop: sentence,
+      })
+        .then()
+        .catch((err) => console.log(err));
   };
-
 
   return (
     <KeyboardAvoidingView
@@ -91,6 +101,7 @@ const Listening = ({ onComplete }) => {
           placeholder="Type in Albanian"
           placeholderTextColor="#AFAFAF"
           keyboardType="default"
+          textAlignVertical="top"
           multiline
         />
       </View>
@@ -117,7 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "space-between",
     alignSelf: "start",
-    paddingVertical: 30,
+    paddingTop: 30,
     paddingHorizontal: 15,
     gap: 20,
   },

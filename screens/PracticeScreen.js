@@ -1,11 +1,19 @@
 import { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
 import BalooFont from "../assets/fonts/Baloo.ttf";
 import { practices } from "../utils/constants";
 import { LinearGradient } from "expo-linear-gradient";
+import Practice from "../components/Practice";
 
 const PracticeScreen = () => {
   const [practice, setPractice] = useState(null);
@@ -20,34 +28,31 @@ const PracticeScreen = () => {
 
   const Practices = () => {
     return (
-      <ScrollView contentContainerStyle={{
+      <ScrollView
+        contentContainerStyle={{
           width: "100%",
-          height: '100%',
+          height: "100%",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "space-evenly",
           alignItems: "center",
-          gap: 40,
+          gap: 10,
         }}
       >
         <View style={styles.banner}>
           <LinearGradient
-            colors={[
-              "rgb(19, 55, 115)",
-              "rgb(27, 88, 111)",
-              "rgb(12, 51, 76)",
-            ]}
+            colors={["rgb(19, 55, 115)", "rgb(27, 88, 111)", "rgb(12, 51, 76)"]}
             start={{ x: 0.378, y: 1.003 }}
             end={{ x: 0.378, y: 0 }}
             style={styles.background}
           />
           <View style={styles.bannerContent}>
-          <Image
-            source={require("../assets/practice/done-bird.png")}
-            style={styles.bannerImage}
-          />
-          <Text style={styles.text}>
-            Target your weaknesses with personalized practice exercises
-          </Text>
+            <Image
+              source={require("../assets/practice/done-bird.png")}
+              style={styles.bannerImage}
+            />
+            <Text style={styles.text}>
+              Target your weaknesses with personalized practice exercises
+            </Text>
           </View>
         </View>
         <View
@@ -61,7 +66,11 @@ const PracticeScreen = () => {
           {practices.map((practice, index) => {
             const { name, image, size } = practice;
             return (
-              <TouchableOpacity style={styles.container} key={index} onPress={() => setPractice(name)}>
+              <TouchableOpacity
+                style={styles.container}
+                key={index}
+                onPress={() => setPractice(practice)}
+              >
                 <View
                   style={{
                     flexDirection: "column",
@@ -101,7 +110,14 @@ const PracticeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.base}>
-        {practice !== null ? <Practice type={practice} /> : <Practices />}
+        {practice !== null ? (
+          <Practice
+            practice={practice}
+            setPractice={(val) => setPractice(val)}
+          />
+        ) : (
+          <Practices />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -109,23 +125,22 @@ const PracticeScreen = () => {
 
 const styles = StyleSheet.create({
   base: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   banner: {
     width: "100%",
     height: 350,
   },
   background: {
-    position: 'relative',
+    position: "relative",
     width: "100%",
     height: 350,
   },
   bannerContent: {
-    positon: 'absolute',
-    flexDirection: 'column',
-    alignItems: 'center',
-    bottom: '70%',
+    flexDirection: "column",
+    alignItems: "center",
+    bottom: "80%",
     gap: 20,
   },
   bannerImage: {
@@ -133,10 +148,10 @@ const styles = StyleSheet.create({
     height: 150,
   },
   text: {
-    color: 'white',
+    color: "white",
     fontSize: 20,
-    textAlign: 'center',
-    fontFamily: 'baloo-semibold'
+    textAlign: "center",
+    fontFamily: "baloo-semibold",
   },
   container: {
     width: "100%",

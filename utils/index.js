@@ -229,6 +229,5 @@ export const bgColors = [
   "#2d3c4f",
   "#ffffff",
   "#2c2c2c",
-  "#000000"
+  "#000000",
 ];
-
