@@ -26,10 +26,7 @@ const UnitLayout = ({ color, darkerColor }) => {
         transparent={true}
         dismiss={() => setStartLesson(false)}
       >
-        <Lesson
-          startLesson={startLesson}
-          setStartLesson={(val) => setStartLesson(val)}
-        />
+        <Lesson />
       </CustomModal>
       {rows.map((row, i) => (
         <View key={i} style={styles.row}>
@@ -46,7 +43,7 @@ const UnitLayout = ({ color, darkerColor }) => {
                 borderColor={box ? darkerColor : "transparent"}
                 borderRadius={50}
                 isDisabled={!box}
-                onPress={() => setStartLesson(true)}
+                onPress={() => setLesson(i)}
               />
             </View>
           ))}

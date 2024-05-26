@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import { Text, View, StyleSheet, Platform, KeyboardAvoidingView } from "react-native";
 import CustomCard from "../CustomCard";
 import CustomButton from "../CustomButton";
 import { logMistake } from "../../api";

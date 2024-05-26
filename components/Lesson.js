@@ -9,7 +9,7 @@ import { roleplay, comprehension, labeling } from "../utils/language";
 import * as Exercises from "../components/exercises";
 import userStore from "../store/UserStore";
 
-const Lesson = ({ startLesson, setStartLesson }) => {
+const Lesson = () => {
   const user = userStore.user;
   const [exerciseSequence, setExerciseSequence] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -34,6 +34,9 @@ const Lesson = ({ startLesson, setStartLesson }) => {
       setProgress((prevProgress) => prevProgress + 1);
       setCurrentExercise(exerciseSequence[progress + 1]);
     }
+    // else if (isCorrect && progress === steps) {
+    //   updateProgress()
+    // }
   };
 
   const getExercise = () => {
@@ -98,13 +101,6 @@ const Lesson = ({ startLesson, setStartLesson }) => {
           <Exercises.Translation
             sentence={"Birds fly over the sea"}
             translation={"Zogjtë fluturojnë mbi det"}
-            onComplete={(val) => handleNextStep(val)}
-            user={user}
-          />
-        );
-      case "Speaking":
-        return (
-          <Exercises.Speaking
             onComplete={(val) => handleNextStep(val)}
             user={user}
           />

@@ -48,10 +48,11 @@ class UserStore {
   }
 
   async logout() {
-    await AsyncStorage.removeItem("authToken");
     await AsyncStorage.removeItem("user");
+    await AsyncStorage.removeItem("authToken");
     runInAction(() => {
       this.user = null;
+      this.token = null;
       this.loadUser();
     });
   }

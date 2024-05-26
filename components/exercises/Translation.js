@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TextInput,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import BalooSemiBoldFont from "../../assets/fonts/Baloo-SemiBold.ttf";

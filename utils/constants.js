@@ -202,7 +202,6 @@ export const practices = [
 ];
 
 export const exerciseTypes = [
-  "Speaking",
   "Translation",
   "Listening",
   "Comprehension",
@@ -224,6 +223,7 @@ export const generateExerciseSequence = () => {
 
   allExercises.sort(() => Math.random() - 0.5);
   sequence.push(allExercises[0]);
+  sequence.push(allExercises[1]);
 
   return sequence;
 };

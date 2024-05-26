@@ -201,7 +201,7 @@ const ProfileScreen = observer(() => {
             </View>
             <Text style={styles.details}>{user.username}</Text>
             <Text style={styles.details}>
-              Joined {dayjs(user.joindDate).format("MMMM YYYY")}
+              Joined {dayjs(user.joined).format("MMMM YYYY")}
             </Text>
             <Text style={styles.accentDetail}>
               {(user.friends &&

@@ -7,6 +7,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("./models/User");
+const Activity = require("./models/Activity");
 
 const app = express();
 const port = 3000;
@@ -301,5 +302,49 @@ app.post("/logMistake", async (req, res) => {
   } catch (error) {
     console.error("Error logging mistake:", error);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/addActivity", async (req, res) => {
+  try {
+    const { userId, type, description } = req.body;
+
+    const activity = new Activity({
+      userId,
+      type,
+      description,
+    });
+
+    await activity.save();
+
+    res.status(200).json({ message: "Activity logged successfully", activity });
+  } catch (error) {
+    console.error("Error logging activity:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/complete-lesson", async (req, res) => {
+  const { userId, unitId, lessonId } = req.body;
+
+  const user = await User.findById(userId);
+  const unit = user.progress.units.find((unit) => unit.unitId === unitId);
+
+  if (!unit.completedLessons.includes(lessonId)) {
+    unit.completedLessons.push(lessonId);
+
+    if (unit.completedLessons.length === 10) {
+      unit.completed = true;
+      await Activity.create({
+        userId,
+        type: "unit",
+        description: `Completed unit ${unitId}`,
+      });
+    }
+
+    await user.save();
+    res.send("Lesson completed");
+  } else {
+    res.status(400).send("Lesson already completed");
   }
 });

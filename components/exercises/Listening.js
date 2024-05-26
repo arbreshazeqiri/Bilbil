@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import { Audio } from "expo-av";
