@@ -118,7 +118,7 @@ const updateProgress = async (userId, progress) => {
   }
 };
 
-const addActivity = async (userId, type, description) => {
+const logActivity = async (userId, type, description) => {
   try {
     const response = await axios.post(`${BASE_URL}/addActivity`, {
       userId,
@@ -132,15 +132,14 @@ const addActivity = async (userId, type, description) => {
   }
 };
 
-const getFriendsActivity = async (userId) => {
+const getFriends = async (userId) => {
   try {
-    const response = await axios.post(`${BASE_URL}/getFriendActivity`, {
+    const response = await axios.post(`${BASE_URL}/getFriends`, {
       userId,
     });
-    console.log(response.data);
-    return response.data;
+    return response.data.friends;
   } catch (error) {
-    console.error("Error fetching friend activities:", error);
+    console.error("Error fetching friends:", error);
     throw error;
   }
 };
@@ -154,8 +153,8 @@ export {
   removeFriendRequest,
   getUserById,
   updateAvatar,
-  logMistake,
   updateProgress,
-  addActivity,
-  getFriendsActivity,
+  logMistake,
+  logActivity,
+  getFriends,
 };

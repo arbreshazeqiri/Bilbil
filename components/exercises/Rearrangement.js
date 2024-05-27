@@ -27,19 +27,20 @@ const Rearrangement = ({ user, onComplete }) => {
   const [wordPositions, setWordPositions] = useState({});
 
   const handleNextStep = async () => {
-    if (placementWords.length === 0) return;
-    const isCorrect = checkRearrangement(
-      sentence,
-      placementWords.map((w) => w.text)
-    );
-    if (isCorrect) onComplete(true);
-    else
-      await logMistake(user._id, {
-        title: "Translate this sentence",
-        prop: sentence,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true);
+    // if (placementWords.length === 0) return;
+    // const isCorrect = checkRearrangement(
+    //   sentence,
+    //   placementWords.map((w) => w.text)
+    // );
+    // if (isCorrect) onComplete(true);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Translate this sentence",
+    //     prop: sentence,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -239,6 +240,7 @@ const styles = StyleSheet.create({
   header: {
     color: "white",
     fontSize: 22,
+    fontFamily: 'baloo-semibold',
   },
   container: {
     flexDirection: "row",

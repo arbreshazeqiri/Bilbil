@@ -33,16 +33,17 @@ const Comprehension = ({ user, exercise, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    if (checked.length === 0) return;
-    const isCorrect = checked === correct;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Choose the correct answer for: " + q,
-        prop: options[correct],
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true)
+    // if (checked.length === 0) return;
+    // const isCorrect = checked === correct;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Choose the correct answer for: " + q,
+    //     prop: options[correct],
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

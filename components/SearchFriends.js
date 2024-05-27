@@ -55,6 +55,7 @@ const styles = StyleSheet.create({
   usersSection: {
     flexDirection: "column",
     padding: 10,
+    gap: 15,
   },
 });
 

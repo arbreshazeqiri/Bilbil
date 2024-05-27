@@ -19,16 +19,17 @@ const Labeling = ({ user, cards, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    if (checked === null) return;
-    const isCorrect = checked === correct;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Select the correct image",
-        prop: word,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true)
+    // if (checked === null) return;
+    // const isCorrect = checked === correct;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Select the correct image",
+    //     prop: word,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

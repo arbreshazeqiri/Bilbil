@@ -25,14 +25,15 @@ const Translation = ({ user, sentence, translation, onComplete }) => {
   }
 
   const handleNextStep = async () => {
-    if(input.length === 0) return;
-    const isCorrect = translation === input;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Translate this sentence",
-        prop: sentence,
-      }).then().catch((err) => console.log(err));
+    onComplete(true);
+    // if(input.length === 0) return;
+    // const isCorrect = translation === input;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Translate this sentence",
+    //     prop: sentence,
+    //   }).then().catch((err) => console.log(err));
   };
 
   return (

@@ -25,6 +25,8 @@ class UserStore {
         runInAction(() => {
           this.user = JSON.parse(user);
         });
+      } else {
+        this.user = null;
       }
     } catch (error) {
       console.error("Error loading user from AsyncStorage:", error);
@@ -48,10 +50,11 @@ class UserStore {
   }
 
   async logout() {
-    await AsyncStorage.removeItem("user");
     await AsyncStorage.removeItem("authToken");
+    await AsyncStorage.removeItem("user");
     runInAction(() => {
       this.user = null;
+      this.loadUser();
     });
   }
 }

@@ -50,16 +50,17 @@ const Matching = ({ user, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    if (checked.length === 0) return;
-    const isCorrect = checkMatching(pairs, checked);
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Tap the matching pairs",
-        prop: Object.values(pairs).toString(),
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true);
+    // if (checked.length === 0) return;
+    // const isCorrect = checkMatching(pairs, checked);
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Tap the matching pairs",
+    //     prop: Object.values(pairs).toString(),
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

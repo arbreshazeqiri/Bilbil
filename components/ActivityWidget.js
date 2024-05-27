@@ -1,30 +1,49 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 
-const ActivityWidget = ({ user, description, icon }) => {
-  const getIcon = (type) => {
+const ActivityWidget = ({ name, type, description }) => {
+  const getLevel = (desc) => {
+    const d = desc.split(" ")[2];
+    switch (d) {
+      case "Bronze.":
+        return require("../assets/news/bronze.png");
+      case "Silver.":
+        return require("../assets/news/silver.png");
+      case "Gold.":
+        return require("../assets/news/gold.png");
+      case "Platinum.":
+        return require("../assets/news/platinum.png");
+      case "Diamond.":
+        return require("../assets/news/diamond.png");
+      default:
+        return require("../assets/news/iron.png");
+    }
+  };
+
+  const getIcon = (type, d) => {
     switch (type) {
       case "lesson":
-        return "smth";
+        return require("../assets/news/lesson.png");
       case "unit":
-        return "smth-better";
+        return require("../assets/news/unit.png");
       case "chapter":
-        return "smth-betterer";
+        return getLevel(d);
       case "friends":
-        return "friends";
+        return require("../assets/news/friends.png");
       default:
-        return null;
+        return require("../assets/news/unit.png");
     }
   };
   return (
     <View style={styles.activityWidget}>
       <View style={styles.userData}>
-        <Text style={styles.userDetailOne}>{activity.userName}</Text>
-        <Text>{activity.message}</Text>
+        <Text style={styles.userDetailOne}>{name}</Text>
+        <Text style={styles.userDetailTwo}>{description}</Text>
+      </View>
+      <View>
         <Image
-          key={index}
-          source={getIcon(activity.type)}
-          style={{ width: 20, height: 20 }}
+          source={getIcon(type, description)}
+          style={{ width: 80, height: 80 }}
         />
       </View>
     </View>
@@ -33,15 +52,11 @@ const ActivityWidget = ({ user, description, icon }) => {
 
 const styles = StyleSheet.create({
   activityWidget: {
-    color: "white",
     width: "100%",
-    height: 60,
-    fontWeight: "semibold",
     borderWidth: 1,
     borderColor: "#AFAFAF",
     backgroundColor: "#2B3440",
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    padding: 10,
     borderRadius: 10,
     display: "flex",
     flexDirection: "row",
@@ -55,7 +70,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
     fontWeight: "bold",
-    alignSelf: "center",
+  },
+  userDetailTwo: {
+    color: "#DAE5EB",
+    fontSize: 14,
+    marginVertical: 2,
   },
 });
 

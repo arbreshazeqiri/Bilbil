@@ -41,16 +41,17 @@ const Listening = ({ user, sentence, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    if (input.length === 0) return;
-    const isCorrect = sentence === input;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Type what you hear",
-        prop: sentence,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true);
+    // if (input.length === 0) return;
+    // const isCorrect = sentence === input;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Type what you hear",
+    //     prop: sentence,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

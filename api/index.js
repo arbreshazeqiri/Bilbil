@@ -320,7 +320,7 @@ app.post("/updateProgress", async (req, res) => {
   }
 });
 
-app.post("/addActivity", async (req, res) => {
+app.post("/logActivity", async (req, res) => {
   try {
     const { userId, type, description } = req.body;
 
@@ -329,22 +329,33 @@ app.post("/addActivity", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    user.activity.push({
+    const newActivity = {
       type,
       description,
       timestamp: new Date()
-    });
+    };
 
-    await user.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          activity: {
+            $each: [newActivity],
+            $slice: -20
+          }
+        }
+      },
+      { new: true }
+    );
 
-    res.status(200).json({ message: "Activity logged successfully", activity: user.activity });
+    res.status(200).json({ message: "Activity logged successfully", activity: updatedUser.activity });
   } catch (error) {
     console.error("Error logging activity:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
-app.post("/getFriendActivity", async (req, res) => {
+app.post("/getFriends", async (req, res) => {
   try {
     const { userId } = req.body;
 
@@ -353,12 +364,12 @@ app.post("/getFriendActivity", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const friendIds = user.friends.map(friend => friend.friendId);
-    const activities = await User.find({ _id: { $in: friendIds } }).select('activity');
+    const friendIds = user.friends.filter(friend => friend.status === 'Friends').map(f => f.friendId);
+    const friends = await User.find({ _id: { $in: friendIds } });
 
-    res.status(200).json({ activities });
+    res.status(200).json({ friends });
   } catch (error) {
-    console.error("Error fetching friend activities:", error);
+    console.error("Error fetching friends:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

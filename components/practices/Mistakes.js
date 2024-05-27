@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
 import userStore from "../../store/UserStore";
 
 const Mistakes = () => {
-  const [mistakes] = useState(userStore.mistakes || []);
+  const [mistakes] = useState(userStore.user.mistakes || []);
   return (
     <View style={styles.container}>
       <Text style={styles.subText}>{mistakes.length} mistakes</Text>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFonts } from "expo-font";
 import BalooSemiBoldFont from "../assets/fonts/Baloo-SemiBold.ttf";
@@ -11,7 +11,7 @@ import {
   getUserById,
   acceptFriendRequest,
   removeFriendRequest,
-  getFriendsActivity,
+  getFriends,
 } from "../api";
 
 const NewsScreen = () => {
@@ -49,8 +49,12 @@ const NewsScreen = () => {
 
   const getFriendActivity = async () => {
     try {
-      const response = await getFriendsActivity(user._id);
-      const activities = response.activities;
+      const response = await getFriends(user._id);
+      const activities = response.flatMap((f) =>
+        f.activity.map((a) => {
+          return { name: f.name, type: a.type, description: a.description };
+        })
+      );
       setFriendAct(activities);
     } catch (error) {
       console.error("Error fetching friend activities:", error);
@@ -101,10 +105,11 @@ const NewsScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#212832" }}>
       <View style={styles.container}>
+        <Text style={styles.title}>News</Text>
         <View style={styles.section}>
           <Text style={styles.text}>Friend Requests</Text>
           {friendReqs.length > 0 ? (
-            <View style={styles.usersSection}>
+            <ScrollView contentContainerStyle={styles.usersSection}>
               {friendReqs.map((foundUser, id) => (
                 <UserWidget
                   key={id}
@@ -114,7 +119,7 @@ const NewsScreen = () => {
                   onAcceptRequest={handleAcceptFriendRequest}
                 />
               ))}
-            </View>
+            </ScrollView>
           ) : (
             <Text style={styles.subText}>You have no new friend requests.</Text>
           )}
@@ -122,16 +127,16 @@ const NewsScreen = () => {
         <View style={styles.section}>
           <Text style={styles.text}>Friend Activity</Text>
           {friendAct?.length > 0 ? (
-            <View style={styles.usersSection}>
+            <ScrollView contentContainerStyle={styles.usersSection}>
               {friendAct?.map((act, id) => (
                 <ActivityWidget
                   key={id}
-                  user={act._id}
-                  description={description || ''}
-                  icon={icon}
+                  name={act.name}
+                  type={act.type}
+                  description={act.description}
                 />
               ))}
-            </View>
+            </ScrollView>
           ) : (
             <Text style={styles.subText}>You have no new friend activity.</Text>
           )}
@@ -145,15 +150,23 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "column",
     padding: 20,
-    gap: 30,
+    gap: 15,
     flex: 1,
   },
   section: {
     flexDirection: "column",
     gap: 5,
+    marginBottom: 30,
   },
   usersSection: {
     flexDirection: "column",
+    gap: 15,
+  },
+  title: {
+    color: "white",
+    fontSize: 22,
+    fontFamily: "baloo-semibold",
+    alignSelf: 'center',
   },
   text: {
     color: "white",

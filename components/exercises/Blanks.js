@@ -23,23 +23,24 @@ const Blanks = ({ user, sentence = "", missingIndices = [], onComplete }) => {
   const [placementWords, setPlacementWords] = useState([]);
 
   const handleNextStep = async () => {
-    if (words.length === 0) return;
-    let structuredSentence = [...words];
-    missingIndices.forEach((index, i) => {
-      if (placementWords[i]) {
-        structuredSentence[index] = placementWords[i].text;
-      }
-    });
+    onComplete(true)
+    // if (words.length === 0) return;
+    // let structuredSentence = [...words];
+    // missingIndices.forEach((index, i) => {
+    //   if (placementWords[i]) {
+    //     structuredSentence[index] = placementWords[i].text;
+    //   }
+    // });
 
-    const isCorrect = checkRearrangement(sentence, structuredSentence);
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Complete the sentence",
-        prop: sentence,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    // const isCorrect = checkRearrangement(sentence, structuredSentence);
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Complete the sentence",
+    //     prop: sentence,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   const handleTap = (word) => {
@@ -153,6 +154,7 @@ const styles = StyleSheet.create({
   header: {
     color: "white",
     fontSize: 22,
+    fontFamily: 'baloo-semibold',
   },
   container: {
     flexDirection: "row",
