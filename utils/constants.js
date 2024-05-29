@@ -282,3 +282,21 @@ export const settings = [
     placeholder: 'Email'
   },
 ]
+
+export const inputsList = [
+  {
+    value: 'oldPassword',
+    text: 'Old password',
+    placeholder: ''
+  },
+  {
+    value: 'newPassword',
+    text: 'New password',
+    placeholder: ''
+  },
+  {
+    value: 'confirmPassword',
+    text: 'Confirm password',
+    placeholder: ''
+  },
+]

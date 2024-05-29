@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
   modalContent: {
     flex: 1,
     backgroundColor: "#212832",
-    paddingVertical: "15%",
-    paddingHorizontal: 10,
+    padding: 10,
   },
 });

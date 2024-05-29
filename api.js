@@ -22,9 +22,9 @@ const loginUser = async (userData) => {
   }
 };
 
-const searchUsers = async (searchInput) => {
+const searchUsers = async (searchInput, userId) => {
   try {
-    const response = await axios.post(`${BASE_URL}/search`, { searchInput });
+    const response = await axios.post(`${BASE_URL}/search`, { searchInput, userId });
     return response;
   } catch (error) {
     console.error("Error searching users:", error);
@@ -144,6 +144,30 @@ const getFriends = async (userId) => {
   }
 };
 
+const changePassword = async (userId, oldPassword, newPassword) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/changePassword`, {
+      userId,
+      oldPassword,
+      newPassword,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw error;
+  }
+};
+
+const deleteAccount = async (userId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/deleteAccount/${userId}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -157,4 +181,6 @@ export {
   logMistake,
   logActivity,
   getFriends,
+  changePassword,
+  deleteAccount
 };

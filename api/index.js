@@ -161,7 +161,7 @@ app.delete("/deleteAccount/:id", async (req, res) => {
 
 app.post("/search", async (req, res) => {
   try {
-    const { searchInput } = req.body;
+    const { searchInput, userId } = req.body;
     const searchRegex = new RegExp(`.*${searchInput}.*`, "i");
 
     const users = await User.find({
@@ -169,6 +169,7 @@ app.post("/search", async (req, res) => {
         { username: { $regex: searchRegex } },
         { name: { $regex: searchRegex } },
       ],
+      _id: { $ne: userId }
     });
 
     res.status(200).json({ users });

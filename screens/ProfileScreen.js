@@ -34,11 +34,13 @@ import {
 } from "../utils/constants";
 import { useAvatarContext } from "../context/AvatarContext";
 import { AntDesign } from "@expo/vector-icons";
+import ChangePassword from "../components/ChangePassword";
 
 const ProfileScreen = observer(() => {
   const navigation = useNavigation();
   const [user, setUser] = useState(userStore.user);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenPassword, setIsOpenPassword] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [users, setUsers] = useState([]);
   const [isCustomizing, setIsCustomizing] = useState(false);
@@ -52,7 +54,7 @@ const ProfileScreen = observer(() => {
 
   const handleSearch = async () => {
     try {
-      await searchUsers(searchInput)
+      await searchUsers(searchInput, user._id)
         .then((response) => {
           const foundUsers = response.data.users;
           const updatedUsers = foundUsers.map((foundUser) => {
@@ -273,22 +275,42 @@ const ProfileScreen = observer(() => {
             return (
               <View style={styles.inputSet} key={i}>
                 <Text style={styles.inputText}>{s.text}</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => setUser({ ...user, [s.value]: text })}
-                  value={s.value === "password" ? "********" : user[s.value]}
-                  placeholder={s.placeholder}
-                  placeholderTextColor="#AFAFAF"
-                  secureTextEntry={s.value === "password"}
-                />
+                {s.value === "password" ? (
+                  <TouchableOpacity onPress={() => setIsOpenPassword(true)}>
+                    <TextInput
+                      style={styles.input}
+                      value="********"
+                      placeholder={s.placeholder}
+                      placeholderTextColor="#AFAFAF"
+                      secureTextEntry
+                      editable={false}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TextInput
+                    style={styles.input}
+                    onChangeText={(text) =>
+                      setUser({ ...user, [s.value]: text })
+                    }
+                    value={user[s.value]}
+                    placeholder={s.placeholder}
+                    placeholderTextColor="#AFAFAF"
+                  />
+                )}
               </View>
             );
           })}
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
           <Text style={styles.inputText}>Notifications</Text>
           <Switch
-            trackColor={{ false: "#767577", true: "#767577"}}
+            trackColor={{ false: "#767577", true: "#767577" }}
             thumbColor={isEnabled ? "#944ADE" : "#f4f3f4"}
             onValueChange={() => setIsEnabled(!isEnabled)}
             value={isEnabled}
@@ -317,6 +339,10 @@ const ProfileScreen = observer(() => {
           />
         </View>
       </View>
+      <ChangePassword
+        isOpen={isOpenPassword}
+        dismiss={() => setIsOpenPassword(!isOpenPassword)}
+      />
     </SafeAreaView>
   );
 });
