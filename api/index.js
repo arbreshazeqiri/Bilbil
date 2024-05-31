@@ -43,15 +43,27 @@ const generateSecretKey = () => {
 
 const secretKey = generateSecretKey();
 
-//endpoint to register a user in the backend
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 app.post("/register", async (req, res) => {
   try {
     const { username, name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: "Username already taken." });
+    }
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long. It must contain upper and lower case letters, a number, and a special character.",
+      });
     }
 
     const saltRounds = 10;
@@ -64,10 +76,6 @@ app.post("/register", async (req, res) => {
       password: hashedPassword,
     });
 
-    //generate and store the verification token
-    newUser.verificationToken = crypto.randomBytes(20).toString("hex");
-
-    //save the  user to the database
     await newUser.save().then((result) => {
       const token = jwt.sign({ userId: result._id }, secretKey);
       res.status(200).json({ user: { ...result["_doc"], token } });
@@ -87,14 +95,14 @@ app.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "Invalid email or username" });
+      return res.status(400).json({ message: "Invalid credentials." });
     }
 
     //compare password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(404).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Invalid credentials." });
     }
 
     const token = jwt.sign({ userId: user._id }, secretKey);
@@ -161,7 +169,7 @@ app.delete("/deleteAccount/:id", async (req, res) => {
 
 app.post("/search", async (req, res) => {
   try {
-    const { searchInput } = req.body;
+    const { searchInput, userId } = req.body;
     const searchRegex = new RegExp(`.*${searchInput}.*`, "i");
 
     const users = await User.find({
@@ -169,6 +177,7 @@ app.post("/search", async (req, res) => {
         { username: { $regex: searchRegex } },
         { name: { $regex: searchRegex } },
       ],
+      _id: { $ne: userId }
     });
 
     res.status(200).json({ users });
@@ -300,6 +309,76 @@ app.post("/logMistake", async (req, res) => {
       .json({ message: "Mistake logged successfully.", user: updatedUser });
   } catch (error) {
     console.error("Error logging mistake:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/updateProgress", async (req, res) => {
+  try {
+    const { userId, progress } = req.body;
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { progress: progress } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Progress updated successfully." });
+  } catch (error) {
+    console.error("Error updating progress:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/logActivity", async (req, res) => {
+  try {
+    const { userId, type, description } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const newActivity = {
+      type,
+      description,
+      timestamp: new Date()
+    };
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $push: {
+          activity: {
+            $each: [newActivity],
+            $slice: -20
+          }
+        }
+      },
+      { new: true }
+    );
+
+    res.status(200).json({ message: "Activity logged successfully", activity: updatedUser.activity });
+  } catch (error) {
+    console.error("Error logging activity:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.post("/getFriends", async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const friendIds = user.friends.filter(friend => friend.status === 'Friends').map(f => f.friendId);
+    const friends = await User.find({ _id: { $in: friendIds } });
+
+    res.status(200).json({ friends });
+  } catch (error) {
+    console.error("Error fetching friends:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 });

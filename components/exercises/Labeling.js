@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Text, View, StyleSheet, KeyboardAvoidingView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+} from "react-native";
 import CustomCard from "../CustomCard";
 import CustomButton from "../CustomButton";
 import { logMistake } from "../../api";
@@ -13,15 +19,17 @@ const Labeling = ({ user, cards, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    const isCorrect = checked === correct;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Select the correct image",
-        prop: word,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true)
+    // if (checked === null) return;
+    // const isCorrect = checked === correct;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Select the correct image",
+    //     prop: word,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

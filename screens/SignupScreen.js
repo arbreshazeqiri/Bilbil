@@ -24,6 +24,7 @@ const SignUpScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
   const navigation = useNavigation();
 
   const [isLoaded] = useFonts({
@@ -57,11 +58,10 @@ const SignUpScreen = () => {
         navigation.navigate("Menu");
       })
       .catch((error) => {
-        Alert.alert(
-          "Registration failed",
-          "An error occurred during registration"
+        setValidationMessage(
+          error.response.data.message ||
+            "An error occurred during registration."
         );
-        console.log("error", error);
       });
   };
 
@@ -112,6 +112,14 @@ const SignUpScreen = () => {
               />
             </TouchableOpacity>
           </View>
+          <Text
+            style={{
+              ...styles.validationMessage,
+              opacity: validationMessage ? 1 : 0,
+            }}
+          >
+            {validationMessage}
+          </Text>
         </View>
         <View style={styles.buttons}>
           <CustomButton
@@ -207,6 +215,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     fontFamily: "baloo",
+  },
+  validationMessage: {
+    color: "#EF3A3A",
+    marginTop: 20,
+    fontFamily: "baloo-semibold",
   },
 });
 

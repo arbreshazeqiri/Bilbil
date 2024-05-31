@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import { Audio } from "expo-av";
@@ -40,15 +41,17 @@ const Listening = ({ user, sentence, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    const isCorrect = sentence === input;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: "Type what you hear",
-        prop: sentence,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true);
+    // if (input.length === 0) return;
+    // const isCorrect = sentence === input;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Type what you hear",
+    //     prop: sentence,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (

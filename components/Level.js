@@ -6,8 +6,10 @@ import { useFonts } from "expo-font";
 import { AntDesign } from "@expo/vector-icons";
 import { units, colors, darkerColors } from "../utils/constants";
 import UnitLayout from "./UnitLayout";
+import userStore from "../store/UserStore";
 
 const Level = ({ level, setLevel }) => {
+  const user = userStore.user;
   const [isLoaded] = useFonts({
     baloo: BalooFont,
     "baloo-semibold": BalooSemiBoldFont,
@@ -29,34 +31,42 @@ const Level = ({ level, setLevel }) => {
         <Text style={styles.title}>{level.chapter}</Text>
       </View>
       <ScrollView contentContainerStyle={styles.course}>
-        {units[level.index].map((unit, i) => (
-          <View key={i} style={{ flexDirection: "column" }}>
-            <View
-              style={{
-                ...styles.banner,
-                backgroundColor: colors[i % colors.length],
-              }}
-            >
-              <Text
+        {units[level.index].map((unit, i) => {
+          const isDisabled = user?.progress?.unit < i;
+          return (
+            <View key={i} style={{ flexDirection: "column" }}>
+              <View
                 style={{
-                  fontFamily: "baloo-semibold",
-                  color: "white",
-                  fontWeight: 700,
-                  fontSize: 25,
+                  ...styles.banner,
+                  backgroundColor: isDisabled
+                    ? "gray"
+                    : colors[i % colors.length],
                 }}
               >
-                Unit {i + 1}
-              </Text>
-              <Text style={{ color: "white", fontWeight: 600, fontSize: 18 }}>
-                {unit}
-              </Text>
+                <Text
+                  style={{
+                    fontFamily: "baloo-semibold",
+                    color: isDisabled ? "#3c3c3c" : "white",
+                    fontWeight: 700,
+                    fontSize: 25,
+                  }}
+                >
+                  Unit {i + 1}
+                </Text>
+                <Text style={{ color:isDisabled ? "#3c3c3c" : "white", fontWeight: 600, fontSize: 18 }}>
+                  {unit}
+                </Text>
+              </View>
+              <UnitLayout
+                chapter={level.index}
+                unit={i}
+                isParentDisabled={isDisabled}
+                color={colors[i % colors.length]}
+                darkerColor={darkerColors[i % darkerColors.length]}
+              />
             </View>
-            <UnitLayout
-              color={colors[i % colors.length]}
-              darkerColor={darkerColors[i % darkerColors.length]}
-            />
-          </View>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );

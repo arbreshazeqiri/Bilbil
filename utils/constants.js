@@ -202,7 +202,6 @@ export const practices = [
 ];
 
 export const exerciseTypes = [
-  "Speaking",
   "Translation",
   "Listening",
   "Comprehension",
@@ -224,6 +223,7 @@ export const generateExerciseSequence = () => {
 
   allExercises.sort(() => Math.random() - 0.5);
   sequence.push(allExercises[0]);
+  sequence.push(allExercises[1]);
 
   return sequence;
 };
@@ -280,5 +280,23 @@ export const settings = [
     value: 'email',
     text: 'Email',
     placeholder: 'Email'
+  },
+]
+
+export const inputsList = [
+  {
+    value: 'oldPassword',
+    text: 'Old password',
+    placeholder: ''
+  },
+  {
+    value: 'newPassword',
+    text: 'New password',
+    placeholder: ''
+  },
+  {
+    value: 'confirmPassword',
+    text: 'Confirm password',
+    placeholder: ''
   },
 ]

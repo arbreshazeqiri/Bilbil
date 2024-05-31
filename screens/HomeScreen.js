@@ -11,6 +11,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import Level from "../components/Level";
 
 const HomeScreen = () => {
+  const user = userStore.user;
   const [level, setLevel] = useState(null);
   const [isLoaded] = useFonts({
     baloo: BalooFont,
@@ -76,7 +77,7 @@ const HomeScreen = () => {
         }}
       >
         {levels.map((level, index) => {
-          const isDisabled = level.status === "Locked";
+          const isDisabled = user?.progress?.chapter < index;
           return (
             <View
               style={{

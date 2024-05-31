@@ -7,6 +7,7 @@ import BalooFont from "../assets/fonts/Baloo.ttf";
 import { useFonts } from "expo-font";
 import CustomButton from "../components/CustomButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import userStore from "../store/UserStore";
 
 const StartingScreen = () => {
   const navigation = useNavigation();
@@ -17,9 +18,10 @@ const StartingScreen = () => {
 
   const checkLoginStatus = async () => {
     try {
-      const isAuthenticated = await AsyncStorage.getItem("authToken");
+      const token = await AsyncStorage.getItem("authToken");
+      const user = userStore.user;
 
-      if (isAuthenticated) {
+      if (token && user) {
         navigation.replace("Menu");
       }
     } catch (error) {

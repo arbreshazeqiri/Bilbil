@@ -5,6 +5,7 @@ import {
   View,
   ScrollView,
   StyleSheet,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";

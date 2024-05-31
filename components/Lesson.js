@@ -9,7 +9,7 @@ import { roleplay, comprehension, labeling } from "../utils/language";
 import * as Exercises from "../components/exercises";
 import userStore from "../store/UserStore";
 
-const Lesson = ({ startLesson, setStartLesson }) => {
+const Lesson = ({ chapter, unit, lesson }) => {
   const user = userStore.user;
   const [exerciseSequence, setExerciseSequence] = useState([]);
   const [progress, setProgress] = useState(0);
@@ -29,10 +29,22 @@ const Lesson = ({ startLesson, setStartLesson }) => {
     }
   }, [isLoaded]);
 
-  const handleNextStep = (isCorrect) => {
+  const handleNextStep = async (isCorrect) => {
     if (isCorrect && progress < steps) {
       setProgress((prevProgress) => prevProgress + 1);
       setCurrentExercise(exerciseSequence[progress + 1]);
+    }
+    if (isCorrect && progress === steps) {
+      if (
+        chapter === user?.progress?.chapter &&
+        unit === user?.progres?.unit &&
+        lesson === user?.progress?.lesson
+      )
+        await updateProgress(user._id, {
+          chapter: user?.progress?.chapter,
+          unit: user?.progress?.unit,
+          lesson: user?.progress?.lesson + 1,
+        });
     }
   };
 
@@ -98,13 +110,6 @@ const Lesson = ({ startLesson, setStartLesson }) => {
           <Exercises.Translation
             sentence={"Birds fly over the sea"}
             translation={"Zogjtë fluturojnë mbi det"}
-            onComplete={(val) => handleNextStep(val)}
-            user={user}
-          />
-        );
-      case "Speaking":
-        return (
-          <Exercises.Speaking
             onComplete={(val) => handleNextStep(val)}
             user={user}
           />

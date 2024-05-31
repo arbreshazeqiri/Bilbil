@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   ScrollView,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import ThoughtBubble from "../ThoughtBubble";
@@ -16,39 +17,41 @@ const Roleplay = ({ user, questions, onComplete }) => {
   const [checked, setChecked] = useState(new Array(questions.length).fill([]));
 
   const handleNextStep = async () => {
-    const incorrectQuestions = [];
+    onComplete(true);
+    // if (checked.length === 0) return;
+    // const incorrectQuestions = [];
 
-    questions.forEach((q, index) => {
-      const correctAnswers = q.correctAnswers || [];
-      const isCheckedForQuestion = checked[index] || [];
+    // questions.forEach((q, index) => {
+    //   const correctAnswers = q.correctAnswers || [];
+    //   const isCheckedForQuestion = checked[index] || [];
 
-      const isAllCorrectIncluded = correctAnswers.every((c) =>
-        isCheckedForQuestion.includes(c)
-      );
-      const isLengthMatched =
-        isCheckedForQuestion.length === correctAnswers.length;
+    //   const isAllCorrectIncluded = correctAnswers.every((c) =>
+    //     isCheckedForQuestion.includes(c)
+    //   );
+    //   const isLengthMatched =
+    //     isCheckedForQuestion.length === correctAnswers.length;
 
-      if (!(isAllCorrectIncluded && isLengthMatched)) {
-        incorrectQuestions.push(q);
-      }
-    });
+    //   if (!(isAllCorrectIncluded && isLengthMatched)) {
+    //     incorrectQuestions.push(q);
+    //   }
+    // });
 
-    if (incorrectQuestions.length === 0) {
-      onComplete(true);
-    } else {
-      const incorrectQuestionTitles = incorrectQuestions
-        .map((q) => q.question)
-        .join(", ");
-      const correctOptions = incorrectQuestions
-        .map((q) => q.answers.filter((o, i) => q.correctAnswers.includes(i)))
-        .join(", ");
-      await logMistake(user._id, {
-        title: "Choose the correct answer(s) for: " + incorrectQuestionTitles,
-        prop: correctOptions,
-      })
-        .then()
-        .catch((err) => console.log(err));
-    }
+    // if (incorrectQuestions.length === 0) {
+    //   onComplete(true);
+    // } else {
+    //   const incorrectQuestionTitles = incorrectQuestions
+    //     .map((q) => q.question)
+    //     .join(", ");
+    //   const correctOptions = incorrectQuestions
+    //     .map((q) => q.answers.filter((o, i) => q.correctAnswers.includes(i)))
+    //     .join(", ");
+    //   await logMistake(user._id, {
+    //     title: "Choose the correct answer(s) for: " + incorrectQuestionTitles,
+    //     prop: correctOptions,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
+    // }
   };
 
   return (

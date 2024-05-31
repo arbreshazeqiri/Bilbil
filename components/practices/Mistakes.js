@@ -1,9 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, ScrollView, Text, Image } from "react-native";
 import userStore from "../../store/UserStore";
 
 const Mistakes = () => {
-  const { mistakes } = userStore.user;
+  const [mistakes] = useState(userStore.user.mistakes || []);
   return (
     <View style={styles.container}>
       <Text style={styles.subText}>{mistakes.length} mistakes</Text>

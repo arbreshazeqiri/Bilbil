@@ -29,18 +29,25 @@ const userSchema = new mongoose.Schema({
       eyes: "#47323B",
     },
   },
-  joindDate: { type: Date, default: Date.now },
+  joined: { type: Date, default: Date.now },
   friends: [
     {
       friendId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
       status: String, // Pending, Friends, Resolve
     },
   ],
-  verified: {
-    type: Boolean,
-    default: false,
+  progress: {
+    chapter: { type: Number, default: 0 },
+    unit: { type: Number, default: 0 },
+    lesson: { type: Number, default: 0 },
   },
-  verificationToken: String,
+  activity: [
+    {
+      type: { type: String },
+      description: { type: String },
+      timestamp: { type: Date, default: Date.now },
+    }
+  ],
 });
 
 const User = mongoose.model("User", userSchema);

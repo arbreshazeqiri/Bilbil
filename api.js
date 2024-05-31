@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://192.168.2.2:3000";
+const BASE_URL = "http://192.168.100.17:3000";
 
 const registerUser = async (userData) => {
   try {
@@ -22,9 +22,9 @@ const loginUser = async (userData) => {
   }
 };
 
-const searchUsers = async (searchInput) => {
+const searchUsers = async (searchInput, userId) => {
   try {
-    const response = await axios.post(`${BASE_URL}/search`, { searchInput });
+    const response = await axios.post(`${BASE_URL}/search`, { searchInput, userId });
     return response;
   } catch (error) {
     console.error("Error searching users:", error);
@@ -106,6 +106,68 @@ const logMistake = async (userId, mistake) => {
   }
 };
 
+const updateProgress = async (userId, progress) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/updateProgress`, {
+      userId,
+      progress,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error saving progress:", error);
+  }
+};
+
+const logActivity = async (userId, type, description) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/addActivity`, {
+      userId,
+      type,
+      description,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding activity:", error);
+    throw error;
+  }
+};
+
+const getFriends = async (userId) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/getFriends`, {
+      userId,
+    });
+    return response.data.friends;
+  } catch (error) {
+    console.error("Error fetching friends:", error);
+    throw error;
+  }
+};
+
+const changePassword = async (userId, oldPassword, newPassword) => {
+  try {
+    const response = await axios.post(`${BASE_URL}/changePassword`, {
+      userId,
+      oldPassword,
+      newPassword,
+    });
+    return response;
+  } catch (error) {
+    console.error("Error changing password:", error);
+    throw error;
+  }
+};
+
+const deleteAccount = async (userId) => {
+  try {
+    const response = await axios.delete(`${BASE_URL}/deleteAccount/${userId}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting account:", error);
+    throw error;
+  }
+};
+
 export {
   registerUser,
   loginUser,
@@ -115,5 +177,10 @@ export {
   removeFriendRequest,
   getUserById,
   updateAvatar,
+  updateProgress,
   logMistake,
+  logActivity,
+  getFriends,
+  changePassword,
+  deleteAccount
 };

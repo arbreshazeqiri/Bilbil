@@ -23,22 +23,24 @@ const Blanks = ({ user, sentence = "", missingIndices = [], onComplete }) => {
   const [placementWords, setPlacementWords] = useState([]);
 
   const handleNextStep = async () => {
-    let structuredSentence = [...words];
-    missingIndices.forEach((index, i) => {
-      if (placementWords[i]) {
-        structuredSentence[index] = placementWords[i].text;
-      }
-    });
+    onComplete(true)
+    // if (words.length === 0) return;
+    // let structuredSentence = [...words];
+    // missingIndices.forEach((index, i) => {
+    //   if (placementWords[i]) {
+    //     structuredSentence[index] = placementWords[i].text;
+    //   }
+    // });
 
-    const isCorrect = checkRearrangement(sentence, structuredSentence);
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: 'Complete the sentence',
-        prop: sentence,
-      })
-        .then()
-        .catch((err) => console.log(err));
+    // const isCorrect = checkRearrangement(sentence, structuredSentence);
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Complete the sentence",
+    //     prop: sentence,
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   const handleTap = (word) => {
@@ -73,7 +75,7 @@ const Blanks = ({ user, sentence = "", missingIndices = [], onComplete }) => {
   };
 
   const renderTextArea = () => {
-    let placementCounter = 0
+    let placementCounter = 0;
     return (
       <View style={styles.textArea}>
         {words.map((word, index) => {
@@ -84,11 +86,17 @@ const Blanks = ({ user, sentence = "", missingIndices = [], onComplete }) => {
                 {word}
               </Text>
             );
-          } else if (placementWords.length > 0 && placementCounter < placementWords.length) {
+          } else if (
+            placementWords.length > 0 &&
+            placementCounter < placementWords.length
+          ) {
             const placementWord = placementWords[placementCounter];
             placementCounter++;
             return (
-              <TouchableOpacity key={index} onPress={() => handleTap(placementWord)}>
+              <TouchableOpacity
+                key={index}
+                onPress={() => handleTap(placementWord)}
+              >
                 <View style={styles.wordContainer}>
                   <Text style={styles.wordText}>{placementWord.text}</Text>
                 </View>
@@ -146,6 +154,7 @@ const styles = StyleSheet.create({
   header: {
     color: "white",
     fontSize: 22,
+    fontFamily: 'baloo-semibold',
   },
   container: {
     flexDirection: "row",
@@ -169,7 +178,7 @@ const styles = StyleSheet.create({
     color: "white",
     fontFamily: "baloo-semibold",
     fontSize: 20,
-    fontWeight: '500',
+    fontWeight: "500",
   },
   dashedLine: {
     width: 100,
@@ -215,7 +224,7 @@ const styles = StyleSheet.create({
   },
   draggableWords: {
     width: "100%",
-    justifyContent: 'space-evenly',
+    justifyContent: "space-evenly",
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 20,

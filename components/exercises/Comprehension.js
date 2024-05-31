@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  Platform,
   KeyboardAvoidingView,
 } from "react-native";
 import { Audio } from "expo-av";
@@ -32,15 +33,17 @@ const Comprehension = ({ user, exercise, onComplete }) => {
   };
 
   const handleNextStep = async () => {
-    const isCorrect = checked === correct;
-    if (isCorrect) onComplete(isCorrect);
-    else
-      await logMistake(user._id, {
-        title: 'Choose the correct answer for: ' + q,
-        prop: options[correct],
-      })
-        .then()
-        .catch((err) => console.log(err));
+    onComplete(true)
+    // if (checked.length === 0) return;
+    // const isCorrect = checked === correct;
+    // if (isCorrect) onComplete(isCorrect);
+    // else
+    //   await logMistake(user._id, {
+    //     title: "Choose the correct answer for: " + q,
+    //     prop: options[correct],
+    //   })
+    //     .then()
+    //     .catch((err) => console.log(err));
   };
 
   return (
@@ -51,10 +54,7 @@ const Comprehension = ({ user, exercise, onComplete }) => {
       {dialogue.map((d, i) => {
         return (
           <View style={styles.container} key={i}>
-            <Image
-              style={styles.image}
-              source={characters[i]}
-            />
+            <Image style={styles.image} source={characters[i]} />
             <ThoughtBubble gap={10} pH={15} justify={"start"}>
               <TouchableOpacity
                 style={{
@@ -89,7 +89,7 @@ const Comprehension = ({ user, exercise, onComplete }) => {
               isChecked={checked === i}
               setIsChecked={(val) => setChecked(val)}
             />
-          )
+          );
         })}
       </View>
       <View style={styles.buttons}>
