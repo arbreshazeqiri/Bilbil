@@ -43,15 +43,27 @@ const generateSecretKey = () => {
 
 const secretKey = generateSecretKey();
 
-//endpoint to register a user in the backend
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 app.post("/register", async (req, res) => {
   try {
     const { username, name, email, password } = req.body;
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
+    const existingEmail = await User.findOne({ email });
+    if (existingEmail) {
       return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const existingUsername = await User.findOne({ username });
+    if (existingUsername) {
+      return res.status(400).json({ message: "Username already taken." });
+    }
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        message:
+          "Password must be at least 8 characters long. It must contain upper and lower case letters, a number, and a special character.",
+      });
     }
 
     const saltRounds = 10;
@@ -64,10 +76,6 @@ app.post("/register", async (req, res) => {
       password: hashedPassword,
     });
 
-    //generate and store the verification token
-    newUser.verificationToken = crypto.randomBytes(20).toString("hex");
-
-    //save the  user to the database
     await newUser.save().then((result) => {
       const token = jwt.sign({ userId: result._id }, secretKey);
       res.status(200).json({ user: { ...result["_doc"], token } });
@@ -87,14 +95,14 @@ app.post("/login", async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "Invalid email or username" });
+      return res.status(400).json({ message: "Invalid credentials." });
     }
 
     //compare password with the stored hashed password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(404).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Invalid credentials." });
     }
 
     const token = jwt.sign({ userId: user._id }, secretKey);

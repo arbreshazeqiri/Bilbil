@@ -4,7 +4,6 @@ import {
   Text,
   View,
   TextInput,
-  Alert,
   StatusBar,
   TouchableOpacity,
 } from "react-native";
@@ -26,6 +25,7 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
+  const [validationMessage, setValidationMessage] = useState("");
 
   const [isLoaded] = useFonts({
     baloo: BalooFont,
@@ -50,8 +50,9 @@ const LoginScreen = () => {
       });
       navigation.navigate("Menu");
     } catch (error) {
-      Alert.alert("Login error");
-      console.error("error", error);
+      setValidationMessage(
+        error.response.data.message || "An error occurred during login."
+      );
     }
   };
 
@@ -88,6 +89,14 @@ const LoginScreen = () => {
               />
             </TouchableOpacity>
           </View>
+          <Text
+            style={{
+              ...styles.validationMessage,
+              opacity: validationMessage ? 1 : 0,
+            }}
+          >
+            {validationMessage}
+          </Text>
         </View>
         <View style={styles.buttons}>
           <CustomButton
@@ -173,6 +182,11 @@ const styles = StyleSheet.create({
     fontSize: 17,
     fontWeight: "600",
     fontFamily: "baloo",
+  },
+  validationMessage: {
+    color: "#EF3A3A",
+    marginTop: 20,
+    fontFamily: "baloo-semibold",
   },
 });
 
